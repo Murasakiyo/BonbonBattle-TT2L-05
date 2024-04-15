@@ -2,8 +2,8 @@ import pygame
 
 VELOCITY         = 5
 LERP_FACTOR      = 0.1
-minimum_distance = 0
-maximum_distance = 0
+minimum_distance = 20
+maximum_distance = 100
 
 def FollowMe(pops, fpos):
     target_vector       = pygame.math.Vector2(pops)
@@ -16,7 +16,7 @@ def FollowMe(pops, fpos):
         direction_vector    = (target_vector - follower_vector) / distance
         min_step            = max(0, distance - maximum_distance)
         max_step            = distance - minimum_distance
-        #step_distance       = min(max_step, max(min_step, VELOCITY))
+        # step_distance       = min(max_step, max(min_step, VELOCITY))
         step_distance       = min_step + (max_step - min_step) * LERP_FACTOR
         new_follower_vector = follower_vector + direction_vector * step_distance
 
