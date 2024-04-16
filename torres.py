@@ -18,6 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.current_frame, self.last_frame_update = 0,0
         self.fps = 0
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
+        self.color = "white"
         
 
     def update(self,deltatime,player_action):
@@ -84,11 +85,11 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += 400 * deltatime * direction_x
         self.rect.y += 450 * deltatime * direction_y
         
-        # if any(rect.clipline(*line) for line in lines):
-        #     color = "red"
+        if any(self.rect.clipline(*line) for line in self.lines):
+            self.color = "red"
 
-        # else:
-        #     color = "green"
+        else:
+            self.color = "green"
 
 
     def render(self, display):
@@ -96,7 +97,9 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(display, (255,255,255), self.rect,2)
         for line in self.lines:
             pygame.draw.line(display, "white", *line)
+        pygame.draw.rect(display, self.color, (180, 180, 40, 40))
         pygame.display.flip()
+
         
 
 
