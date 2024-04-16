@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.fps = 0
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         self.color = "white"
-        
+        self.speed = 5
 
     def update(self,deltatime,player_action):
         # Get direction from input
@@ -82,19 +82,25 @@ class Player(pygame.sprite.Sprite):
         self.animate(deltatime, direction_x, direction_y)
 
         # position
-        self.rect.x += 400 * deltatime * direction_x
-        self.rect.y += 450 * deltatime * direction_y
+        self.rect.x += 400 * deltatime * direction_x #look back at the game states tutorial
+        self.rect.y += 450 * deltatime * direction_y #currently adding the tuples individually is an idea
+
+
+  
+
+        self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         
         if any(self.rect.clipline(*line) for line in self.lines):
             self.color = "red"
-
         else:
             self.color = "green"
+
 
 
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
         pygame.draw.rect(display, (255,255,255), self.rect,2)
+
         for line in self.lines:
             pygame.draw.line(display, "white", *line)
         pygame.draw.rect(display, self.color, (180, 180, 40, 40))
