@@ -33,9 +33,9 @@ class Stage(State):
         display.fill((100,100,100))
         self.camera.custom_draw(display)
         
-        # if self.immunity == False:
-        #     self.stan.render(display)
-        # self.player.render(display)
+        if self.immunity == False:
+            self.stan.render(display)
+        self.player.render(display)
 
 
 
