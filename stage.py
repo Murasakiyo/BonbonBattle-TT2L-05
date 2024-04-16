@@ -7,6 +7,7 @@ class Stage(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.camera = CameraGroup(self.game)
+        self.background = pygame.image.load("sprites/grass.bmp").convert()
         self.player = Player(self.game, self.camera) 
         self.stan = Stanley(self.game, self.camera) 
         self.c_time = 0
@@ -30,7 +31,7 @@ class Stage(State):
             self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
 
     def render(self, display):
-        display.fill((100,100,100))
+        display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
         self.camera.custom_draw(display)
         
         # if self.immunity == False:
