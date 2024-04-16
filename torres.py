@@ -95,7 +95,7 @@ class Player(pygame.sprite.Sprite):
         # display.blit(self.image, (self.rect.x, self.rect.y))
         pygame.draw.rect(display, (255,255,255), self.rect,2)
         for line in self.lines:
-            pygame.draw.line(self.game.screen, "white", *line)
+            pygame.draw.line(display, "white", *line)
         pygame.display.flip()
         
 
