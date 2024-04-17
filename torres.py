@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
         self.defend = False
         self.right = 1
         self.load_sprites()
-        self.rect = self.torres_walk.get_rect(width= 150, height=200)
+        self.rect = self.torres_walk.get_rect(width= 200, height=200)
         # self.rect.center = (295, 373)
         self.rect.x, self.rect.y = 200,150
         # self.line = self.rect.clipline(50, 50)
@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.fps = 0
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         self.color = "white"
-        self.speed = 5
+        self.rect_draw = pygame.Rect(180, 180, 40, 40) #for clipline collision testing
 
     def update(self,deltatime,player_action):
         # Get direction from input
@@ -90,10 +90,10 @@ class Player(pygame.sprite.Sprite):
 
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         
-        if any(self.rect.clipline(*line) for line in self.lines):
-            self.color = "red"
+        if any(self.rect_draw.clipline(*line) for line in self.lines):
+            print("Collision detected")
         else:
-            self.color = "green"
+            print("No collision detected")
 
 
 
@@ -103,7 +103,7 @@ class Player(pygame.sprite.Sprite):
 
         for line in self.lines:
             pygame.draw.line(display, "white", *line)
-        pygame.draw.rect(display, self.color, (180, 180, 40, 40))
+        pygame.draw.rect(display, self.color, self.rect_draw)
         pygame.display.flip()
 
         
