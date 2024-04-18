@@ -2,6 +2,7 @@ import pygame
 from state import State, CameraGroup
 from torres import Player
 from stanley import Stanley
+from louie import Louie
 
 class Stage(State):
     def __init__(self, game):
@@ -10,7 +11,7 @@ class Stage(State):
         self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
         self.player = Player(self.game, self.camera) 
-        self.stan = Stanley(self.game, self.camera) 
+        self.stan = Louie(self.game, self.camera) 
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
@@ -24,7 +25,7 @@ class Stage(State):
         if self.game.damaged == True:
             self.immunity = True
             self.c_time += deltatime
-            if self.c_time > 3:
+            if self.c_time > 1:
                 self.game.damaged = False
                 self.immunity = False
         self.player.update(deltatime, player_action)
