@@ -27,10 +27,7 @@ class Player(pygame.sprite.Sprite):
         direction_y = player_action["down"] - player_action["up"]
 
         # collision with the screen
-        if self.rect.right >= self.game.SCREENWIDTH:
-            self.rect.x = 950
-        if self.rect.left <= 0:
-            self.rect.x = -1
+        self.rect.clamp_ip(self.game.screen_rect)
 
         # Check for defense button
         if player_action["defend"]:
@@ -82,14 +79,12 @@ class Player(pygame.sprite.Sprite):
         self.animate(deltatime, direction_x, direction_y)
 
         # position
-        self.rect.x += 400 * deltatime * direction_x #look back at the game states tutorial
-        self.rect.y += 450 * deltatime * direction_y #currently adding the tuples individually is an idea
+        self.rect.x += 400 * deltatime * direction_x 
+        self.rect.y += 450 * deltatime * direction_y 
 
-
-  
 
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
-        
+
         if any(self.rect_draw.clipline(*line) for line in self.lines):
             print("Collision detected")
         else:
