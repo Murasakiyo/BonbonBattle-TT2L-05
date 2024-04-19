@@ -8,10 +8,10 @@ class Stage(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.camera = CameraGroup(self.game)
-        self.background = pygame.image.load("sprites/grass.bmp").convert()
+        self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.player = Player(self.game, self.camera) 
         self.stan = Stanley(self.game, self.camera) 
-        self.enemy3 = Enemy3(self.game)
+        # self.enemy3 = Enemy3(self.game, self.camera)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
@@ -39,7 +39,7 @@ class Stage(State):
         if self.immunity == False:
             self.stan.render(display)
         self.player.render(display)
-        self.enemy3.render(display)
+        # self.enemy3.render(display)
 
 
 
