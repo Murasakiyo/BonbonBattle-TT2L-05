@@ -11,13 +11,15 @@ class Player(pygame.sprite.Sprite):
         self.defend = False
         self.right = 1
         self.load_sprites()
-        self.rect = self.torres_walk.get_rect(width= 150, height=200)
+        self.rect = self.torres_walk.get_rect(width= 200, height=200)
         # self.rect.center = (295, 373)
         self.rect.x, self.rect.y = 200,150
         # self.line = self.rect.clipline(50, 50)
         self.current_frame, self.last_frame_update = 0,0
         self.fps = 0
-        
+        self.lines = [((self.rect.midbottom), (self.rect.midtop))]
+        self.color = "white"
+        self.rect_draw = pygame.Rect(180, 180, 40, 40) #for clipline collision testing
 
     def update(self,deltatime,player_action):
         # Get direction from input
@@ -25,10 +27,7 @@ class Player(pygame.sprite.Sprite):
         direction_y = player_action["down"] - player_action["up"]
 
         # collision with the screen
-        if self.rect.right >= self.game.SCREENWIDTH:
-            self.rect.x = 950
-        if self.rect.left <= 0:
-            self.rect.x = -1
+        self.rect.clamp_ip(self.game.screen_rect)
 
         # Check for defense button
         if player_action["defend"]:
@@ -80,15 +79,28 @@ class Player(pygame.sprite.Sprite):
         self.animate(deltatime, direction_x, direction_y)
 
         # position
-        self.rect.x += 400 * deltatime * direction_x
-        self.rect.y += 450 * deltatime * direction_y
-        
+        self.rect.x += 400 * deltatime * direction_x 
+        self.rect.y += 450 * deltatime * direction_y 
+
+
+        self.lines = [((self.rect.midbottom), (self.rect.midtop))]
+
+        if any(self.rect_draw.clipline(*line) for line in self.lines):
+            print("Collision detected")
+        else:
+            print("No collision detected")
 
 
 
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
         pygame.draw.rect(display, (255,255,255), self.rect,2)
+
+        for line in self.lines:
+            pygame.draw.line(display, "white", *line)
+        pygame.draw.rect(display, self.color, self.rect_draw)
+        pygame.display.flip()
+
         
 
 

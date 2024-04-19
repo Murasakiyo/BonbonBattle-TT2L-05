@@ -2,6 +2,7 @@ import pygame
 from state import State, CameraGroup
 from torres import Player
 from stanley import Stanley
+from enemy3 import Enemy3
 
 class Stage(State):
     def __init__(self, game):
@@ -10,6 +11,7 @@ class Stage(State):
         self.background = pygame.image.load("sprites/grass.bmp").convert()
         self.player = Player(self.game, self.camera) 
         self.stan = Stanley(self.game, self.camera) 
+        self.enemy3 = Enemy3(self.game)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
@@ -34,9 +36,10 @@ class Stage(State):
         display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
         self.camera.custom_draw(display)
         
-        # if self.immunity == False:
-        #     self.stan.render(display)
-        # self.player.render(display)
+        if self.immunity == False:
+            self.stan.render(display)
+        self.player.render(display)
+        self.enemy3.render(display)
 
 
 
