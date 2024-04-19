@@ -2,6 +2,7 @@ import pygame
 from state import State, CameraGroup
 from torres import Player
 from stanley import Stanley
+from enemy3 import Enemy3
 
 class Stage(State):
     def __init__(self, game):
@@ -9,6 +10,7 @@ class Stage(State):
         self.camera = CameraGroup(self.game)
         self.player = Player(self.game, self.camera) 
         self.stan = Stanley(self.game, self.camera) 
+        self.enemy3 = Enemy3(self.game)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
@@ -36,6 +38,7 @@ class Stage(State):
         if self.immunity == False:
             self.stan.render(display)
         self.player.render(display)
+        self.enemy3.render(display)
 
 
 
