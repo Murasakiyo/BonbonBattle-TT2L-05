@@ -12,6 +12,7 @@ class Stage(State):
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
         self.player = Player(self.game, self.camera) 
         self.stan = Stanley(self.game, self.camera) 
+        # self.enemy1 = Enemy1(self.game, self.camera)
         # self.enemy3 = Enemy3(self.game, self.camera)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
@@ -43,8 +44,3 @@ class Stage(State):
         # self.player.render(display)
 
 
-
-            
-
-        
-        
