@@ -16,7 +16,7 @@ class Game():
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False} 
-        self.deltatime, self.prevtime = 0 , 0
+        self.deltatime, self.prevtime4 = 0 , 0
         self.state_stack = []
         self.load_states()
         
