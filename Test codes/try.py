@@ -2,8 +2,8 @@ import pygame
 
 VELOCITY         = 5
 LERP_FACTOR      = 0.1
-minimum_distance = 0
-maximum_distance = 0
+minimum_distance =0
+maximum_distance =0
 
 def FollowMe(pops, fpos):
     target_vector       = pygame.math.Vector2(pops)
@@ -25,6 +25,7 @@ def FollowMe(pops, fpos):
 pygame.init()
 window = pygame.display.set_mode((500, 500))
 clock = pygame.time.Clock()
+rect = pygame.rect(30,30,)
 
 follower = (100, 100)
 run = True
@@ -39,7 +40,7 @@ while run:
 
     window.fill(0)  
     pygame.draw.circle(window, (0, 0, 255), player, 10)
-    pygame.draw.circle(window, (255, 0, 0), (round(follower[0]), round(follower[1])), 10)
+    pygame.draw.Rect(window, (255, 0, 0), (round(follower[0]), round(follower[1])), 10)
     pygame.display.flip()
 
 pygame.quit()

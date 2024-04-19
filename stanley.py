@@ -45,8 +45,8 @@ class Stanley(pygame.sprite.Sprite):
         
     
     def render(self, display):
-        display.blit(self.image, (self.stan_vector.x, self.stan_vector.y))
-        # pygame.draw.rect(display, (255,255,255), self.rect,2)
+        # display.blit(self.image, (self.stan_vector.x, self.stan_vector.y))
+        pygame.draw.rect(display, (255,255,255), self.rect,2)
 
 
     def animate(self, deltatime, direction_x, direction_y, distance):
@@ -118,8 +118,8 @@ class Stanley(pygame.sprite.Sprite):
         self.torres_vector = pygame.math.Vector2(player_x, player_y)
         self.stan_vector = pygame.math.Vector2(self.rect.x, self.rect.y)
         self.step_distance = 0
-        self.min_distance = 300
-        self.max_distance = 500
+        self.min_distance = 50
+        self.max_distance = 50
         # print(self.follower_vector)
 
 

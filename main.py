@@ -112,8 +112,6 @@ class Game():
             self.player_action[actions] = False
 
 
-
-
 if __name__ == "__main__":
     game = Game()
     while game.run:

@@ -112,7 +112,6 @@ class Louie(pygame.sprite.Sprite):
                     self.last_frame_update = 0
                 else:
                     self.image = self.attack_right[3]
-                    self.last_frame_update = 0
             else:
                 self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
                 self.image = self.current_anim_list[self.current_frame]
