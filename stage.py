@@ -39,8 +39,8 @@ class Stage(State):
         display.blit(pygame.transform.scale(self.trees, (1200,600)), (-60,0))
         
         # if self.immunity == False:
-        self.stan.render(display)
-        self.player.render(display)
+        # self.stan.render(display)
+        # self.player.render(display)
 
 
 
