@@ -98,9 +98,9 @@ class Stanley(pygame.sprite.Sprite):
 
 
         # Fps for each animation
-        if self.current_anim_list == (self.right_sprites or self.left_sprites):
+        if self.current_anim_list == self.right_sprites or self.current_anim_list == self.left_sprites:
             self.fps = 0.5
-        if self.current_anim_list == (self.walk_right or self.walk_left):
+        if self.current_anim_list == self.walk_right or self.current_anim_list == self.walk_left:
             self.fps = 0.2
 
         # Updating frames

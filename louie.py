@@ -98,20 +98,21 @@ class Louie(pygame.sprite.Sprite):
 
 
         # Fps for each animation
-        if self.current_anim_list == (self.right_sprites or self.left_sprites):
+        if self.current_anim_list == self.right_sprites or self.current_anim_list == self.left_sprites:
             self.fps = 0.5
-        if self.current_anim_list == (self.walk_right or self.walk_left):
+        if self.current_anim_list == self.walk_right or self.current_anim_list == self.walk_left:
             self.fps = 0.2
 
         # Updating frames
         if self.last_frame_update > self.fps:
             if self.current_anim_list == self.attack_right:
-                if self.current_frame > 4:
-                    self.image = self.current_anim_list[3]
-                else:
+                if self.current_frame < 4:
                     self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
-                self.image = self.current_anim_list[self.current_frame]
-                self.last_frame_update = 0
+                    self.image = self.attack_right[self.current_frame]
+                    self.last_frame_update = 0
+                else:
+                    self.image = self.attack_right[3]
+                    self.last_frame_update = 0
             else:
                 self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
                 self.image = self.current_anim_list[self.current_frame]
