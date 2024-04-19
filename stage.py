@@ -40,7 +40,7 @@ class Stage(State):
         
         # if self.immunity == False:
         self.stan.render(display)
-        # self.player.render(display)
+        self.player.render(display)
 
 
 
