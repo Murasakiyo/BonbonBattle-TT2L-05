@@ -2,9 +2,9 @@ import pygame
 import time
 import math
 import spritesheet
-# from torres import Player
 
-class Stanley(pygame.sprite.Sprite):
+
+class Louie(pygame.sprite.Sprite):
     def __init__(self, game, group):
         super().__init__(group)
         self.game = game
@@ -41,12 +41,12 @@ class Stanley(pygame.sprite.Sprite):
 
         self.animate(deltatime, direction_x, direction_y, self.step_distance)
         
-        # print(self.fps)
+        print(self.current_frame)
         
     
     def render(self, display):
-        # display.blit(self.image, (self.stan_vector.x, self.stan_vector.y))
-        pygame.draw.rect(display, (255,255,255), self.rect,2)
+        display.blit(self.image, (self.stan_vector.x, self.stan_vector.y))
+        # pygame.draw.rect(display, (255,255,255), self.rect,2)
 
 
     def animate(self, deltatime, direction_x, direction_y, distance):
@@ -105,9 +105,17 @@ class Stanley(pygame.sprite.Sprite):
 
         # Updating frames
         if self.last_frame_update > self.fps:
-            self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
-            self.image = self.current_anim_list[self.current_frame]
-            self.last_frame_update = 0 
+            if self.current_anim_list == self.attack_right:
+                if self.current_frame < 4:
+                    self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
+                    self.image = self.attack_right[self.current_frame]
+                    self.last_frame_update = 0
+                else:
+                    self.image = self.attack_right[3]
+            else:
+                self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
+                self.image = self.current_anim_list[self.current_frame]
+                self.last_frame_update = 0 
 
         
 
@@ -118,8 +126,8 @@ class Stanley(pygame.sprite.Sprite):
         self.torres_vector = pygame.math.Vector2(player_x, player_y)
         self.stan_vector = pygame.math.Vector2(self.rect.x, self.rect.y)
         self.step_distance = 0
-        self.min_distance = 50
-        self.max_distance = 50
+        self.min_distance = 300
+        self.max_distance = 500
         # print(self.follower_vector)
 
 
@@ -143,23 +151,23 @@ class Stanley(pygame.sprite.Sprite):
         self.right_sprites, self.left_sprites = [], []
         self.walk_right, self.walk_left = [], []
         self.attack_right, self.attack_left = [], []
-        stan = pygame.image.load("sprites/stanley_sp.png").convert()
-        self.stanley = pygame.transform.scale(stan, (650,800)).convert_alpha()
+        stan = pygame.image.load("sprites/louie_sp.png").convert()
+        self.stanley = pygame.transform.scale(stan, (775,800)).convert_alpha()
         SP = spritesheet.Spritesheet(self.stanley)
 
         # Walking sprites
         for x in range(2):
-            self.right_sprites.append(SP.get_sprite(x, 0, 159,190, (0,0,0)))
+            self.right_sprites.append(SP.get_sprite(x, 0, 160,190, (0,0,0)))
         for x in range(2, 4):
             self.left_sprites.append(SP.get_sprite(x, 0, 160, 190, (0,0,0)))
         for x in range(2):
-            self.walk_right.append(SP.get_sprite(x, 200, 160, 190, (0,0,0)))
+            self.walk_right.append(SP.get_sprite(x, 200, 190, 190, (0,0,0)))
         for x in range(2,4):
-            self.walk_left.append(SP.get_sprite(x, 200, 160, 190, (0,0,0)))
-        for x in range(3):
-            self.attack_right.append(SP.get_sprite(x,400, 180, 190, (0,0,0)))
-        for x in range(3):
-            self.attack_left.append(SP.get_sprite(x, 600, 180, 190, (0,0,0)))
+            self.walk_left.append(SP.get_sprite(x, 200, 183, 190, (0,0,0)))
+        for x in range(4):
+            self.attack_right.append(SP.get_sprite(x, 390, 167, 190, (0,0,0)))
+        for x in range(4):
+            self.attack_left.append(SP.get_sprite(x, 600, 167, 190, (0,0,0)))
 
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites
