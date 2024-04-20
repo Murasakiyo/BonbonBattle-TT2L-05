@@ -3,6 +3,7 @@ from state import State, CameraGroup
 from torres import Player
 from stanley import Stanley
 from louie import Louie
+from enemy1 import Enemy1
 
 class Stage(State):
     def __init__(self, game):
@@ -33,14 +34,20 @@ class Stage(State):
         self.player.update(deltatime, player_action)
         if self.immunity == False:
             self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+        # test code for enemy1
+        # self.enemy1.update(deltatime)
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
         self.camera.custom_draw(display)
         display.blit(pygame.transform.scale(self.trees, (1200,600)), (-60,0))
-        
+    
+
         # if self.immunity == False:
         # self.stan.render(display)
         # self.player.render(display)
 
+
+        #test code for enemy1
+        # self.enemy1.render(display)
 
