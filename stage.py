@@ -32,7 +32,7 @@ class Stage(State):
                 self.immunity = False
         self.player.update(deltatime, player_action)
         if self.immunity == False:
-            self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+            self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
