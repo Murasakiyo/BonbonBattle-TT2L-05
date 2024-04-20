@@ -11,7 +11,7 @@ class Stage(State):
         self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
         self.player = Player(self.game, self.camera) 
-        self.stan = Stanley(self.game, self.camera) 
+        self.stan = Louie(self.game, self.camera) 
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
