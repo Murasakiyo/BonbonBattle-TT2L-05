@@ -2,7 +2,7 @@ import pygame
 import time
 import math
 import spritesheet
-from torres import Player
+# from torres import Player
 
 class Stanley(pygame.sprite.Sprite):
     def __init__(self, game, group):
