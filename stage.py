@@ -3,7 +3,8 @@ from state import State, CameraGroup
 from torres import Player
 from stanley import Stanley
 from louie import Louie
-from enemy1 import Enemy1
+from enemy1 import FrogEnemy
+from enemy3 import Enemy3
 
 class Stage(State):
     def __init__(self, game):
@@ -12,8 +13,9 @@ class Stage(State):
         self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
         self.player = Player(self.game, self.camera) 
+        self.louie = Louie(self.game, self.camera) 
         self.stan = Stanley(self.game, self.camera) 
-        # self.enemy1 = Enemy1(self.game, self.camera)
+        self.enemy1 = FrogEnemy(self.game, self.camera)
         # self.enemy3 = Enemy3(self.game, self.camera)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
@@ -34,8 +36,8 @@ class Stage(State):
         self.player.update(deltatime, player_action)
         if self.immunity == False:
             self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-        # test code for enemy1
-        # self.enemy1.update(deltatime)
+        self.enemy1.update(deltatime, self.player) # pass player's position to enemy1
+
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
@@ -49,5 +51,5 @@ class Stage(State):
 
 
         #test code for enemy1
-        # self.enemy1.render(display)
+        self.enemy1.render(display)
 

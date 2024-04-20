@@ -12,7 +12,7 @@ class Stanley(pygame.sprite.Sprite):
         self.rect = self.stanley.get_rect(width=150, height=200)
         self.rect.x, self.rect.y = -500, 0
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
-        self.fps =0.2
+        self.fps = 0.2
         self.attack = False
         self.current_time = 0
         self.attack_cooldown = 0
@@ -46,7 +46,7 @@ class Stanley(pygame.sprite.Sprite):
     
     def render(self, display):
         # display.blit(self.image, (self.stan_vector.x, self.stan_vector.y))
-        pygame.draw.rect(display, (255,255,255), self.rect,2)
+        pygame.draw.rect(display, (255,255,255), self.rect, 2)
 
 
     def animate(self, deltatime, direction_x, direction_y, distance):
