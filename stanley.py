@@ -55,9 +55,11 @@ class Stanley(pygame.sprite.Sprite):
         # Support doll idle
         if not(direction_x or direction_y) and (self.attack == False):
             if self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right or self.current_anim_list == self.attack_right:
-                self.image = self.right_sprites[self.current_frame_unique]
+                self.current_anim_list = self.right_sprites
+                self.image = self.current_anim_list[self.current_frame_unique]
             elif self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left or self.current_anim_list == self.attack_left:
-                self.image = self.left_sprites[self.current_frame_unique]
+                self.current_anim_list = self.left_sprites
+                self.image = self.current_anim_list[self.current_frame_unique]
             if self.last_frame_update > 0.5:
                 self.current_frame_unique = (self.current_frame_unique + 1) % len(self.right_sprites)
                 self.last_frame_update = 0 
