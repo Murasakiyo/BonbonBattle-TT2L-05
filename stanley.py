@@ -87,13 +87,11 @@ class Stanley(pygame.sprite.Sprite):
             self.current_anim_list.clear
             self.fps = 0.15
             # self.current_frame = 0
-            self.current_anim_list = self.attack_right[0]
             self.current_anim_list = self.attack_right
         if self.attack == True and (self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left):
             self.current_anim_list.clear
             self.fps = 0.15
             # self.current_frame = 0
-            self.current_anim_list = self.attack_left[0]
             self.current_anim_list = self.attack_left
 
 

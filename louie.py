@@ -55,9 +55,11 @@ class Louie(pygame.sprite.Sprite):
         # Support doll idle
         if not(direction_x or direction_y) and (self.attack == False):
             if self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right or self.current_anim_list == self.attack_right:
-                self.image = self.right_sprites[self.current_frame_unique]
+                self.current_anim_list = self.right_sprites
+                self.image = self.current_anim_list[self.current_frame_unique]
             elif self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left or self.current_anim_list == self.attack_left:
-                self.image = self.left_sprites[self.current_frame_unique]
+                self.current_anim_list = self.left_sprites
+                self.image = self.current_anim_list[self.current_frame_unique]
             if self.last_frame_update > 0.5:
                 self.current_frame_unique = (self.current_frame_unique + 1) % len(self.right_sprites)
                 self.last_frame_update = 0 
@@ -77,22 +79,22 @@ class Louie(pygame.sprite.Sprite):
                     self.current_anim_list =self.left_sprites
 
         # walk animation after attacking
-        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]): 
+        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]) and self.attack == False: 
             self.current_anim_list = self.right_sprites
-        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]): 
+        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]) and self.attack == False: 
             self.current_anim_list = self.left_sprites
 
         # Support doll attacking animation
         if self.attack == True and (self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right):
             self.current_anim_list.clear
             self.fps = 0.15
-            # self.current_frame = 0
+            self.current_frame = 0
             self.current_anim_list = self.attack_right[0]
             self.current_anim_list = self.attack_right
         if self.attack == True and (self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left):
             self.current_anim_list.clear
             self.fps = 0.15
-            # self.current_frame = 0
+            self.current_frame = 0
             self.current_anim_list = self.attack_left[0]
             self.current_anim_list = self.attack_left
 
@@ -105,13 +107,14 @@ class Louie(pygame.sprite.Sprite):
 
         # Updating frames
         if self.last_frame_update > self.fps:
-            if self.current_anim_list == self.attack_right:
-                if self.current_frame < 4:
+            if self.current_anim_list == self.attack_right or self.current_anim_list == self.attack_left:
+                if self.current_frame != 4:
                     self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
-                    self.image = self.attack_right[self.current_frame]
+                    self.image = self.current_anim_list[self.current_frame]
                     self.last_frame_update = 0
                 else:
-                    self.image = self.attack_right[3]
+                    self.image = self.current_anim_list[4]
+                    self.last_frame_update = 0
             else:
                 self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
                 self.image = self.current_anim_list[self.current_frame]
@@ -164,10 +167,10 @@ class Louie(pygame.sprite.Sprite):
             self.walk_right.append(SP.get_sprite(x, 200, 190, 190, (0,0,0)))
         for x in range(2,4):
             self.walk_left.append(SP.get_sprite(x, 200, 183, 190, (0,0,0)))
-        for x in range(4):
-            self.attack_right.append(SP.get_sprite(x, 390, 167, 190, (0,0,0)))
-        for x in range(4):
-            self.attack_left.append(SP.get_sprite(x, 600, 167, 190, (0,0,0)))
+        for x in range(5):
+            self.attack_right.append(SP.get_sprite(x, 390, 157, 190, (0,0,0)))
+        for x in range(5):
+            self.attack_left.append(SP.get_sprite(x, 600, 157, 190, (0,0,0)))
 
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites
