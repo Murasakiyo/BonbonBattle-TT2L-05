@@ -3,6 +3,7 @@ from state import State, CameraGroup
 from torres import Player
 from stanley import Stanley
 from louie import Louie
+from krie import Krie
 
 class Stage(State):
     def __init__(self, game):
@@ -13,6 +14,7 @@ class Stage(State):
         self.player = Player(self.game, self.camera) 
         self.louie = Louie(self.game, self.camera) 
         self.stan = Stanley(self.game, self.camera) 
+        self.krie = Krie(self.game, self.camera) 
         # self.enemy3 = Enemy3(self.game, self.camera)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
@@ -33,6 +35,8 @@ class Stage(State):
         self.player.update(deltatime, player_action)
         if self.immunity == False:
             self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+            self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+            self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             
 
     def render(self, display):
