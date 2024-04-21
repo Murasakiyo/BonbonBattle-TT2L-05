@@ -129,7 +129,7 @@ class Krie(pygame.sprite.Sprite):
         self.torres_vector = pygame.math.Vector2(player_x, player_y)
         self.krie_vector = pygame.math.Vector2(self.rect.x, self.rect.y)
         self.step_distance = 0
-        self.min_distance = 100
+        self.min_distance = 300
         self.max_distance = 500
         # print(self.follower_vector)
 
