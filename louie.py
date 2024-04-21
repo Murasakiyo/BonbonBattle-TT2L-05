@@ -9,7 +9,7 @@ class Louie(pygame.sprite.Sprite):
         super().__init__(group)
         self.game = game
         self.load_sprites()
-        self.rect = self.louie.get_rect(width=150, height=200)
+        self.rect = self.stanley.get_rect(width=150, height=200)
         self.rect.x, self.rect.y = -500, 0
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
         self.fps =0.2
@@ -45,7 +45,7 @@ class Louie(pygame.sprite.Sprite):
         
     
     def render(self, display):
-        display.blit(self.image, (self.louie_vector.x, self.louie_vector.y))
+        display.blit(self.image, (self.stan_vector.x, self.stan_vector.y))
         # pygame.draw.rect(display, (255,255,255), self.rect,2)
 
 
@@ -55,11 +55,9 @@ class Louie(pygame.sprite.Sprite):
         # Support doll idle
         if not(direction_x or direction_y) and (self.attack == False):
             if self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right or self.current_anim_list == self.attack_right:
-                self.current_anim_list = self.right_sprites
-                self.image = self.current_anim_list[self.current_frame_unique]
+                self.image = self.right_sprites[self.current_frame_unique]
             elif self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left or self.current_anim_list == self.attack_left:
-                self.current_anim_list = self.left_sprites
-                self.image = self.current_anim_list[self.current_frame_unique]
+                self.image = self.left_sprites[self.current_frame_unique]
             if self.last_frame_update > 0.5:
                 self.current_frame_unique = (self.current_frame_unique + 1) % len(self.right_sprites)
                 self.last_frame_update = 0 
@@ -79,22 +77,22 @@ class Louie(pygame.sprite.Sprite):
                     self.current_anim_list =self.left_sprites
 
         # walk animation after attacking
-        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]) and self.attack == False: 
+        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]): 
             self.current_anim_list = self.right_sprites
-        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]) and self.attack == False: 
+        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]): 
             self.current_anim_list = self.left_sprites
 
         # Support doll attacking animation
         if self.attack == True and (self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right):
             self.current_anim_list.clear
             self.fps = 0.15
-            self.current_frame = 0
+            # self.current_frame = 0
             self.current_anim_list = self.attack_right[0]
             self.current_anim_list = self.attack_right
         if self.attack == True and (self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left):
             self.current_anim_list.clear
             self.fps = 0.15
-            self.current_frame = 0
+            # self.current_frame = 0
             self.current_anim_list = self.attack_left[0]
             self.current_anim_list = self.attack_left
 
@@ -107,14 +105,13 @@ class Louie(pygame.sprite.Sprite):
 
         # Updating frames
         if self.last_frame_update > self.fps:
-            if self.current_anim_list == self.attack_right or self.current_anim_list == self.attack_left:
-                if self.current_frame != 4:
+            if self.current_anim_list == self.attack_right:
+                if self.current_frame < 4:
                     self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
-                    self.image = self.current_anim_list[self.current_frame]
+                    self.image = self.attack_right[self.current_frame]
                     self.last_frame_update = 0
                 else:
-                    self.image = self.current_anim_list[4]
-                    self.last_frame_update = 0
+                    self.image = self.attack_right[3]
             else:
                 self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
                 self.image = self.current_anim_list[self.current_frame]
@@ -127,25 +124,25 @@ class Louie(pygame.sprite.Sprite):
     def move(self, player_x, player_y):
 
         self.torres_vector = pygame.math.Vector2(player_x, player_y)
-        self.louie_vector = pygame.math.Vector2(self.rect.x, self.rect.y)
+        self.stan_vector = pygame.math.Vector2(self.rect.x, self.rect.y)
         self.step_distance = 0
-        self.min_distance = 200
+        self.min_distance = 300
         self.max_distance = 500
         # print(self.follower_vector)
 
 
         # distance_to returns the pythagorean distance between two points
-        self.distance = self.louie_vector.distance_to(self.torres_vector)
+        self.distance = self.stan_vector.distance_to(self.torres_vector)
         
         if self.distance > self.min_distance:
-            self.direction_vector = (self.torres_vector - self.louie_vector) / self.distance
+            self.direction_vector = (self.torres_vector - self.stan_vector) / self.distance
             self.min_step        = max(0, self.distance - self.max_distance)
             self.max_step        = self.distance - self.min_distance
             #step_distance       = min(max_step, max(min_step, VELOCITY))
             self.step_distance   = self.min_step + (self.max_step - self.min_step) 
             # self.new_stan_vector = self.stan_vector + self.direction_vector * self.step_distance
-            self.louie_vector += self.direction_vector * self.step_distance * 0.2
-            self.rect.x, self.rect.y = self.louie_vector.x, self.louie_vector.y
+            self.stan_vector += self.direction_vector * self.step_distance * 0.2
+            self.rect.x, self.rect.y = self.stan_vector.x, self.stan_vector.y
 
 
         
@@ -154,9 +151,9 @@ class Louie(pygame.sprite.Sprite):
         self.right_sprites, self.left_sprites = [], []
         self.walk_right, self.walk_left = [], []
         self.attack_right, self.attack_left = [], []
-        louis = pygame.image.load("sprites/louie_sp.png").convert()
-        self.louie = pygame.transform.scale(louis, (775,800)).convert_alpha()
-        SP = spritesheet.Spritesheet(self.louie)
+        stan = pygame.image.load("sprites/louie_sp.png").convert()
+        self.stanley = pygame.transform.scale(stan, (775,800)).convert_alpha()
+        SP = spritesheet.Spritesheet(self.stanley)
 
         # Walking sprites
         for x in range(2):
@@ -167,10 +164,10 @@ class Louie(pygame.sprite.Sprite):
             self.walk_right.append(SP.get_sprite(x, 200, 190, 190, (0,0,0)))
         for x in range(2,4):
             self.walk_left.append(SP.get_sprite(x, 200, 183, 190, (0,0,0)))
-        for x in range(5):
-            self.attack_right.append(SP.get_sprite(x, 390, 157, 190, (0,0,0)))
-        for x in range(5):
-            self.attack_left.append(SP.get_sprite(x, 600, 157, 190, (0,0,0)))
+        for x in range(4):
+            self.attack_right.append(SP.get_sprite(x, 390, 167, 190, (0,0,0)))
+        for x in range(4):
+            self.attack_left.append(SP.get_sprite(x, 600, 167, 190, (0,0,0)))
 
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites
