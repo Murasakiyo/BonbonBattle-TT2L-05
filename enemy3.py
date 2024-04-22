@@ -12,8 +12,9 @@ class Enemy3(pygame.sprite.Sprite):
         self.camera = state.CameraGroup(self.game)
         self.player = torres.Player(self.game, self.camera)
         self.rect_draw = pygame.Rect(180, 180, 40, 40)
+        self.enemyborder = pygame.Rect(100, 70, 900, 450)
         self.color = "white"
-        self.speed = 1
+        self.speed = -4
 
 
     def update(self, deltatime, player_action):
@@ -23,10 +24,14 @@ class Enemy3(pygame.sprite.Sprite):
         self.player.rect.x += 400 * deltatime * direction_x 
         self.player.rect.y += 450 * deltatime * direction_y 
 
+        self.rect_draw.clamp_ip(self.enemyborder)
+
         self.move_towards_player()
 
     def render(self, display):
         pygame.draw.rect(display, self.color, self.rect_draw)
+        # pygame.draw.rect(display, self.color, self.enemyborder)
+        pygame.display.flip()
 
     def move_towards_player(self):
         # Find direction vector (dx, dy) between enemy and player.
