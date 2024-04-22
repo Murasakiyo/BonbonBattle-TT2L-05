@@ -45,7 +45,6 @@ class Stage(State):
         self.enemy1.update(deltatime, self.player) # pass player's position to enemy1
 
 
-
     def render(self, display):
         display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
         self.camera.custom_draw(display)
