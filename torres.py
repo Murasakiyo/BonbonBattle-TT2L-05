@@ -17,7 +17,6 @@ class Player(pygame.sprite.Sprite):
         # self.line = self.rect.clipline(50, 50)
         self.current_frame, self.last_frame_update = 0,0
         self.fps = 0
-        self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         self.color = "white"
         self.rect_draw = pygame.Rect(180, 180, 40, 40) #for clipline collision testing
 
