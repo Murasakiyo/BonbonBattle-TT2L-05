@@ -20,19 +20,20 @@ class Enemy3(pygame.sprite.Sprite):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
-        # self.rect_draw.x += 400 * deltatime * direction_x 
-        # self.rect_draw.y += 450 * deltatime * direction_y 
+        self.player.rect.x += 400 * deltatime * direction_x 
+        self.player.rect.y += 450 * deltatime * direction_y 
 
-        self.move_towards_player(player_action)
+        self.move_towards_player()
 
     def render(self, display):
         pygame.draw.rect(display, self.color, self.rect_draw)
 
-    def move_towards_player(self, player):
+    def move_towards_player(self):
         # Find direction vector (dx, dy) between enemy and player.
         dx, dy = self.player.rect.x - self.rect_draw.x, self.player.rect.y - self.rect_draw.y
         dist = math.hypot(dx, dy)
-        # dx, dy = dx / dist, dy / dist  # Normalize.
+
+        dx, dy = dx / (dist + 1), dy / (dist + 1)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
         self.rect_draw.x += dx * self.speed
         self.rect_draw.y += dy * self.speed
