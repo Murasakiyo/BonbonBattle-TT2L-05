@@ -39,7 +39,7 @@ class Stage(State):
             # self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             # self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-            # self.enemy3.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+            self.enemy3.update(deltatime, player_action)
             
 
     def render(self, display):
