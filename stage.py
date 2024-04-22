@@ -3,7 +3,9 @@ from state import State, CameraGroup
 from torres import Player
 from stanley import Stanley
 from louie import Louie
+
 from krie import Krie
+from enemy1 import FrogEnemy
 from enemy3 import Enemy3
 
 class Stage(State):
@@ -17,7 +19,7 @@ class Stage(State):
         self.stan = Stanley(self.game, self.camera) 
         self.krie = Krie(self.game, self.camera)
         self.enemy3 = Enemy3(self.game, self.camera) 
-        # self.enemy3 = Enemy3(self.game, self.camera)
+        self.enemy1 = FrogEnemy(self.game, self.camera)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
@@ -40,21 +42,22 @@ class Stage(State):
             # self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             # self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             self.enemy3.update(deltatime, player_action)
-            
+        self.enemy1.update(deltatime, self.player) # pass player's position to enemy1
+
+
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
         self.camera.custom_draw(display)
         display.blit(pygame.transform.scale(self.trees, (1200,600)), (-60,0))
-        
+    
+
         # if self.immunity == False:
         # self.stan.render(display)
         # self.player.render(display)
         self.enemy3.render(display)
 
 
+        #test code for enemy1
+        self.enemy1.render(display)
 
-            
-
-        
-        
