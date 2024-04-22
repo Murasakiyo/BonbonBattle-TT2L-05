@@ -12,7 +12,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.camera = state.CameraGroup(self.game)
         self.player = torres.Player(self.game, self.camera)
         self.rect_draw = pygame.Rect(180, 180, 40, 40)
-        self.enemyborder = pygame.Rect(100, 70, 900, 450)
+        self.enemyborder = pygame.Rect(100, 90, 900, 370)
         self.color = "white"
         self.speed = -4
 
@@ -30,7 +30,7 @@ class Enemy3(pygame.sprite.Sprite):
 
     def render(self, display):
         pygame.draw.rect(display, self.color, self.rect_draw)
-        # pygame.draw.rect(display, self.color, self.enemyborder)
+        # pygame.draw.rect(display, self.color, self.enemyborder) #draws the enemy border for refference
         pygame.display.flip()
 
     def move_towards_player(self):
