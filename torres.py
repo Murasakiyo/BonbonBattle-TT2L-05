@@ -133,10 +133,12 @@ class Player(pygame.sprite.Sprite):
         #Attack animation
         if (self.image == self.right_sprites[self.current_frame]) and self.attack:
             self.current_anim_list.clear
+            self.current_frame = 0
             self.current_anim_list = self.attack_right[0]
             self.current_anim_list = self.attack_right
         if (self.image == self.left_sprites[self.current_frame]) and self.attack:
             self.current_anim_list.clear
+            self.current_frame = 0
             self.current_anim_list = self.attack_left[0]
             self.current_anim_list = self.attack_left
 
