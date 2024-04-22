@@ -1,36 +1,38 @@
 import pygame
+import time
+import math
 import spritesheet
+import state
+import torres
 
 class Enemy3(pygame.sprite.Sprite):
     def __init__(self, game, group):
-        super().__init__(group)
+        # super().__init__(group)
         self.game = game
-        self.rect = pygame.Rect(180, 180, 40, 40)
+        self.camera = state.CameraGroup(self.game)
+        self.player = torres.Player(self.game, self.camera)
+        self.rect_draw = pygame.Rect(180, 180, 40, 40)
+        self.color = "white"
+        self.speed = 1
 
 
-    def update():
-        pass
+    def update(self, deltatime, player_action):
+        direction_x = player_action["right"] - player_action["left"]
+        direction_y = player_action["down"] - player_action["up"]
+
+        # self.rect_draw.x += 400 * deltatime * direction_x 
+        # self.rect_draw.y += 450 * deltatime * direction_y 
+
+        self.move_towards_player(player_action)
 
     def render(self, display):
-        pygame.draw.rect(display, (255, 255, 255), self.rect)
-        pygame.display.flip()
+        pygame.draw.rect(display, self.color, self.rect_draw)
 
-    def animate(self, deltatime, direction_x, direction_y):
-        self.last_frame_update += deltatime
-
-
-
-
-    def load_sprites(self):
-        self.right_sprites, self.left_sprites = [], []
-        enemy3 = pygame.image.load("sprites/louie_walk_sprite.png").convert()
-        self.enemy3_walk = pygame.transform.scale(enemy3, (600, 120)).convert_alpha()
-        SP = spritesheet.Spritesheet(self.enemy3_walk)
-
-        for x in range(4):
-            self.right_sprites.append(SP.get_sprite(x,75,120, (21, 255, 0)))
-        for x in range(4,8):
-            self.left_sprites.append(SP.get_sprite(x,75,120, (21, 255, 0)))
-
-        self.image = self.right_sprites[0]
-        self.current_anim_list = self.right_sprites
+    def move_towards_player(self, player):
+        # Find direction vector (dx, dy) between enemy and player.
+        dx, dy = self.player.rect.x - self.rect_draw.x, self.player.rect.y - self.rect_draw.y
+        dist = math.hypot(dx, dy)
+        dx, dy = dx / dist, dy / dist  # Normalize.
+        # Move along this normalized vector towards the player at current speed.
+        self.rect_draw.x += dx * self.speed
+        self.rect_draw.y += dy * self.speed
