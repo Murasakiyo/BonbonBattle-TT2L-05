@@ -38,8 +38,8 @@ class Stage(State):
         if self.immunity == False:
             # self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             # self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-            # self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-            self.enemy3.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+            self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+            # self.enemy3.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             
 
     def render(self, display):
@@ -49,7 +49,7 @@ class Stage(State):
         
         # if self.immunity == False:
         # self.stan.render(display)
-        self.player.render(display)
+        # self.player.render(display)
         self.enemy3.render(display)
 
 
