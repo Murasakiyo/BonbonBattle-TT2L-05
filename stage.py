@@ -35,8 +35,8 @@ class Stage(State):
         self.player.update(deltatime, player_action)
         if self.immunity == False:
             self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-            # self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-            # self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+            self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+            self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             
 
     def render(self, display):
