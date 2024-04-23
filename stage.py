@@ -20,15 +20,12 @@ class Stage(State):
         self.louie = Louie(self.game, self.camera) 
         self.stan = Stanley(self.game, self.camera) 
         self.enemy1 = FrogEnemy(self.game, self.camera)
-<<<<<<< HEAD
         self.enemy3 = Enemy3(self.game, self.camera)
-=======
         self.krie = Krie(self.game, self.camera) 
         # self.enemy3 = Enemy3(self.game, self.camera)
         self.krie = Krie(self.game, self.camera)
         self.enemy3 = Enemy3(self.game, self.camera) 
         self.enemy1 = FrogEnemy(self.game, self.camera)
->>>>>>> main
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
