@@ -14,7 +14,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.rect_draw = pygame.Rect(180, 180, 40, 40)
         self.enemyborder = pygame.Rect(100, 90, 900, 370)
         self.color = "white"
-        self.speed = -4
+        self.speed = -1
 
 
     def update(self, deltatime, player_action):
@@ -41,3 +41,15 @@ class Enemy3(pygame.sprite.Sprite):
         # Move along this normalized vector towards the player at current speed.
         self.rect_draw.x += dx * self.speed
         self.rect_draw.y += dy * self.speed
+
+
+class Minions(pygame.sprite.Sprite):
+    def __init__(self, game, group):
+        # super().__init__(group)
+        self.game = game
+
+    def update(self, deltatime, player_action):
+        pass
+
+    def render(self, display):
+        pass
