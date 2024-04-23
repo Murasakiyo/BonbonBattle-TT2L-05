@@ -17,9 +17,10 @@ class Player(pygame.sprite.Sprite):
         # self.line = self.rect.clipline(50, 50)
         self.current_frame, self.last_frame_update = 0,0
         self.fps = 0
-        self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         self.color = "white"
         self.rect_draw = pygame.Rect(180, 180, 40, 40) #for clipline collision testing
+
+
 
     def update(self,deltatime,player_action):
         # Get direction from input
@@ -31,13 +32,14 @@ class Player(pygame.sprite.Sprite):
 
         # Check for defense button
         if player_action["defend"]:
-            self.attack = False
+            player_action["attack"] = False
             self.defend = True
             direction_x = 0
             direction_y = 0
             
         # Defense timer
         if self.defend:
+            self.attack = False
             self.current_time += deltatime
             if self.current_time > 0.5:
                 player_action["defend"] = False
@@ -47,13 +49,15 @@ class Player(pygame.sprite.Sprite):
                     self.current_anim_list = self.right_sprites
                 else:
                     self.current_anim_list = self.left_sprites
-
+                    
         # Check for attack button
         if player_action["attack"]:
-            self.attack = True
-            direction_x = 0
-            direction_y = 0
-
+            if player_action["defend"]:
+                self.attack = False
+            else:
+                self.attack = True
+                direction_x = 0
+                direction_y = 0
 
         # if direction_y != 0:
         #     self.attack = False
@@ -67,7 +71,7 @@ class Player(pygame.sprite.Sprite):
         #             self.prev_time = self.current_time
 
         # Attack timer
-        if self.attack == True:
+        if self.attack == True and self.defend != True:
             self.current_time += deltatime
             if self.current_frame >= 4:
                 if self.current_time > 0.3:
@@ -82,13 +86,13 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += 400 * deltatime * direction_x 
         self.rect.y += 450 * deltatime * direction_y 
 
-
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
 
-        if any(self.rect_draw.clipline(*line) for line in self.lines):
-            print("Collision detected")
-        else:
-            print("No collision detected")
+        # if any(self.rect_draw.clipline(*line) for line in self.lines):
+        #     print("Collision detected")
+        # else:
+        #     print("No collision detected")
+
 
 
 
@@ -98,11 +102,11 @@ class Player(pygame.sprite.Sprite):
 
         for line in self.lines:
             pygame.draw.line(display, "white", *line)
-        pygame.draw.rect(display, self.color, self.rect_draw)
+            
+        # pygame.draw.rect(display, self.color, self.rect_draw)
         pygame.display.flip()
 
         
-
 
 
     def animate(self, deltatime, direction_x, direction_y):
@@ -132,10 +136,12 @@ class Player(pygame.sprite.Sprite):
         #Attack animation
         if (self.image == self.right_sprites[self.current_frame]) and self.attack:
             self.current_anim_list.clear
+            self.current_frame = 0
             self.current_anim_list = self.attack_right[0]
             self.current_anim_list = self.attack_right
         if (self.image == self.left_sprites[self.current_frame]) and self.attack:
             self.current_anim_list.clear
+            self.current_frame = 0
             self.current_anim_list = self.attack_left[0]
             self.current_anim_list = self.attack_left
 
@@ -169,6 +175,7 @@ class Player(pygame.sprite.Sprite):
         #-----------------------------------------------------------------------------------------
         
 
+
     def load_sprites(self):
         self.right_sprites, self.left_sprites = [], []
         self.attack_right, self.attack_left = [], []
@@ -191,6 +198,8 @@ class Player(pygame.sprite.Sprite):
             
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites
+
+
 
 class Hitbox(pygame.sprite.Sprite):
     pass
