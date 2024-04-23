@@ -68,12 +68,12 @@ class Louie(pygame.sprite.Sprite):
         # Support doll walking
         if direction_x and self.attack == False:
             if direction_x > 0:
-                if distance > 0.6:
+                if distance > 0.4:
                     self.current_anim_list = self.walk_right
                 else:
                     self.current_anim_list = self.right_sprites
             else: 
-                if distance > 0.6:
+                if distance > 0.4:
                     self.current_anim_list = self.walk_left
                 else:
                     self.current_anim_list =self.left_sprites
