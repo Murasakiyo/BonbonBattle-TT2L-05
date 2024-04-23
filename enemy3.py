@@ -37,6 +37,7 @@ class Enemy3(pygame.sprite.Sprite):
         # Find direction vector (dx, dy) between enemy and player.
         dx, dy = self.player.rect.x - self.rect_draw.x, self.player.rect.y - self.rect_draw.y
         dist = math.hypot(dx, dy)
+
         dx, dy = dx / (dist + 1), dy / (dist + 1)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
         self.rect_draw.x += dx * self.speed
