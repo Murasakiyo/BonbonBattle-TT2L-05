@@ -4,6 +4,7 @@ import math
 import spritesheet
 import state
 import torres
+# from minions import Minions
 
 class Enemy3(pygame.sprite.Sprite):
     def __init__(self, game, group):
@@ -14,7 +15,13 @@ class Enemy3(pygame.sprite.Sprite):
         self.rect_draw = pygame.Rect(180, 180, 40, 40)
         self.enemyborder = pygame.Rect(100, 90, 900, 370)
         self.color = "white"
-        self.speed = -1
+        self.speed = 0
+        self.countdown = 5
+        self.start_time = time.time()
+        self.spawnx = self.rect_draw.x - 10
+        self.spawny = self.rect_draw.y + 10
+        # self.minions = Minions(self.game, self.camera)
+
 
 
     def update(self, deltatime, player_action):
@@ -28,9 +35,14 @@ class Enemy3(pygame.sprite.Sprite):
 
         self.move_towards_player()
 
+        # self.minions.update(deltatime, player_action)
+
+        self.timer()
+
     def render(self, display):
         pygame.draw.rect(display, self.color, self.rect_draw)
         # pygame.draw.rect(display, self.color, self.enemyborder) #draws the enemy border for refference
+        # self.minions.render(display)
         pygame.display.flip()
 
     def move_towards_player(self):
@@ -43,14 +55,10 @@ class Enemy3(pygame.sprite.Sprite):
         self.rect_draw.x += dx * self.speed
         self.rect_draw.y += dy * self.speed
 
+    def timer(self):
+        self.elapsed_time = time.time() - self.start_time
+        self.time_remaining = int(self.countdown - self.elapsed_time)
+        # print(self.time_remaining)
 
-class Minions(pygame.sprite.Sprite):
-    def __init__(self, game, group):
-        # super().__init__(group)
-        self.game = game
 
-    def update(self, deltatime, player_action):
-        pass
 
-    def render(self, display):
-        pass
