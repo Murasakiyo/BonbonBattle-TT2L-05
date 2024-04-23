@@ -19,7 +19,7 @@ class Stage(State):
         self.louie = Louie(self.game, self.camera) 
         self.stan = Stanley(self.game, self.camera) 
         self.krie = Krie(self.game, self.camera)
-        self.enemy3 = Enemy3(self.game, self.camera) 
+        self.enemy3 = Enemy3(self.game) 
         self.minions = Minions(self.game, self.camera)
         self.enemy1 = FrogEnemy(self.game, self.camera)
         self.c_time = 0

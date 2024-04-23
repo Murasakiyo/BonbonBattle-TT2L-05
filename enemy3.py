@@ -7,7 +7,7 @@ import torres
 # from minions import Minions
 
 class Enemy3(pygame.sprite.Sprite):
-    def __init__(self, game, group):
+    def __init__(self, game):
         # super().__init__(group)
         self.game = game
         self.camera = state.CameraGroup(self.game)

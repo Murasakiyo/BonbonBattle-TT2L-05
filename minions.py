@@ -10,7 +10,7 @@ class Minions(pygame.sprite.Sprite):
         self.game = game
         self.camera = state.CameraGroup(self.game)
         self.player = torres.Player(self.game, self.camera)
-        self.enemy3 = Enemy3(self.game, self.camera)
+        self.enemy3 = Enemy3(self.game)
         self.mini_rect = pygame.Rect(self.enemy3.rect_draw.x - 100, self.enemy3.rect_draw.y + 10, 30, 30)
         self.speed = 1
 
