@@ -40,8 +40,7 @@ class Louie(pygame.sprite.Sprite):
         self.move(player_x, player_y)
 
         self.animate(deltatime, direction_x, direction_y, self.step_distance)
-        
-        print(self.current_frame)
+    
         
     
     def render(self, display):
@@ -129,7 +128,7 @@ class Louie(pygame.sprite.Sprite):
         self.torres_vector = pygame.math.Vector2(player_x, player_y)
         self.louie_vector = pygame.math.Vector2(self.rect.x, self.rect.y)
         self.step_distance = 0
-        self.min_distance = 300
+        self.min_distance = 200
         self.max_distance = 500
         # print(self.follower_vector)
 
