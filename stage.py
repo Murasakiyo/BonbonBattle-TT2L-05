@@ -19,7 +19,7 @@ class Stage(State):
         self.stan = Stanley(self.game, self.camera) 
         self.krie = Krie(self.game, self.camera)
         self.enemy3 = Enemy3(self.game, self.camera) 
-        self.enemy1 = FrogEnemy(self.game, self.camera)
+        # self.enemy1 = FrogEnemy(self.game, self.camera)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
@@ -38,11 +38,11 @@ class Stage(State):
                 self.immunity = False
         self.player.update(deltatime, player_action)
         if self.immunity == False:
-            self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-            # self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+            # self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+            self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             # self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             self.enemy3.update(deltatime, player_action)
-        self.enemy1.update(deltatime, self.player) # pass player's position to enemy1
+        # self.enemy1.update(deltatime, self.player) # pass player's position to enemy1
 
 
     def render(self, display):
@@ -58,5 +58,5 @@ class Stage(State):
 
 
         #test code for enemy1
-        self.enemy1.render(display)
+        # self.enemy1.render(display)
 

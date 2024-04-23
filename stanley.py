@@ -37,7 +37,8 @@ class Stanley(pygame.sprite.Sprite):
                 self.current_time = 0
         
         # Move towards player always
-        self.move(player_x, player_y)
+        if not self.attack:
+            self.move(player_x, player_y)
 
         self.animate(deltatime, direction_x, direction_y, self.step_distance)
         
