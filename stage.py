@@ -20,8 +20,8 @@ class Stage(State):
         self.stan = Stanley(self.game, self.camera) 
         self.krie = Krie(self.game, self.camera)
         self.enemy3 = Enemy3(self.game) 
-        self.minions = Minions(self.game, self.camera)
-        self.enemy1 = FrogEnemy(self.game, self.camera)
+        self.minions = Minions(self.game)
+        # self.enemy1 = FrogEnemy(self.game, self.camera)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
@@ -56,7 +56,7 @@ class Stage(State):
 
         # if self.immunity == False:
         # self.stan.render(display)
-        # self.player.render(display)
+        self.player.render(display)
         self.enemy3.render(display)
         self.minions.render(display)
 

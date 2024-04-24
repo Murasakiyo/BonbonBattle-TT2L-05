@@ -15,7 +15,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.rect_draw = pygame.Rect(180, 180, 40, 40)
         self.enemyborder = pygame.Rect(100, 90, 900, 370)
         self.color = "white"
-        self.speed = 0
+        self.speed = -4
         self.countdown = 5
         self.start_time = time.time()
         self.spawnx = self.rect_draw.x - 10
@@ -32,6 +32,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.player.rect.y += 450 * deltatime * direction_y 
 
         self.rect_draw.clamp_ip(self.enemyborder)
+        self.player.rect.clamp_ip(self.game.screen_rect)
 
         self.move_towards_player()
 
@@ -50,7 +51,7 @@ class Enemy3(pygame.sprite.Sprite):
         dx, dy = self.player.rect.x - self.rect_draw.x, self.player.rect.y - self.rect_draw.y
         dist = math.hypot(dx, dy)
 
-        dx, dy = dx / (dist + 1), dy / (dist + 1)  # Normalize.
+        dx, dy = dx / (dist), dy / (dist)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
         self.rect_draw.x += dx * self.speed
         self.rect_draw.y += dy * self.speed
