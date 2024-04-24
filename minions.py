@@ -14,7 +14,7 @@ class Minions(pygame.sprite.Sprite):
         self.mini_rect = pygame.Rect(self.enemy3.rect_draw.x - 100, self.enemy3.rect_draw.y + 10, 30, 30)
         self.speed = 3
 
-    def update(self, deltatime, player_action):
+    def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
@@ -23,15 +23,18 @@ class Minions(pygame.sprite.Sprite):
 
         self.mini_rect.clamp_ip(self.game.screen_rect)
         self.player.rect.clamp_ip(self.game.screen_rect)
-        self.move_towards_player()
+
+        self.move_towards_player(player_x, player_y)
+
+
 
     def render(self, display):
         pygame.draw.rect(display, (255, 0, 255), self.mini_rect)
         pygame.display.flip()
 
-    def move_towards_player(self):
+    def move_towards_player(self, player_x, player_y):
         # Find direction vector (dx, dy) between enemy and player.
-        dx, dy = self.player.rect.x - self.mini_rect.x, self.player.rect.y - self.mini_rect.y
+        dx, dy = player_x - self.mini_rect.x, player_y - self.mini_rect.y
         dist = math.hypot(dx, dy)
 
         dx, dy = dx / (dist + 1), dy / (dist + 1)  # Normalize.

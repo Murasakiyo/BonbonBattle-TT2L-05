@@ -14,44 +14,56 @@ class Enemy3(pygame.sprite.Sprite):
         self.player = torres.Player(self.game, self.camera)
         self.rect_draw = pygame.Rect(180, 180, 40, 40)
         self.enemyborder = pygame.Rect(100, 90, 900, 370)
+        self.enemyborder1 = pygame.Rect(100, 90, 900, 370)
+        self.enemyborder2 = pygame.Rect(100, 90, 900, 370)
+        self.enemyborder3 = pygame.Rect(100, 90, 900, 370)
+        self.enemyborder4 = pygame.Rect(100, 90, 900, 370)        
         self.color = "white"
-        self.speed = -4
-        self.countdown = 5
+        self.speed = 4
+        self.countdown = 0
         self.start_time = time.time()
         self.spawnx = self.rect_draw.x - 10
         self.spawny = self.rect_draw.y + 10
-        # self.minions = Minions(self.game, self.camera)
+        self.avoid = False
 
 
 
-    def update(self, deltatime, player_action):
+
+    def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
-        self.player.rect.x += 400 * deltatime * direction_x 
-        self.player.rect.y += 450 * deltatime * direction_y 
-
         self.rect_draw.clamp_ip(self.enemyborder)
         self.player.rect.clamp_ip(self.game.screen_rect)
-
-        self.move_towards_player()
-
-        # self.minions.update(deltatime, player_action)
-
         self.timer()
+
+        self.current_time = deltatime
+
+
+        if pygame.Rect.collidepoint(self.rect_draw, self.enemyborder[0], self.enemyborder[1]):
+            if self.current_time > 3:
+                self.avoid = True
+                self.speed = 4
+                self.current_time = 0
+        else:
+            self.speed = -4
+
+
+        self.move_towards_player(player_x, player_y)
+
+
 
     def render(self, display):
         pygame.draw.rect(display, self.color, self.rect_draw)
         # pygame.draw.rect(display, self.color, self.enemyborder) #draws the enemy border for refference
-        # self.minions.render(display)
         pygame.display.flip()
 
-    def move_towards_player(self):
+    def move_towards_player(self, player_x, player_y):
         # Find direction vector (dx, dy) between enemy and player.
-        dx, dy = self.player.rect.x - self.rect_draw.x, self.player.rect.y - self.rect_draw.y
+        dx, dy = player_x - self.rect_draw.x, player_y - self.rect_draw.y
         dist = math.hypot(dx, dy)
 
-        dx, dy = dx / (dist), dy / (dist)  # Normalize.
+        dx, dy = dx / (dist + 1), dy / (dist + 1)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
         self.rect_draw.x += dx * self.speed
         self.rect_draw.y += dy * self.speed
