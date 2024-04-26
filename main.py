@@ -1,7 +1,6 @@
 import pygame
 import sys
 from stage import Stage
-from ultimates import Ultimate
 
 class Game():
     def __init__(self):
@@ -21,6 +20,7 @@ class Game():
         self.deltatime, self.prevtime = 0 , 0
         self.state_stack = []
         self.load_states()
+        self.ultimates()
         
 
 
@@ -114,6 +114,9 @@ class Game():
     def reset_keys(self):
         for actions in self.player_action:
             self.player_action[actions] = False
+
+    def ultimates(self):
+        self.ult = False
 
 
 if __name__ == "__main__":
