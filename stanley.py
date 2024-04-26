@@ -97,7 +97,6 @@ class Stanley(pygame.sprite.Sprite):
             # self.current_frame = 0
             self.current_anim_list = self.attack_left
 
-
         # Fps for each animation
         if self.current_anim_list == self.right_sprites or self.current_anim_list == self.left_sprites:
             self.fps = 0.5

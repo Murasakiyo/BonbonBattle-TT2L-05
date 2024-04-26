@@ -10,7 +10,7 @@ class Enemy3(pygame.sprite.Sprite):
         # super().__init__(group)
         self.game = game
         self.camera = state.CameraGroup(self.game)
-        self.player = torres.Player(self.game, self.camera)
+        self.player = torres.Player(self.game, self.camera, 200, 150)
         self.rect_draw = pygame.Rect(180, 180, 40, 40)
         self.color = "white"
         self.speed = 1

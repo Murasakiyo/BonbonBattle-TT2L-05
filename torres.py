@@ -3,7 +3,7 @@ import spritesheet
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game, group):
+    def __init__(self, game, group, position_x, position_y):
         super().__init__(group)
         self.game = game
         self.current_time = 0
@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.load_sprites()
         self.rect = self.torres_walk.get_rect(width= 200, height=200)
         # self.rect.center = (295, 373)
-        self.rect.x, self.rect.y = 200,150
+        self.rect.x, self.rect.y = position_x, position_y
         # self.line = self.rect.clipline(50, 50)
         self.current_frame, self.last_frame_update = 0,0
         self.fps = 0

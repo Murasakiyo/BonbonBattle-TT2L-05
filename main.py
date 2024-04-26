@@ -1,6 +1,7 @@
 import pygame
 import sys
 from stage import Stage
+from ultimates import Ultimate
 
 class Game():
     def __init__(self):
@@ -15,7 +16,8 @@ class Game():
 
 
         # Action dictionary
-        self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False} 
+        self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
+                              "ultimate": False} 
         self.deltatime, self.prevtime = 0 , 0
         self.state_stack = []
         self.load_states()
@@ -55,6 +57,8 @@ class Game():
                     self.player_action["attack"] = True
                 if event.key == pygame.K_k:
                     self.player_action["defend"] = True
+                if event.key == pygame.K_q:
+                    self.player_action["ultimate"] = True
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
@@ -65,8 +69,8 @@ class Game():
                     self.player_action["up"] = False
                 if event.key == pygame.K_s:
                     self.player_action["down"] = False
-                if event.key == pygame.K_k:
-                    self.player_action["defend"] = True
+                if event.key == pygame.K_q:
+                    self.player_action["ultimate"] = False
         
    
 

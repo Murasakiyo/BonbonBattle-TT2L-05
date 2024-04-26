@@ -19,7 +19,7 @@ class Louie(pygame.sprite.Sprite):
         self.min_step, self.max_step = 0,0
  
 
-
+ 
     def update(self,deltatime, player_action, player_x, player_y):
         self.current_time += deltatime
 
