@@ -2,25 +2,30 @@ import pygame
 
 class Ultimate(pygame.sprite.Group):
     def __init__(self, game):
-        super().__init__()
+        super.__init__(self, game)
         self.game = game
+        self.torres_ult = Torres_Ult(game)
+        self.stan_ult = Stan_Ult(game)
+        self.louie_ult = Louie_Ult(game)
+        self.krie_ult = Krie_Ult(game)
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
         self.immunity = False
         
 
+
     def update(self, deltatime, player_action):
-        pass
+        self.torres.update(deltatime, player_action)
 
 
     def render(self, display):
-        pass
+        display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
+        self.torres.render(display)
 
 
 
 class Torres_Ult(pygame.sprite.Sprite):
-    def __init__(self, game, group):
-        super().__init__(group)
+    def __init__(self, game):
         self.game = game
         self.load_sprites()
         self.current_frame, self.last_frame_update = 0,0
@@ -55,8 +60,7 @@ class Torres_Ult(pygame.sprite.Sprite):
 
 
 class Stan_Ult(pygame.sprite.Sprite):
-    def __init__(self, game, group):
-        super().__init__(group)
+    def __init__(self, game):
         self.game = game
         self.load_sprites()
         self.current_frame, self.last_frame_update = 0,0
@@ -96,8 +100,7 @@ class Stan_Ult(pygame.sprite.Sprite):
 
 
 class Louie_Ult(pygame.sprite.Sprite):
-    def __init__(self, game, group):
-        super().__init__(group)
+    def __init__(self, game):
         self.game = game
         self.load_sprites()
         self.current_frame, self.last_frame_update = 0,0
@@ -145,8 +148,7 @@ class Louie_Ult(pygame.sprite.Sprite):
 
 
 class Krie_Ult(pygame.sprite.Sprite):
-    def __init__(self, game, group):
-        super().__init__(group)
+    def __init__(self, game):
         self.game = game
         self.load_sprites()
         self.current_frame, self.last_frame_update = 0,0

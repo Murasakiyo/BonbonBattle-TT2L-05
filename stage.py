@@ -1,23 +1,21 @@
 import pygame
-from state import State, CameraGroup
-from torres import Player
-from stanley import Stanley
-from louie import Louie
-from krie import Krie
-from ultimates import Ultimate
-from enemy1 import FrogEnemy
-from enemy3 import Enemy3
+from state import *
+from torres import *
+from stanley import *
+from louie import *
+from krie import *
 from ultimates import *
-
-
+from enemy1 import *
+from enemy3 import *
+from ultimates import *
 
 class Stage(State):
     def __init__(self, game):
         State.__init__(self, game)
-        self.camera = CameraGroup(self.game)
-        self.ult = Ultimate(self.game)
         self.ultimates()
         self.characters()
+        self.camera = CameraGroup(self.game)
+        self.ult = Ultimate(self.game)
         self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
         # self.enemy1 = FrogEnemy(self.game, self.camera)
@@ -35,13 +33,12 @@ class Stage(State):
         self.enemy3 = Enemy3(self.game, self.camera) 
 
     def ultimates(self):
-        self.torres_ult = Torres_Ult(self.game, self.ult)
-        self.stan_ult = Stan_Ult(self.game, self.ult)
-        self.louie_ult = Louie_Ult(self.game, self.ult)
-        self.krie_ult = Krie_Ult(self.game, self.ult)
+        self.torres_ult = Torres_Ult(self.game)
+        self.stan_ult = Stan_Ult(self.game)
+        self.louie_ult = Louie_Ult(self.game)
+        self.krie_ult = Krie_Ult(self.game)
 
     def update(self, deltatime, player_action):
-        
         # player_action["up"] = False
         # player_action["down"] = False
         if self.game.damaged == True:
@@ -77,3 +74,5 @@ class Stage(State):
 
         #test code for enemy1
         # self.enemy1.render(display)
+
+
