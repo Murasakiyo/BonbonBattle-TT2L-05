@@ -33,6 +33,7 @@ class Stage(State):
 
     def update(self, deltatime, player_action):
 
+        print(self.game.ult_finish)
         if self.game.ult == False:
             if self.game.damaged == True:
                 self.immunity = True
@@ -44,10 +45,11 @@ class Stage(State):
             if self.immunity == False:
                 for support in self.support_dolls.sprites():
                     support.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-        
-        if pygame.sprite.spritecollide(self.player, self.confection_ult, False):
-            if pygame.sprite.spritecollide(self.player, self.confection_ult, False, pygame.sprite.collide_mask):
-                self.confection_ult.empty()
+
+        if self.game.ult_finish == False:
+            if pygame.sprite.spritecollide(self.player, self.confection_ult, False):
+                if pygame.sprite.spritecollide(self.player, self.confection_ult, False, pygame.sprite.collide_mask):
+                    self.confection_ult.empty()
 
         if self.init_louie == False and self.init_krie == False:
             if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
@@ -70,7 +72,6 @@ class Stage(State):
             self.support_dolls.add(self.krie)
 
         if player_action["ultimate"]:
-            self.game.ult_finish = False
             self.game.ult = True
 
         if self.game.ult:
@@ -93,6 +94,7 @@ class Stage(State):
             self.stan.kill()
             self.louie.kill()
             self.krie.kill()
+            self.game.ult_finish = False
 
 
 
