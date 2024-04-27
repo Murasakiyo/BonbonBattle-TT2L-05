@@ -21,18 +21,18 @@ class Stage(State):
         self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
-        # self.enemy1 = FrogEnemy(self.game, self.camera)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.ultimate = False
         self.countdown = 0
         self.immunity = False
         self.init_stan = False
+        self.init_louie = False
+        self.init_krie = False
 
 
     def update(self, deltatime, player_action):
-        # player_action["up"] = False
-        # player_action["down"] = False
+
         if self.game.ult == False:
             if self.game.damaged == True:
                 self.immunity = True
@@ -44,27 +44,28 @@ class Stage(State):
             if self.immunity == False:
                 for support in self.support_dolls.sprites():
                     support.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-                # self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-                # self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-                # self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-                # self.enemy3.update(deltatime, player_action)
-            # self.enemy1.update(deltatime, self.player) # pass player's position to enemy1
-
-        if player_action["ultimate"]:
-            self.game.ult = True
-
-        if self.game.ult:
-            self.louie_ult.update(deltatime, player_action)
         
         if pygame.sprite.spritecollide(self.player, self.confection_ult, False):
             if pygame.sprite.spritecollide(self.player, self.confection_ult, False, pygame.sprite.collide_mask):
                 self.confection_ult.empty()
 
-        if self.player.torres_mask.overlap(self.vanilla.image_mask, (0,0)):
+        if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
+            self.camera.add(self.stan)
             self.init_stan = True
 
         if self.init_stan:
             self.support_dolls.add(self.stan)
+
+        if player_action["ultimate"]:
+            self.game.ult = True
+
+        if self.game.ult:
+            if self.init_stan:
+                self.stan_ult.update(deltatime, player_action)
+            elif self.init_louie:
+                self.louie_ult.update(deltatime, player_action)
+            elif self.init_krie:
+                self.krie_ult.update(deltatime,player_action)
 
 
     def render(self, display):
@@ -84,10 +85,9 @@ class Stage(State):
 
     def characters(self):
         self.player = Player(self.game, self.camera, 200,150) 
-        self.louie = Louie(self.game, self.camera) 
-        self.stan = Stanley(self.game, self.camera) 
-        self.krie = Krie(self.game, self.camera)
-        self.enemy3 = Enemy3(self.game, self.camera) 
+        self.louie = Louie(self.game) 
+        self.stan = Stanley(self.game) 
+        self.krie = Krie(self.game)
 
         # self.support_dolls.add(self.louie)
         # self.support_dolls.add(self.stan)
@@ -96,14 +96,17 @@ class Stage(State):
     
 
     def ultimates(self):
+        self.vanilla_grp = pygame.sprite.Group()
+        self.float_grp = pygame.sprite.Group()
+        self.strawb_grp = pygame.sprite.Group()
         self.torres_ult = Torres_Ult(self.game)
         self.stan_ult = Stan_Ult(self.game)
         self.louie_ult = Louie_Ult(self.game)
         self.krie_ult = Krie_Ult(self.game)
 
-        self.vanilla = Vanilla(self.game)
-        self.float = Float(self.game)
-        self.strawb = Strawb(self.game)
+        self.vanilla = Vanilla(self.game, self.vanilla_grp)
+        self.float = Float(self.game, self.float_grp)
+        self.strawb = Strawb(self.game, self.strawb_grp)
 
         self.confection_ult.add(self.vanilla)
         self.confection_ult.add(self.float)

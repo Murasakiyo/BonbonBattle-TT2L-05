@@ -1,8 +1,8 @@
 import pygame
 
 class Vanilla(pygame.sprite.Sprite):
-    def __init__(self, game):
-        super().__init__()
+    def __init__(self, game, group):
+        super().__init__(group)
         self.game = game
         image = pygame.image.load('sprites/vanilla.png').convert_alpha()
         self.image = pygame.transform.scale(image, (64,80)).convert_alpha()
@@ -18,8 +18,8 @@ class Vanilla(pygame.sprite.Sprite):
         # pygame.draw.rect(display, (255,255,255), self.rect, 2)
 
 class Float(pygame.sprite.Sprite):
-    def __init__(self, game):
-        super().__init__()
+    def __init__(self, game, group):
+        super().__init__(group)
         self.game = game
         image = pygame.image.load('sprites/float.png').convert_alpha()
         self.image = pygame.transform.scale(image, (64,80)).convert_alpha()
@@ -36,8 +36,8 @@ class Float(pygame.sprite.Sprite):
 
 
 class Strawb(pygame.sprite.Sprite):
-    def __init__(self, game):
-        super().__init__()
+    def __init__(self, game, group):
+        super().__init__(group)
         self.game = game
         image = pygame.image.load('sprites/strawberry.png').convert_alpha()
         self.image = pygame.transform.scale(image, (64,80)).convert_alpha()
