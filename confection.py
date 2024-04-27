@@ -8,6 +8,7 @@ class Vanilla(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(image, (64,80)).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = 700, 100
+        self.image_mask = pygame.mask.from_surface(self.image)
 
     def update(self):
         pass
@@ -24,6 +25,7 @@ class Float(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(image, (64,80)).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = 800, 300
+        self.image_mask = pygame.mask.from_surface(self.image)
 
     def update(self):
         pass
@@ -41,6 +43,7 @@ class Strawb(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(image, (64,80)).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = 700, 400
+        self.image_mask = pygame.mask.from_surface(self.image)
 
     def update(self):
         pass

@@ -14,12 +14,10 @@ class Stage(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.camera = CameraGroup(self.game)
+        self.confection_ult = pygame.sprite.Group()
+        self.support_dolls = pygame.sprite.Group()
         self.ultimates()
         self.characters()
-        self.confection_ult = pygame.sprite.Group()
-        self.confection_ult.add(self.vanilla)
-        self.confection_ult.add(self.float)
-        self.confection_ult.add(self.strawb)
         self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
@@ -29,6 +27,7 @@ class Stage(State):
         self.ultimate = False
         self.countdown = 0
         self.immunity = False
+        self.init_stan = False
 
 
     def update(self, deltatime, player_action):
@@ -43,8 +42,10 @@ class Stage(State):
                     self.immunity = False
             self.player.update(deltatime, player_action)
             if self.immunity == False:
+                for support in self.support_dolls.sprites():
+                    support.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
                 # self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-                self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+                # self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
                 # self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
                 # self.enemy3.update(deltatime, player_action)
             # self.enemy1.update(deltatime, self.player) # pass player's position to enemy1
@@ -53,31 +54,33 @@ class Stage(State):
             self.game.ult = True
 
         if self.game.ult:
-            self.stan_ult.update(deltatime, player_action)
+            self.louie_ult.update(deltatime, player_action)
+        
+        if pygame.sprite.spritecollide(self.player, self.confection_ult, False):
+            if pygame.sprite.spritecollide(self.player, self.confection_ult, False, pygame.sprite.collide_mask):
+                self.confection_ult.empty()
+
+        if self.player.torres_mask.overlap(self.vanilla.image_mask, (0,0)):
+            self.init_stan = True
+
+        if self.init_stan:
+            self.support_dolls.add(self.stan)
 
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
         self.camera.custom_draw(display)
         display.blit(pygame.transform.scale(self.trees, (1200,600)), (-60,0))
-        self.vanilla.render(display)
-        self.float.render(display)
-        self.strawb.render(display)
         
-    
+        for confection in self.confection_ult.sprites():
+            confection.render(display)
+
+        self.player.render(display)
+
         if self.game.ult:
             display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
-            self.stan_ult.render(display)
+            self.louie_ult.render(display)
 
-
-        # if self.immunity == False:
-        # self.stan.render(display)
-        # self.player.render(display)
-        # self.enemy3.render(display)
-
-
-        #test code for enemy1
-        # self.enemy1.render(display)
 
     def characters(self):
         self.player = Player(self.game, self.camera, 200,150) 
@@ -85,6 +88,12 @@ class Stage(State):
         self.stan = Stanley(self.game, self.camera) 
         self.krie = Krie(self.game, self.camera)
         self.enemy3 = Enemy3(self.game, self.camera) 
+
+        # self.support_dolls.add(self.louie)
+        # self.support_dolls.add(self.stan)
+        # self.support_dolls.add(self.krie)
+
+    
 
     def ultimates(self):
         self.torres_ult = Torres_Ult(self.game)
@@ -95,6 +104,10 @@ class Stage(State):
         self.vanilla = Vanilla(self.game)
         self.float = Float(self.game)
         self.strawb = Strawb(self.game)
+
+        self.confection_ult.add(self.vanilla)
+        self.confection_ult.add(self.float)
+        self.confection_ult.add(self.strawb)
 
 
 

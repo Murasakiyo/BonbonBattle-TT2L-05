@@ -14,6 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.torres_walk.get_rect(width= 200, height=200)
         # self.rect.center = (295, 373)
         self.rect.x, self.rect.y = position_x, position_y
+        self.torres_mask = pygame.mask.from_surface(self.image)
         # self.line = self.rect.clipline(50, 50)
         self.current_frame, self.last_frame_update = 0,0
         self.fps = 0
