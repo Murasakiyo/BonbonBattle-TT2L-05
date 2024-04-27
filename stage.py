@@ -8,6 +8,7 @@ from ultimates import *
 from enemy1 import *
 from enemy3 import *
 from ultimates import *
+from confection import *
 
 class Stage(State):
     def __init__(self, game):
@@ -15,6 +16,10 @@ class Stage(State):
         self.camera = CameraGroup(self.game)
         self.ultimates()
         self.characters()
+        self.confection_ult = pygame.sprite.Group()
+        self.confection_ult.add(self.vanilla)
+        self.confection_ult.add(self.float)
+        self.confection_ult.add(self.strawb)
         self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
@@ -48,17 +53,21 @@ class Stage(State):
             self.game.ult = True
 
         if self.game.ult:
-            self.louie_ult.update(deltatime, player_action)
+            self.stan_ult.update(deltatime, player_action)
 
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
         self.camera.custom_draw(display)
         display.blit(pygame.transform.scale(self.trees, (1200,600)), (-60,0))
+        self.vanilla.render(display)
+        self.float.render(display)
+        self.strawb.render(display)
+        
     
         if self.game.ult:
             display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
-            self.louie_ult.render(display)
+            self.stan_ult.render(display)
 
 
         # if self.immunity == False:
@@ -82,5 +91,11 @@ class Stage(State):
         self.stan_ult = Stan_Ult(self.game)
         self.louie_ult = Louie_Ult(self.game)
         self.krie_ult = Krie_Ult(self.game)
+
+        self.vanilla = Vanilla(self.game)
+        self.float = Float(self.game)
+        self.strawb = Strawb(self.game)
+
+
 
 

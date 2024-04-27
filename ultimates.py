@@ -45,7 +45,7 @@ class Stan_Ult(pygame.sprite.Sprite):
 
     def update(self, deltatime, player_action):
         self.animate(deltatime)
-        if self.image == self.current_anim_list[7]:
+        if self.image == self.current_anim_list[13]:
             self.game.ult = False
 
 
@@ -72,6 +72,12 @@ class Stan_Ult(pygame.sprite.Sprite):
         self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/005.png").convert_alpha())
         self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/006.png").convert_alpha())
         self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/007.png").convert_alpha())
+        self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/008.png").convert_alpha())
+        self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/009.png").convert_alpha())
+        self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/010.png").convert_alpha())
+        self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/011.png").convert_alpha())
+        self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/012.png").convert_alpha())
+        self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/000.png").convert_alpha())
 
         
         self.image = self.ultimate[0]
