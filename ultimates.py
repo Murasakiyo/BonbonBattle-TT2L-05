@@ -1,6 +1,6 @@
 import pygame
 
-class Torres_Ult(pygame.sprite.Sprite):
+class Torres_Ult():
     def __init__(self, game):
         self.game = game
         self.load_sprites()
@@ -9,6 +9,7 @@ class Torres_Ult(pygame.sprite.Sprite):
     def update(self, deltatime, player_action):
         self.animate(deltatime)
         if self.image == self.current_anim_list[3]:
+            self.game.ult_finish = True
             self.game.ult = False
 
 
@@ -37,7 +38,7 @@ class Torres_Ult(pygame.sprite.Sprite):
 
 
 
-class Stan_Ult(pygame.sprite.Sprite):
+class Stan_Ult():
     def __init__(self, game):
         self.game = game
         self.load_sprites()
@@ -46,6 +47,7 @@ class Stan_Ult(pygame.sprite.Sprite):
     def update(self, deltatime, player_action):
         self.animate(deltatime)
         if self.image == self.current_anim_list[13]:
+            self.game.ult_finish = True
             self.game.ult = False
 
 
@@ -85,7 +87,7 @@ class Stan_Ult(pygame.sprite.Sprite):
 
 
 
-class Louie_Ult(pygame.sprite.Sprite):
+class Louie_Ult():
     def __init__(self, game):
         self.game = game
         self.load_sprites()
@@ -94,6 +96,7 @@ class Louie_Ult(pygame.sprite.Sprite):
     def update(self, deltatime, player_action):
         self.animate(deltatime)
         if self.image == self.current_anim_list[17]:
+            self.game.ult_finish = True
             self.game.ult = False
 
 
@@ -135,7 +138,7 @@ class Louie_Ult(pygame.sprite.Sprite):
         self.current_anim_list = self.ultimate
 
 
-class Krie_Ult(pygame.sprite.Sprite):
+class Krie_Ult():
     def __init__(self, game):
         self.game = game
         self.load_sprites()
@@ -144,6 +147,7 @@ class Krie_Ult(pygame.sprite.Sprite):
     def update(self, deltatime, player_action):
         self.animate(deltatime)
         if self.image == self.current_anim_list[10]:
+            self.game.ult_finish = True
             self.game.ult = False
 
 

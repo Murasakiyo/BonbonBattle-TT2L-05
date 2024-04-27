@@ -49,14 +49,28 @@ class Stage(State):
             if pygame.sprite.spritecollide(self.player, self.confection_ult, False, pygame.sprite.collide_mask):
                 self.confection_ult.empty()
 
-        if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
-            self.camera.add(self.stan)
-            self.init_stan = True
+        if self.init_louie == False and self.init_krie == False:
+            if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
+                self.camera.add(self.stan)
+                self.init_stan = True
+        if self.init_stan == False and self.init_krie == False:
+            if pygame.sprite.spritecollide(self.player, self.float_grp, False, pygame.sprite.collide_mask):
+                self.camera.add(self.louie)
+                self.init_louie = True
+        if self.init_louie == False and self.init_stan == False:
+            if pygame.sprite.spritecollide(self.player, self.strawb_grp, False, pygame.sprite.collide_mask):
+                self.camera.add(self.krie)
+                self.init_krie = True
 
         if self.init_stan:
             self.support_dolls.add(self.stan)
+        if self.init_louie:
+            self.support_dolls.add(self.louie)
+        if self.init_krie:
+            self.support_dolls.add(self.krie)
 
         if player_action["ultimate"]:
+            self.game.ult_finish = False
             self.game.ult = True
 
         if self.game.ult:
@@ -66,6 +80,20 @@ class Stage(State):
                 self.louie_ult.update(deltatime, player_action)
             elif self.init_krie:
                 self.krie_ult.update(deltatime,player_action)
+            else:
+                self.torres_ult.update(deltatime,player_action)
+
+        if self.game.ult_finish:
+            self.init_stan = False
+            self.init_louie = False
+            self.init_krie = False
+            self.confection_ult.add(self.vanilla)
+            self.confection_ult.add(self.float)
+            self.confection_ult.add(self.strawb)
+            self.stan.kill()
+            self.louie.kill()
+            self.krie.kill()
+
 
 
     def render(self, display):
@@ -80,7 +108,14 @@ class Stage(State):
 
         if self.game.ult:
             display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
-            self.louie_ult.render(display)
+            if self.init_stan:
+                self.stan_ult.render(display)
+            elif self.init_louie:
+                self.louie_ult.render(display)
+            elif self.init_krie:
+                self.krie_ult.render(display)
+            else:
+                self.torres_ult.render(display)
 
 
     def characters(self):

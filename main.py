@@ -117,6 +117,7 @@ class Game():
 
     def ultimates(self):
         self.ult = False
+        self.ult_finish = False
 
 
 if __name__ == "__main__":

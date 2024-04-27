@@ -15,6 +15,7 @@ class Vanilla(pygame.sprite.Sprite):
 
     def render(self, display):
         display.blit(self.image, self.rect)
+
         # pygame.draw.rect(display, (255,255,255), self.rect, 2)
 
 class Float(pygame.sprite.Sprite):
