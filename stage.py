@@ -7,7 +7,6 @@ from krie import Krie
 from enemy1 import FrogEnemy
 from enemy2 import FlyEnemy
 from enemy3 import Enemy3
-from minions import Minions
 
 class Stage(State):
     def __init__(self, game):
@@ -22,7 +21,6 @@ class Stage(State):
         self.enemy1 = FrogEnemy(self.game)
         self.enemy2 = FlyEnemy(self.game)
         self.enemy3 = Enemy3(self.game)
-        self.minions = Minions(self.game, self.enemy3.enemy3_rect.x, self.enemy3.enemy3_rect.y)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
@@ -46,11 +44,11 @@ class Stage(State):
             # self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             pass
         # self.enemy1.update(deltatime, self.player) # pass player's position to enemy1
-            # self.enemy3.update(deltatime, player_action)
+
         # self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy1
         # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
             self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
-            # self.minions.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect)
+
 
 
 
@@ -64,8 +62,7 @@ class Stage(State):
         # if self.immunity == False:
         # self.stan.render(display)
         # self.player.render(display)
-        # self.enemy3.render(display)
-        # self.minions.render(display)
+
 
 
         #test code for enemy1
