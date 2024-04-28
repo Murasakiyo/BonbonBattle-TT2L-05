@@ -10,7 +10,6 @@ class Enemy3(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.enemy3_rect = pygame.Rect(180, 180, 40, 40)
-        self.enemyborder = pygame.Rect(100, 90, 900, 370)
         self.enemyborder1 = pygame.Rect(-895, 40, 900, 570) #left
         self.enemyborder2 = pygame.Rect(1095, 40, 900, 570) #right
         self.enemyborder3 = pygame.Rect(0, 560, 1100, 370) #bottom
@@ -78,7 +77,6 @@ class Enemy3(pygame.sprite.Sprite):
 
     def render(self, display):
         pygame.draw.rect(display, self.color, self.enemy3_rect)
-        # pygame.draw.rect(display, "red", self.enemyborder)
         pygame.draw.rect(display, self.color, self.enemyborder1)
         pygame.draw.rect(display, self.color, self.enemyborder2)
         pygame.draw.rect(display, self.color, self.enemyborder3)
