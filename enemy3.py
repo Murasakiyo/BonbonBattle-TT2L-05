@@ -20,7 +20,7 @@ class Enemy3(pygame.sprite.Sprite):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
-        self.player.rect.x += 400 * deltatime * direction_x 
+        self.player.rect.x += 500 * deltatime * direction_x 
         self.player.rect.y += 450 * deltatime * direction_y 
 
         self.move_towards_player()

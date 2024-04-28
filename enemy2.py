@@ -4,7 +4,7 @@ import math
 import torres
 import state
 
-class FrogEnemy(pygame.sprite.Sprite):
+class FlyEnemy(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
@@ -12,7 +12,7 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.current_time = 0
         self.camera = state.CameraGroup(self.game)
         self.player = torres.Player(self.game, self.camera)
-        # self.rect = self.frog.get_rect(width=800, height=0)
+        # self.rect = self.fly.get_rect(width=800, height=0)
         # self.rect.x, self.rect.y = 800, 0 # Initial position
         # self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0 #animation
         # self.fps = 0.2
@@ -20,10 +20,11 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.attack_cooldown = 0 # Before the next attack
         # self.min_step, self.max_step = 0,0
         self.speed = 1
-        self.rect = pygame.Rect(800, 0, 150, 100)   # Add placeholder for enemy frog 
+        self.rect = pygame.Rect(900,70,60,60)  # Placeholder
+        self.color = (255,0,0)
         self.mask = None
-        self.rect_draw = pygame.Rect( 900, 70, 100, 10)  # Placeholder for tongue
-        self.color = (255,255,255)
+        flies =[]
+        flies.append(self)
 
 
     def update(self, deltatime, player_action, player_x, player_y):
@@ -91,9 +92,9 @@ class FrogEnemy(pygame.sprite.Sprite):
 
 
     def render(self, display):
-        display.blit(self.image, (self.rect.x, self.rect.y))
-        pygame.draw.rect(display, (255,255,255), self.rect, 2)
-        pygame.draw.rect(display, self.color, self.rect_draw)
+        # display.blit(self.image, (self.rect.x, self.rect.y))
+        # pygame.draw.rect(display, (255,255,255), self.rect, 2)
+        pygame.draw.rect(display, self.color, self.rect)
 
 
     def animate(self, deltatime, direction_x, direction_y, distance):
@@ -129,7 +130,10 @@ class FrogEnemy(pygame.sprite.Sprite):
         # self.image = self.right_sprites[0]
         # # self.current_anim_list = self.right_sprites
 
-        # Testing enemy movement with placeholder image
-        self.image = pygame.image.load("sprites/placeholder.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (150,100))
-        self.mask = pygame.mask.from_surface(self.image)
+
+
+
+        # Test code - enemy movement with placeholder image
+        # self.image = pygame.image.load("sprites/placeholder.png").convert_alpha()
+        # self.image = pygame.transform.scale(self.image, (150,100))
+        # self.mask = pygame.mask.from_surface(self.image)
