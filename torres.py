@@ -88,6 +88,7 @@ class Player(pygame.sprite.Sprite):
 
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
 
+
         # if any(self.rect_draw.clipline(*line) for line in self.lines):
         #     print("Collision detected")
         # else:
