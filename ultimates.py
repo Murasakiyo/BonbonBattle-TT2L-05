@@ -97,7 +97,7 @@ class Louie_Ult():
 
     def update(self, deltatime, player_action):
         self.animate(deltatime)
-        if self.image == self.current_anim_list[17]:
+        if self.image == self.current_anim_list[18]:
             self.game.ult_finish = True
             self.game.ult = False
             self.image = self.current_anim_list[0]
@@ -136,6 +136,7 @@ class Louie_Ult():
         self.ultimate.append(pygame.image.load("sprites/ult_anim/louie_ult/011.png").convert_alpha())
         self.ultimate.append(pygame.image.load("sprites/ult_anim/louie_ult/012.png").convert_alpha())
         self.ultimate.append(pygame.image.load("sprites/ult_anim/louie_ult/013.png").convert_alpha())
+        self.ultimate.append(pygame.image.load("sprites/ult_anim/louie_ult/014.png").convert_alpha())
 
         self.image = self.ultimate[0]
         self.current_anim_list = self.ultimate

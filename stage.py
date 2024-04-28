@@ -34,16 +34,20 @@ class Stage(State):
     def update(self, deltatime, player_action):
 
         if self.game.ult == False:
+
+            # Cooldown for player receiving damage
             if self.game.damaged == True:
                 self.immunity = True
                 self.c_time += deltatime
-                if self.c_time > 1:
+                if self.c_time > 2:
                     self.game.damaged = False
                     self.immunity = False
+
+            # Update player
             self.player.update(deltatime, player_action)
-            if self.immunity == False:
-                for support in self.support_dolls.sprites():
-                    support.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+
+            for support in self.support_dolls.sprites():
+                support.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
 
             if self.game.ult_finish == False:
                 if pygame.sprite.spritecollide(self.player, self.confection_ult, False):

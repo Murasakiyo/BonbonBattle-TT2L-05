@@ -25,7 +25,7 @@ class Float(pygame.sprite.Sprite):
         image = pygame.image.load('sprites/float.png').convert_alpha()
         self.image = pygame.transform.scale(image, (64,80)).convert_alpha()
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = 800, 300
+        self.rect.x, self.rect.y = 850, 200
         self.image_mask = pygame.mask.from_surface(self.image)
 
     def update(self):
