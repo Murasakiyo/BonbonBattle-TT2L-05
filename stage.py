@@ -19,11 +19,10 @@ class Stage(State):
         self.louie = Louie(self.game, self.camera) 
         self.stan = Stanley(self.game, self.camera) 
         self.krie = Krie(self.game, self.camera)
-        self.enemy3 = Enemy3(self.game) 
-        self.minions = Minions(self.game, self.enemy3.enemy3_rect)
-        # self.enemy1 = FrogEnemy(self.game)
+        self.enemy1 = FrogEnemy(self.game)
         self.enemy2 = FlyEnemy(self.game)
-        # self.enemy3 = Enemy3(self.game)
+        self.enemy3 = Enemy3(self.game)
+        self.minions = Minions(self.game, self.enemy3.enemy3_rect.x, self.enemy3.enemy3_rect.y)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.countdown = 0
@@ -45,12 +44,15 @@ class Stage(State):
             # self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             # self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             # self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-            self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1])
-            self.minions.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect)
+            pass
         # self.enemy1.update(deltatime, self.player) # pass player's position to enemy1
             # self.enemy3.update(deltatime, player_action)
         # self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy1
-        self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
+        # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
+            self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
+            # self.minions.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect)
+
+
 
 
     def render(self, display):
@@ -61,15 +63,15 @@ class Stage(State):
 
         # if self.immunity == False:
         # self.stan.render(display)
-        self.player.render(display)
-        self.enemy3.render(display)
-        self.minions.render(display)
+        # self.player.render(display)
+        # self.enemy3.render(display)
+        # self.minions.render(display)
 
 
         #test code for enemy1
         # self.enemy1.render(display)
         self.player.render(display)
         # self.enemy1.render(display)
-        self.enemy2.render(display)
-        # self.enemy3.render(display)
+        # self.enemy2.render(display)
+        self.enemy3.render(display)
 
