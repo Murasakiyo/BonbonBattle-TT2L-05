@@ -8,9 +8,11 @@ class Torres_Ult():
 
     def update(self, deltatime, player_action):
         self.animate(deltatime)
-        if self.image == self.current_anim_list[3]:
+        if self.image == self.current_anim_list[4]:
             self.game.ult_finish = True
             self.game.ult = False
+            self.image = self.ultimate[0]
+            self.current_anim_list = self.ultimate
 
 
     def render(self, display):
@@ -28,6 +30,7 @@ class Torres_Ult():
 
     def load_sprites(self):
         self.ultimate = []
+        self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/000.png").convert_alpha())
         self.ultimate.append(pygame.image.load("sprites/ult_anim/torres_ult/ult_torres1.png").convert_alpha())
         self.ultimate.append(pygame.image.load("sprites/ult_anim/torres_ult/ult_torres2.png").convert_alpha())
         self.ultimate.append(pygame.image.load("sprites/ult_anim/torres_ult/ult_torres3.png").convert_alpha())
@@ -49,6 +52,8 @@ class Stan_Ult():
         if self.image == self.current_anim_list[13]:
             self.game.ult_finish = True
             self.game.ult = False
+            self.image = self.ultimate[0]
+            self.current_anim_list = self.ultimate
 
 
     def render(self, display):
@@ -98,6 +103,8 @@ class Louie_Ult():
         if self.image == self.current_anim_list[17]:
             self.game.ult_finish = True
             self.game.ult = False
+            self.image = self.ultimate[0]
+            self.current_anim_list = self.ultimate
 
 
     def render(self, display):
@@ -149,7 +156,8 @@ class Krie_Ult():
         if self.image == self.current_anim_list[10]:
             self.game.ult_finish = True
             self.game.ult = False
-
+            self.image = self.ultimate[0]
+            self.current_anim_list = self.ultimate
 
     def render(self, display):
         display.blit(self.image, (0,0))

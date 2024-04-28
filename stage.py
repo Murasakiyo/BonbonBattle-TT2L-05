@@ -46,30 +46,30 @@ class Stage(State):
                 for support in self.support_dolls.sprites():
                     support.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
 
-        if self.game.ult_finish == False:
-            if pygame.sprite.spritecollide(self.player, self.confection_ult, False):
-                if pygame.sprite.spritecollide(self.player, self.confection_ult, False, pygame.sprite.collide_mask):
-                    self.confection_ult.empty()
+            if self.game.ult_finish == False:
+                if pygame.sprite.spritecollide(self.player, self.confection_ult, False):
+                    if pygame.sprite.spritecollide(self.player, self.confection_ult, False, pygame.sprite.collide_mask):
+                        self.confection_ult.empty()
 
-        if self.init_louie == False and self.init_krie == False:
-            if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
-                self.camera.add(self.stan)
-                self.init_stan = True
-        if self.init_stan == False and self.init_krie == False:
-            if pygame.sprite.spritecollide(self.player, self.float_grp, False, pygame.sprite.collide_mask):
-                self.camera.add(self.louie)
-                self.init_louie = True
-        if self.init_louie == False and self.init_stan == False:
-            if pygame.sprite.spritecollide(self.player, self.strawb_grp, False, pygame.sprite.collide_mask):
-                self.camera.add(self.krie)
-                self.init_krie = True
+            if self.init_louie == False and self.init_krie == False:
+                if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
+                    self.init_stan = True
+                    self.camera.add(self.stan)
+            if self.init_stan == False and self.init_krie == False:
+                if pygame.sprite.spritecollide(self.player, self.float_grp, False, pygame.sprite.collide_mask):
+                    self.init_louie = True
+                    self.camera.add(self.louie)
+            if self.init_louie == False and self.init_stan == False:
+                if pygame.sprite.spritecollide(self.player, self.strawb_grp, False, pygame.sprite.collide_mask):
+                    self.init_krie = True
+                    self.camera.add(self.krie)
 
-        if self.init_stan:
-            self.support_dolls.add(self.stan)
-        if self.init_louie:
-            self.support_dolls.add(self.louie)
-        if self.init_krie:
-            self.support_dolls.add(self.krie)
+            if self.init_stan:
+                self.support_dolls.add(self.stan)
+            if self.init_louie:
+                self.support_dolls.add(self.louie)
+            if self.init_krie:
+                self.support_dolls.add(self.krie)
 
         if player_action["ultimate"]:
             self.game.ult = True
@@ -106,7 +106,7 @@ class Stage(State):
         for confection in self.confection_ult.sprites():
             confection.render(display)
 
-        self.player.render(display)
+        # self.player.render(display)
 
         if self.game.ult:
             display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
