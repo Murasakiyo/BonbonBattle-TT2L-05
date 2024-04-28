@@ -33,7 +33,6 @@ class Stage(State):
 
     def update(self, deltatime, player_action):
 
-        print(self.game.ult_finish)
         if self.game.ult == False:
             if self.game.damaged == True:
                 self.immunity = True
@@ -88,13 +87,19 @@ class Stage(State):
             self.init_stan = False
             self.init_louie = False
             self.init_krie = False
+
+            for support in self.support_dolls.sprites():
+                support.rect.x, support.rect.y = 0,200
+
             self.confection_ult.add(self.vanilla)
             self.confection_ult.add(self.float)
             self.confection_ult.add(self.strawb)
+
             self.stan.kill()
             self.louie.kill()
             self.krie.kill()
             self.game.ult_finish = False
+
 
 
 

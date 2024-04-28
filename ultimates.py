@@ -11,9 +11,8 @@ class Torres_Ult():
         if self.image == self.current_anim_list[4]:
             self.game.ult_finish = True
             self.game.ult = False
-            self.image = self.ultimate[0]
-            self.current_anim_list = self.ultimate
-
+            self.image = self.current_anim_list[0]
+            self.current_frame = 0
 
     def render(self, display):
         display.blit(self.image, (0,0))
@@ -22,7 +21,7 @@ class Torres_Ult():
     def animate(self, deltatime):
         self.last_frame_update += deltatime
 
-        if self.last_frame_update > 0.1:
+        if self.last_frame_update > 0.07:
             self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
             self.image = self.current_anim_list[self.current_frame]
             self.last_frame_update = 0
@@ -52,9 +51,8 @@ class Stan_Ult():
         if self.image == self.current_anim_list[13]:
             self.game.ult_finish = True
             self.game.ult = False
-            self.image = self.ultimate[0]
-            self.current_anim_list = self.ultimate
-
+            self.image = self.current_anim_list[0]
+            self.current_frame = 0
 
     def render(self, display):
         display.blit(self.image, (0,0))
@@ -86,7 +84,6 @@ class Stan_Ult():
         self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/012.png").convert_alpha())
         self.ultimate.append(pygame.image.load("sprites/ult_anim/stan_ult/000.png").convert_alpha())
 
-        
         self.image = self.ultimate[0]
         self.current_anim_list = self.ultimate
 
@@ -103,10 +100,9 @@ class Louie_Ult():
         if self.image == self.current_anim_list[17]:
             self.game.ult_finish = True
             self.game.ult = False
-            self.image = self.ultimate[0]
-            self.current_anim_list = self.ultimate
-
-
+            self.image = self.current_anim_list[0]
+            self.current_frame = 0
+            
     def render(self, display):
         display.blit(self.image, (0,0))
 
@@ -145,6 +141,7 @@ class Louie_Ult():
         self.current_anim_list = self.ultimate
 
 
+
 class Krie_Ult():
     def __init__(self, game):
         self.game = game
@@ -156,8 +153,10 @@ class Krie_Ult():
         if self.image == self.current_anim_list[10]:
             self.game.ult_finish = True
             self.game.ult = False
-            self.image = self.ultimate[0]
-            self.current_anim_list = self.ultimate
+            self.image = self.current_anim_list[0]
+            self.current_frame = 0
+
+
 
     def render(self, display):
         display.blit(self.image, (0,0))
@@ -185,6 +184,7 @@ class Krie_Ult():
         self.ultimate.append(pygame.image.load("sprites/ult_anim/krie_ult/008.png").convert_alpha())
         self.ultimate.append(pygame.image.load("sprites/ult_anim/krie_ult/009.png").convert_alpha())
         self.ultimate.append(pygame.image.load("sprites/ult_anim/krie_ult/010.png").convert_alpha())
-        
+
         self.image = self.ultimate[0]
         self.current_anim_list = self.ultimate
+        

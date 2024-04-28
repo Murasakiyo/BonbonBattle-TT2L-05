@@ -10,7 +10,7 @@ class Stanley(pygame.sprite.Sprite):
         self.game = game
         self.load_sprites()
         self.rect = self.stanley.get_rect(width=150, height=200)
-        self.rect.x, self.rect.y = 0, 0
+        self.rect.x, self.rect.y = 0, 200
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
         self.fps = 0.2
         self.attack = False
@@ -41,6 +41,9 @@ class Stanley(pygame.sprite.Sprite):
             self.move(player_x, player_y)
 
         self.animate(deltatime, direction_x, direction_y, self.step_distance)
+
+        if self.game.ult_finish:
+            self.rect.x, self.rect.y = 0,200
         
         # print(self.fps)
         
