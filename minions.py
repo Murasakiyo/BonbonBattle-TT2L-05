@@ -1,28 +1,24 @@
 import pygame
 import math
-import torres
 import state
-from enemy3 import Enemy3
 
 class Minions(pygame.sprite.Sprite):
-    def __init__(self, game):
+    def __init__(self, game, enemy3_rect):
         # super().__init__(group)
         self.game = game
         self.camera = state.CameraGroup(self.game)
-        self.player = torres.Player(self.game, self.camera)
-        self.enemy3 = Enemy3(self.game)
-        self.mini_rect = pygame.Rect(self.enemy3.rect_draw.x - 100, self.enemy3.rect_draw.y + 10, 30, 30)
+        self.mini_rect = pygame.Rect(enemy3_rect.x - 100, enemy3_rect.y + 10, 30, 30)
         self.speed = 3
 
-    def update(self, deltatime, player_action, player_x, player_y):
+    def update(self, deltatime, player_action, player_x, player_y, player_rect):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
-        self.player.rect.x += 400 * deltatime * direction_x 
-        self.player.rect.y += 450 * deltatime * direction_y 
+        player_rect.x += 400 * deltatime * direction_x 
+        player_rect.y += 450 * deltatime * direction_y 
 
         self.mini_rect.clamp_ip(self.game.screen_rect)
-        self.player.rect.clamp_ip(self.game.screen_rect)
+        player_rect.clamp_ip(self.game.screen_rect)
 
         self.move_towards_player(player_x, player_y)
 

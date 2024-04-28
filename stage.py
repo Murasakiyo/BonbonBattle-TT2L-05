@@ -20,7 +20,7 @@ class Stage(State):
         self.stan = Stanley(self.game, self.camera) 
         self.krie = Krie(self.game, self.camera)
         self.enemy3 = Enemy3(self.game) 
-        self.minions = Minions(self.game)
+        self.minions = Minions(self.game, self.enemy3.enemy3_rect)
         # self.enemy1 = FrogEnemy(self.game, self.camera)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
@@ -44,7 +44,7 @@ class Stage(State):
             # self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             # self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1])
-            self.minions.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1])
+            self.minions.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect)
         # self.enemy1.update(deltatime, self.player) # pass player's position to enemy1
 
 
