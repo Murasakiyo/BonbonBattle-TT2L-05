@@ -58,3 +58,27 @@ class Minions(pygame.sprite.Sprite):
 
         self.rect4.x += dx4 * self.speed
         self.rect4.y += dy4 * self.speed
+
+
+    def minion_spawn(self):
+        if len(self.minionlist) == 0:
+                new_minion = Minions(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
+                self.minionlist.add(new_minion) 
+
+        if len(self.minionlist) == 1:
+            for self.minions in self.minionlist.sprites():
+                # if self.cupcake.rect.bottom > 200:
+                    new_minion = Minions2(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
+                    self.minionlist.add(new_minion)
+
+        if len(self.minionlist) == 2:
+            for self.minions in self.minionlist.sprites():
+                # if self.cupcake.rect.bottom > 200:
+                    new_minion = Minions3(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
+                    self.minionlist.add(new_minion)
+
+        if len(self.minionlist) == 3:
+            for self.minions in self.minionlist.sprites():
+                # if self.cupcake.rect.bottom > 200:
+                    new_minion = Minions4(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
+                    self.minionlist.add(new_minion)

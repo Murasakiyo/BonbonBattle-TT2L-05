@@ -53,7 +53,7 @@ class Enemy3(pygame.sprite.Sprite):
 
         if self.avoid == True:
             self.current_time += deltatime
-            if self.current_time > 0.75:
+            if self.current_time > 0.5:
                 self.avoid = False
                 self.current_time = 0
 
@@ -65,13 +65,13 @@ class Enemy3(pygame.sprite.Sprite):
             self.attractspeed = 0
 
         self.minion_spawn()   
-        self.minionlist.update(deltatime, player_action, player_x, player_y, self.enemy3_rect.x, self.enemy3_rect.y)
+        self.minionlist.update(deltatime, player_action, player_x, player_y)
         self.update_minions(player_lines)
 
-
+        ################## Print zone #############################
 
         # print(self.current_time)
-
+        print(self.minionlist)
 
 
 
@@ -109,27 +109,16 @@ class Enemy3(pygame.sprite.Sprite):
 
 
     def minion_spawn(self):
-        if len(self.minionlist) < 2:
+        if len(self.minionlist) == 0:
                 new_minion = Minions(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
                 self.minionlist.add(new_minion) 
+                new_minion = Minions2(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
+                self.minionlist.add(new_minion) 
+                new_minion = Minions3(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
+                self.minionlist.add(new_minion) 
+                new_minion = Minions4(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
+                self.minionlist.add(new_minion) 
 
-        if len(self.minionlist) < 3:
-            for self.minions in self.minionlist.sprites():
-                # if self.cupcake.rect.bottom > 200:
-                    new_minion = Minions2(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                    self.minionlist.add(new_minion)
-
-        if len(self.minionlist) < 4:
-            for self.minions in self.minionlist.sprites():
-                # if self.cupcake.rect.bottom > 200:
-                    new_minion = Minions3(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                    self.minionlist.add(new_minion)
-
-        if len(self.minionlist) < 5:
-            for self.minions in self.minionlist.sprites():
-                # if self.cupcake.rect.bottom > 200:
-                    new_minion = Minions4(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                    self.minionlist.add(new_minion)
 ##############################################
 
     def enemy3_movement(self, player_x, player_y):

@@ -8,9 +8,9 @@ class Minions(pygame.sprite.Sprite):
         self.game = game
         self.camera = state.CameraGroup(self.game)
         self.rect = pygame.Rect(enemy3_rectx - 100, enemy3_recty, 30, 30) #left
-        self.speed = 3
+        self.speed = 2
 
-    def update(self, deltatime, player_action, player_x, player_y, enemy3_rectx, enemy3_recty):
+    def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
@@ -46,7 +46,7 @@ class Minions2(pygame.sprite.Sprite):
         self.rect = pygame.Rect(enemy3_rectx + 100, enemy3_recty, 30, 30) #right
         self.speed = 3
 
-    def update(self, deltatime, player_action, player_x, player_y, enemy3_rectx, enemy3_recty):
+    def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
@@ -81,9 +81,9 @@ class Minions3(pygame.sprite.Sprite):
         self.game = game
         self.camera = state.CameraGroup(self.game)
         self.rect = pygame.Rect(enemy3_rectx, enemy3_recty + 100, 30, 30) #bottom
-        self.speed = 3
+        self.speed = 4
 
-    def update(self, deltatime, player_action, player_x, player_y, enemy3_rectx, enemy3_recty):
+    def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
@@ -118,9 +118,9 @@ class Minions4(pygame.sprite.Sprite):
         self.game = game
         self.camera = state.CameraGroup(self.game)
         self.rect = pygame.Rect(enemy3_rectx, enemy3_recty - 100, 30, 30) #top
-        self.speed = 3
+        self.speed = 5
 
-    def update(self, deltatime, player_action, player_x, player_y, enemy3_rectx, enemy3_recty):
+    def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
