@@ -19,15 +19,18 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.attack = False
         self.attack_cooldown = 0 # Before the next attack
         # self.min_step, self.max_step = 0,0
-        self.speed = 1
-        self.rect = pygame.Rect(800, 0, 150, 100)   # Add placeholder for enemy frog 
+        self.speed = 3
+        self.rect = pygame.Rect(800,10,200,150)   # Add placeholder for enemy frog 
         self.mask = None
-        self.rect_draw = pygame.Rect( 900, 70, 100, 10)  # Placeholder for tongue
+        self.rect_draw = pygame.Rect(900,70,200,20)  # Placeholder for tongue
         self.color = (255,255,255)
 
 
     def update(self, deltatime, player_action, player_x, player_y):
-        # collision with the screen
+        # Tongue's position
+        self.rect_draw = pygame.Rect(self.rect.centerx, self.rect.centery, 150, 20)
+
+        # Collision with the screen
         self.rect.clamp_ip(self.game.screen_rect)
         self.player.rect.clamp_ip(self.game.screen_rect)
 
@@ -42,41 +45,44 @@ class FrogEnemy(pygame.sprite.Sprite):
 
         # Check distance between enemy and player
         dx, dy = player_x - self.rect.centerx, player_y - self.rect.centery
+        if dx > 0:
+            dx -= 200
+        elif dx < 0:
+            dx += 200
+        else:
+            dx = dx
         distance = math.sqrt(dx**2 + dy**2)
 
-        # Put condition where the enemy will stop for a while
-        if distance < 120:
+        # Attack and Cooldown
+        if distance == 0:
+            # print("You get hit!")
             self.attack = True
             self.attack_cooldown += deltatime
-            self.speed = 0   # Stop moving
-            self.rect.centerx += dx * self.speed  # Same position
-            self.rect.centery += dy * self.speed
-            print(self.attack_cooldown)
-
-            if self.attack_cooldown > 1.0:
+            
+            if self.attack_cooldown > 0.5:
+                # print("Wait, let me rest first.")
                 self.attack = False
                 self.attack_cooldown = 0
                 self.current_time = 0
-                self.speed = 1
-                self.move_towards_player(player_x, player_y)
-
-        else:
-            self.speed = 1
-            self.move_towards_player(player_x, player_y)
 
 
     def move_towards_player(self, player_x, player_y):
         # Find direction vector (dx, dy) and distance between enemy and player.
         dx, dy = player_x - self.rect.centerx, player_y - self.rect.centery
+        if dx > 0:
+            dx -= 200
+        elif dx < 0:
+            dx += 200
+        else:
+            dx = dx
         distance = math.sqrt(dx**2 + dy**2)
         # print(int(distance))
 
-        # Move along this normalized vector towards the player at current speed.
-        # dx, dy = dx / (distance + 1), dy / (distance + 1)  # Normalize.
-
+        # Normalize
         if distance != 0:  # Ensure to not divide by zero
             dx, dy = dx / distance, dy / distance
-        
+        # dx, dy = dx / (distance + 1), dy / (distance + 1)
+
         self.rect.centerx += dx * self.speed
         self.rect.centery += dy * self.speed
 
@@ -131,5 +137,5 @@ class FrogEnemy(pygame.sprite.Sprite):
 
         # Testing enemy movement with placeholder image
         self.image = pygame.image.load("sprites/placeholder.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (150,100))
+        self.image = pygame.transform.scale(self.image, (200,150))
         self.mask = pygame.mask.from_surface(self.image)

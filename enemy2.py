@@ -3,6 +3,7 @@ import spritesheet
 import math
 import torres
 import state
+import random
 
 class FlyEnemy(pygame.sprite.Sprite):
     def __init__(self, game):
@@ -23,7 +24,9 @@ class FlyEnemy(pygame.sprite.Sprite):
         self.rect = pygame.Rect(900,70,60,60)  # Placeholder
         self.color = (255,0,0)
         self.mask = None
-        flies =[]
+        self.enemy_spawner = enemy_spawner
+        self.spawn_enemy()
+        self.flies = []
         flies.append(self)
 
 
@@ -43,43 +46,58 @@ class FlyEnemy(pygame.sprite.Sprite):
 
         # Check distance between enemy and player
         dx, dy = player_x - self.rect.centerx, player_y - self.rect.centery
+        if dx > 0:
+            dx -= 200
+        elif dx < 0:
+            dx += 200
+        else:
+            dx = dx
         distance = math.sqrt(dx**2 + dy**2)
 
-        # Put condition where the enemy will stop for a while
-        if distance < 120:
+        # Attack and Cooldown
+        if distance == 0:
+            # print("You get hit!")
             self.attack = True
             self.attack_cooldown += deltatime
-            self.speed = 0   # Stop moving
-            self.rect.centerx += dx * self.speed  # Same position
-            self.rect.centery += dy * self.speed
-            print(self.attack_cooldown)
-
-            if self.attack_cooldown > 1.0:
+            
+            if self.attack_cooldown > 0.5:
+                # print("Wait, let me rest first.")
                 self.attack = False
                 self.attack_cooldown = 0
                 self.current_time = 0
-                self.speed = 1
-                self.move_towards_player(player_x, player_y)
-
-        else:
-            self.speed = 1
-            self.move_towards_player(player_x, player_y)
 
 
     def move_towards_player(self, player_x, player_y):
         # Find direction vector (dx, dy) and distance between enemy and player.
         dx, dy = player_x - self.rect.centerx, player_y - self.rect.centery
+        if dx > 0:
+            dx -= 200
+        elif dx < 0:
+            dx += 200
+        else:
+            dx = dx
         distance = math.sqrt(dx**2 + dy**2)
         # print(int(distance))
-
-        # Move along this normalized vector towards the player at current speed.
-        # dx, dy = dx / (distance + 1), dy / (distance + 1)  # Normalize.
 
         if distance != 0:  # Ensure to not divide by zero
             dx, dy = dx / distance, dy / distance
         
         self.rect.centerx += dx * self.speed
         self.rect.centery += dy * self.speed
+
+
+    # Test code
+    def enemy_spawner(self, player_x, player_y):
+        while True:
+            for i in range(60):
+                yield
+            randomX = random.randint(self.screen_rect)
+            randomY = random.randint(self.screen_rect)
+            fliesgrp = FlyEnemy(randomX, randomY, 60, 60, self.rect, 2)
+            # player_center = player.get_center()
+            while abs(player_x - fliesgrp.x) < 250 and abs(player_y - fliesgrp.y) < 250:
+                fliesgrp.x = random.randint(self.screen_rect)
+                fliesgrp.y = random.randint(self.screen_rect)
 
 
     def take_damage(self, damage):
