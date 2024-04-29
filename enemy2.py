@@ -1,8 +1,6 @@
 import pygame
 import spritesheet
 import math
-import torres
-import state
 import random
 
 class FlyEnemy(pygame.sprite.Sprite):
@@ -10,9 +8,7 @@ class FlyEnemy(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.load_sprites()
-        self.current_time = 0
-        self.camera = state.CameraGroup(self.game)
-        self.player = torres.Player(self.game, self.camera)
+        self.current_time = 0       
         # self.rect = self.fly.get_rect(width=800, height=0)
         # self.rect.x, self.rect.y = 800, 0 # Initial position
         # self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0 #animation
@@ -20,20 +16,18 @@ class FlyEnemy(pygame.sprite.Sprite):
         self.attack = False
         self.attack_cooldown = 0 # Before the next attack
         # self.min_step, self.max_step = 0,0
-        self.speed = 1
+        self.speed = 3
         self.rect = pygame.Rect(900,70,60,60)  # Placeholder
         self.color = (255,0,0)
         self.mask = None
-        self.enemy_spawner = enemy_spawner
-        self.spawn_enemy()
-        self.flies = []
-        flies.append(self)
+        self.enemies = pygame.sprite.Group()
+        # self.spawn_enemies()
 
 
     def update(self, deltatime, player_action, player_x, player_y):
         # collision with the screen
         self.rect.clamp_ip(self.game.screen_rect)
-        self.player.rect.clamp_ip(self.game.screen_rect)
+    
 
         # Increment current_time
         self.current_time += deltatime
@@ -87,18 +81,14 @@ class FlyEnemy(pygame.sprite.Sprite):
 
 
     # Test code
-    def enemy_spawner(self, player_x, player_y):
-        while True:
-            for i in range(60):
-                yield
-            randomX = random.randint(self.screen_rect)
-            randomY = random.randint(self.screen_rect)
-            fliesgrp = FlyEnemy(randomX, randomY, 60, 60, self.rect, 2)
-            # player_center = player.get_center()
-            while abs(player_x - fliesgrp.x) < 250 and abs(player_y - fliesgrp.y) < 250:
-                fliesgrp.x = random.randint(self.screen_rect)
-                fliesgrp.y = random.randint(self.screen_rect)
-
+    # def spawn_enemies(self):
+    #     for i in range(3):
+    #         random_x = random.randint(0, self.game.SCREENWIDTH)
+    #         random_y = random.randint(0, self.game.SCREENHEIGHT)
+    #         new_enemy = FlyEnemy(self.game)  # Create a new enemy instance
+    #         new_enemy.rect.center = (random_x, random_y)  # Position
+    #         self.enemies.add(new_enemy)  # Add the enemy to the grp
+            
 
     def take_damage(self, damage):
         # self.health -= damage
@@ -112,6 +102,7 @@ class FlyEnemy(pygame.sprite.Sprite):
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
         # pygame.draw.rect(display, (255,255,255), self.rect, 2)
+        # for enemy in self.enemies.sprites():
         pygame.draw.rect(display, self.color, self.rect)
 
 

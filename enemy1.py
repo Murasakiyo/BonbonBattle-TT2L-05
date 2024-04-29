@@ -1,8 +1,6 @@
 import pygame
 import spritesheet
 import math
-import torres
-import state
 
 class FrogEnemy(pygame.sprite.Sprite):
     def __init__(self, game):
@@ -10,8 +8,6 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.game = game
         self.load_sprites()
         self.current_time = 0
-        self.camera = state.CameraGroup(self.game)
-        self.player = torres.Player(self.game, self.camera)
         # self.rect = self.frog.get_rect(width=800, height=0)
         # self.rect.x, self.rect.y = 800, 0 # Initial position
         # self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0 #animation
@@ -24,46 +20,74 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.mask = None
         self.rect_draw = pygame.Rect(900,70,200,20)  # Placeholder for tongue
         self.color = (255,255,255)
+        self.test = False
+        self.collision_time = False
 
 
-    def update(self, deltatime, player_action, player_x, player_y):
+    def update(self, deltatime, player_action, player_x, player_y, player_rect):
         # Tongue's position
         self.rect_draw = pygame.Rect(self.rect.centerx, self.rect.centery, 150, 20)
 
         # Collision with the screen
         self.rect.clamp_ip(self.game.screen_rect)
-        self.player.rect.clamp_ip(self.game.screen_rect)
 
-        # Increment current_time
-        self.current_time += deltatime
+        
         
         # Get direction towards player # animation
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
+        # if self.collision_time == False:
+            # self.speed = 3
+        if any(self.rect.clipline(*line) for line in player_rect):
+            self.test = True
+
+        if self.test == True:
+            self.current_time += deltatime
+            self.speed = 0
+            if self.current_time > 1:
+                self.speed = 3
+                self.test = False
+                self.current_time = 0
+
+        # if self.test == True:
+        #     self.current_time += deltatime
+        #     self.collision_time = True
+        #     self.speed = 0
+        #     if self.current_time > 3:
+        #         self.current_time = 0
+        #         self.speed = 3
+        #         self.test = False
+        #     if self.current_time > 3:
+        #         self.collision_time = False
+        #         self.current_time = 0
+
+        # print(self.speed)
+        print(self.current_time)
         self.move_towards_player(player_x, player_y)
 
-        # Check distance between enemy and player
-        dx, dy = player_x - self.rect.centerx, player_y - self.rect.centery
-        if dx > 0:
-            dx -= 200
-        elif dx < 0:
-            dx += 200
-        else:
-            dx = dx
-        distance = math.sqrt(dx**2 + dy**2)
+
+        # # Check distance between enemy and player
+        # dx, dy = player_x - self.rect.centerx, player_y - self.rect.centery
+        # if dx > 0:
+        #     dx -= 200
+        # elif dx < 0:
+        #     dx += 200
+        # else:
+        #     dx = dx
+        # distance = math.sqrt(dx**2 + dy**2)
 
         # Attack and Cooldown
-        if distance == 0:
-            # print("You get hit!")
-            self.attack = True
-            self.attack_cooldown += deltatime
+        # if distance == 0:
+        #     # print("You get hit!")
+        #     self.attack = True
+        #     self.attack_cooldown += deltatime
             
-            if self.attack_cooldown > 0.5:
-                # print("Wait, let me rest first.")
-                self.attack = False
-                self.attack_cooldown = 0
-                self.current_time = 0
+        #     if self.attack_cooldown > 0.5:
+        #         # print("Wait, let me rest first.")
+        #         self.attack = False
+        #         self.attack_cooldown = 0
+        #         self.current_time = 0
 
 
     def move_towards_player(self, player_x, player_y):
@@ -79,9 +103,9 @@ class FrogEnemy(pygame.sprite.Sprite):
         # print(int(distance))
 
         # Normalize
-        if distance != 0:  # Ensure to not divide by zero
-            dx, dy = dx / distance, dy / distance
-        # dx, dy = dx / (distance + 1), dy / (distance + 1)
+        # if distance != 0:  # Ensure to not divide by zero
+        #     dx, dy = dx / distance, dy / distance
+        dx, dy = dx / (distance + 1), dy / (distance + 1)
 
         self.rect.centerx += dx * self.speed
         self.rect.centery += dy * self.speed
@@ -99,7 +123,7 @@ class FrogEnemy(pygame.sprite.Sprite):
     def render(self, display):
         display.blit(self.image, (self.rect.x, self.rect.y))
         pygame.draw.rect(display, (255,255,255), self.rect, 2)
-        pygame.draw.rect(display, self.color, self.rect_draw)
+        pygame.draw.rect(display, self.color, self.rect_draw, 2)
 
 
     def animate(self, deltatime, direction_x, direction_y, distance):
