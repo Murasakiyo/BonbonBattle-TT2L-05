@@ -6,8 +6,6 @@ class FlyEnemy(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.rect = pygame.Rect(900,70,60,60)  # Placeholder
-        self.color = (255,0,0)
         self.current_time = 0       
         # self.rect = self.fly.get_rect(width=800, height=0)
         # self.rect.x, self.rect.y = 800, 0 # Initial position
@@ -17,12 +15,12 @@ class FlyEnemy(pygame.sprite.Sprite):
         self.attack_cooldown = 0 # Before the next attack
         # self.min_step, self.max_step = 0,0
         self.speed = 3
-        
+        self.rect = pygame.Rect(900,70,60,60)  # Placeholder
+        self.color = (255,0,0)
         self.mask = None
         self.enemies = pygame.sprite.Group()
         # self.spawn_enemies()
-        self.load_sprites()
-
+        
 
 
     def update(self, deltatime, player_action, player_x, player_y):
