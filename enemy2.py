@@ -1,17 +1,14 @@
 import pygame
 import spritesheet
 import math
-import torres
-import state
+import random
 
 class FlyEnemy(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
         self.load_sprites()
-        self.current_time = 0
-        self.camera = state.CameraGroup(self.game)
-        self.player = torres.Player(self.game, self.camera)
+        self.current_time = 0       
         # self.rect = self.fly.get_rect(width=800, height=0)
         # self.rect.x, self.rect.y = 800, 0 # Initial position
         # self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0 #animation
@@ -19,18 +16,18 @@ class FlyEnemy(pygame.sprite.Sprite):
         self.attack = False
         self.attack_cooldown = 0 # Before the next attack
         # self.min_step, self.max_step = 0,0
-        self.speed = 1
+        self.speed = 3
         self.rect = pygame.Rect(900,70,60,60)  # Placeholder
         self.color = (255,0,0)
         self.mask = None
-        flies =[]
-        flies.append(self)
+        self.enemies = pygame.sprite.Group()
+        # self.spawn_enemies()
 
 
     def update(self, deltatime, player_action, player_x, player_y):
         # collision with the screen
         self.rect.clamp_ip(self.game.screen_rect)
-        self.player.rect.clamp_ip(self.game.screen_rect)
+    
 
         # Increment current_time
         self.current_time += deltatime
@@ -43,37 +40,38 @@ class FlyEnemy(pygame.sprite.Sprite):
 
         # Check distance between enemy and player
         dx, dy = player_x - self.rect.centerx, player_y - self.rect.centery
+        if dx > 0:
+            dx -= 200
+        elif dx < 0:
+            dx += 200
+        else:
+            dx = dx
         distance = math.sqrt(dx**2 + dy**2)
 
-        # Put condition where the enemy will stop for a while
-        if distance < 120:
+        # Attack and Cooldown
+        if distance == 0:
+            # print("You get hit!")
             self.attack = True
             self.attack_cooldown += deltatime
-            self.speed = 0   # Stop moving
-            self.rect.centerx += dx * self.speed  # Same position
-            self.rect.centery += dy * self.speed
-            print(self.attack_cooldown)
-
-            if self.attack_cooldown > 1.0:
+            
+            if self.attack_cooldown > 0.5:
+                # print("Wait, let me rest first.")
                 self.attack = False
                 self.attack_cooldown = 0
                 self.current_time = 0
-                self.speed = 1
-                self.move_towards_player(player_x, player_y)
-
-        else:
-            self.speed = 1
-            self.move_towards_player(player_x, player_y)
 
 
     def move_towards_player(self, player_x, player_y):
         # Find direction vector (dx, dy) and distance between enemy and player.
         dx, dy = player_x - self.rect.centerx, player_y - self.rect.centery
+        if dx > 0:
+            dx -= 200
+        elif dx < 0:
+            dx += 200
+        else:
+            dx = dx
         distance = math.sqrt(dx**2 + dy**2)
         # print(int(distance))
-
-        # Move along this normalized vector towards the player at current speed.
-        # dx, dy = dx / (distance + 1), dy / (distance + 1)  # Normalize.
 
         if distance != 0:  # Ensure to not divide by zero
             dx, dy = dx / distance, dy / distance
@@ -81,6 +79,16 @@ class FlyEnemy(pygame.sprite.Sprite):
         self.rect.centerx += dx * self.speed
         self.rect.centery += dy * self.speed
 
+
+    # Test code
+    # def spawn_enemies(self):
+    #     for i in range(3):
+    #         random_x = random.randint(0, self.game.SCREENWIDTH)
+    #         random_y = random.randint(0, self.game.SCREENHEIGHT)
+    #         new_enemy = FlyEnemy(self.game)  # Create a new enemy instance
+    #         new_enemy.rect.center = (random_x, random_y)  # Position
+    #         self.enemies.add(new_enemy)  # Add the enemy to the grp
+            
 
     def take_damage(self, damage):
         # self.health -= damage
@@ -94,6 +102,7 @@ class FlyEnemy(pygame.sprite.Sprite):
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
         # pygame.draw.rect(display, (255,255,255), self.rect, 2)
+        # for enemy in self.enemies.sprites():
         pygame.draw.rect(display, self.color, self.rect)
 
 

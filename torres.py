@@ -3,7 +3,7 @@ import spritesheet
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game, group):
+    def __init__(self, game, group, position_x, position_y):
         super().__init__(group)
         self.game = game
         self.current_time = 0
@@ -13,7 +13,9 @@ class Player(pygame.sprite.Sprite):
         self.load_sprites()
         self.rect = self.torres_walk.get_rect(width= 200, height=200)
         # self.rect.center = (295, 373)
-        self.rect.x, self.rect.y = 200,150
+        self.rect.x, self.rect.y = position_x, position_y
+        self.torres_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.torres_mask.to_surface()
         # self.line = self.rect.clipline(50, 50)
         self.current_frame, self.last_frame_update = 0,0
         self.fps = 0
@@ -74,7 +76,7 @@ class Player(pygame.sprite.Sprite):
         if self.attack == True and self.defend != True:
             self.current_time += deltatime
             if self.current_frame >= 4:
-                if self.current_time > 0.3:
+                if self.current_time > 0.2:
                     player_action["attack"] = False
                     self.attack = False
                     self.current_time = 0
@@ -87,7 +89,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += 450 * deltatime * direction_y 
 
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
-
+        self.enemy1_collision = [((self.rect.midleft), (self.rect.midright))]
 
         # if any(self.rect_draw.clipline(*line) for line in self.lines):
         #     print("Collision detected")
@@ -105,6 +107,7 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(display, (255,255,255), self.rect,2)
 
         for line in self.lines:
+            pygame.draw.line(display, "white", *line)
             pygame.draw.line(display, "white", *line)
             
         # pygame.draw.rect(display, self.color, self.rect_draw)
@@ -163,7 +166,7 @@ class Player(pygame.sprite.Sprite):
 
         # fps differs 
         if self.attack:
-            self.fps = 0.08
+            self.fps = 0.06
         else:
             self.fps = 0.1
 

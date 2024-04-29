@@ -14,10 +14,12 @@ class Game():
         self.clock = pygame.time.Clock()
 
         # Action dictionary
-        self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False} 
+        self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
+                              "ultimate": False} 
         self.deltatime, self.prevtime = 0 , 0
         self.state_stack = []
         self.load_states()
+        self.ultimates()
         
 
 
@@ -54,6 +56,8 @@ class Game():
                     self.player_action["attack"] = True
                 if event.key == pygame.K_k:
                     self.player_action["defend"] = True
+                if event.key == pygame.K_q:
+                    self.player_action["ultimate"] = True
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
@@ -64,8 +68,8 @@ class Game():
                     self.player_action["up"] = False
                 if event.key == pygame.K_s:
                     self.player_action["down"] = False
-                if event.key == pygame.K_k:
-                    self.player_action["defend"] = True
+                if event.key == pygame.K_q:
+                    self.player_action["ultimate"] = False
         
    
 
@@ -109,6 +113,10 @@ class Game():
     def reset_keys(self):
         for actions in self.player_action:
             self.player_action[actions] = False
+
+    def ultimates(self):
+        self.ult = False
+        self.ult_finish = False
 
 
 if __name__ == "__main__":
