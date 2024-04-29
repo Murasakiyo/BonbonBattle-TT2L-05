@@ -22,7 +22,7 @@ class Stage(State):
         self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
-        self.enemy1 = FrogEnemy(self.game)
+        self.enemy1 = FrogEnemy(self.game, self.camera)
         # self.enemy2 = FlyEnemy(self.game)
         self.enemy3 = Enemy3(self.game)
         self.c_time = 0
@@ -92,7 +92,7 @@ class Stage(State):
 
         self.player.render(display)
          # test code for enemy1
-        self.enemy1.render(display)
+        # self.enemy1.render(display)
         # self.enemy2.render(display)
         # self.enemy3.render(display)
         if self.game.ult:

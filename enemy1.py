@@ -3,8 +3,8 @@ import spritesheet
 import math
 
 class FrogEnemy(pygame.sprite.Sprite):
-    def __init__(self, game):
-        super().__init__()
+    def __init__(self, game, group):
+        super().__init__(group)
         self.game = game
         self.load_sprites()
         self.rect = self.frog.get_rect(width= 200, height=165)   # Placeholder for enemy froggie 
@@ -16,7 +16,7 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.attack_cooldown = 0 
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0 #animation
         self.fps = 0.05
-        self.speed = 3
+        self.speed = 5
         self.stop = False
         self.collision = False
         self.left = False
@@ -47,7 +47,7 @@ class FrogEnemy(pygame.sprite.Sprite):
             self.attack = True
             if self.current_time > 2.5:
                 self.attack = False
-                self.speed = 3
+                self.speed = 5
                 self.stop = False
             if self.current_time > 3.2:
                 self.collision = False

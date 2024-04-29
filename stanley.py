@@ -121,7 +121,7 @@ class Stanley(pygame.sprite.Sprite):
         self.torres_vector = pygame.math.Vector2(player_x, player_y)
         self.stan_vector = pygame.math.Vector2(self.rect.x, self.rect.y)
         self.step_distance = 0
-        self.min_distance = 300
+        self.min_distance = 250
         self.max_distance = 500
         # print(self.follower_vector)
 
@@ -136,7 +136,7 @@ class Stanley(pygame.sprite.Sprite):
             #step_distance       = min(max_step, max(min_step, VELOCITY))
             self.step_distance   = self.min_step + (self.max_step - self.min_step) 
             # self.new_stan_vector = self.stan_vector + self.direction_vector * self.step_distance
-            self.stan_vector += self.direction_vector * self.step_distance * 0.2
+            self.stan_vector += self.direction_vector * self.step_distance * 0.1
             self.rect.x, self.rect.y = self.stan_vector.x, self.stan_vector.y
 
 
