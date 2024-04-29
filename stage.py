@@ -42,9 +42,8 @@ class Stage(State):
             # self.stan.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             # self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             # self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
-            pass
         # self.enemy1.update(deltatime, self.player) # pass player's position to enemy1
-
+            pass
         # self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy1
         # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
             self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
