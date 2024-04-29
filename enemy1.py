@@ -24,7 +24,7 @@ class FrogEnemy(pygame.sprite.Sprite):
 
 
 
-    def update(self, deltatime, player_action, player_x, player_y, player_rect):
+    def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
         # Tongue's position
         self.rect_draw = pygame.Rect(self.rect.centerx, self.rect.centery, 150, 20)
 
@@ -35,13 +35,18 @@ class FrogEnemy(pygame.sprite.Sprite):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
+        self.move_towards_player(player_x, player_y, player_rectx)
+
         if self.collision == False:
-            if any(self.rect.clipline(*line) for line in player_rect):
+            if self.dx_new == 200 or self.dx_new == -200:
                 self.stop = True
+                self.speed = 0
+            #     print("Collision detected")
+            # else:
+            #     print("No collision detected")
 
         if self.stop == True:
             self.current_time += deltatime
-            self.speed = 0
             self.attack = True
             if self.current_time > 2.5:
                 self.attack = False
@@ -56,8 +61,7 @@ class FrogEnemy(pygame.sprite.Sprite):
         # if pygame.Rect.colliderect(self.rect.right, rect_left):
         #     self.right = True
         
-        self.move_towards_player(player_x, player_y)
-        self.animate(deltatime, direction_x, direction_y, self.dx, self.speed)
+        self.animate(deltatime, self.dx, self.speed)
 
 
     def render(self, display):
@@ -66,23 +70,26 @@ class FrogEnemy(pygame.sprite.Sprite):
         # pygame.draw.rect(display, self.color, self.rect_draw, 2)
 
 
-    def animate(self, deltatime, direction_x, direction_y, distance, speed):
+    def animate(self, deltatime, distance, speed):
         self.last_frame_update += deltatime
 
         if int(speed) == 0:
             if (self.current_anim_list == self.right_sprites or self.current_anim_list == self.attack_right):
                 self.current_anim_list = self.right_sprites
                 self.image = self.current_anim_list[0]
-            elif self.current_anim_list == self.left_sprites or self.current_anim_list == self.attack_left:
+            elif (self.current_anim_list == self.left_sprites or self.current_anim_list == self.attack_left):
                 self.current_anim_list = self.left_sprites
                 self.image = self.current_anim_list[0]
             return self.image
         
-        if speed != 0:
-            if distance > 0:
+        if int(speed) != 0:
+            if self.dx_new > 0:
                 self.current_anim_list = self.right_sprites
-            else:
+            elif self.dx_new < 0:
                 self.current_anim_list = self.left_sprites
+
+        # if self.attack == True:
+        #     self.current_anim_list = self.attack_left
 
         if self.last_frame_update > self.fps:
             self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
@@ -90,13 +97,14 @@ class FrogEnemy(pygame.sprite.Sprite):
             self.last_frame_update = 0  
         
     
-    def move_towards_player(self, player_x, player_y):
+    def move_towards_player(self, player_x, player_y, player_rectx):
         # Find direction vector (dx, dy) and distance between enemy and player.
-        self.dx, self.dy = player_x - self.rect.centerx, player_y - self.rect.centery
+        self.dx, self.dy = player_x - self.rect.centerx , player_y - self.rect.centery 
+        self.dx_new = player_rectx - self.rect.x
         if self.dx > 0:
             self.dx -= 200
         elif self.dx < 0:
-            self.dx += 200
+            self.dx += 200 
         else:
             self.dx = self.dx
         self.distance = math.sqrt(self.dx**2 + self.dy**2)
@@ -106,7 +114,7 @@ class FrogEnemy(pygame.sprite.Sprite):
 
         self.rect.centerx += self.dx * self.speed
         self.rect.centery += self.dy * self.speed
-        print(self.rect.left)
+        # print(self.dx)
 
 
 

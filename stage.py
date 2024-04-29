@@ -33,6 +33,8 @@ class Stage(State):
 
     def update(self, deltatime, player_action):
 
+        print(int(self.player.rect.x - self.enemy1.rect.x))
+
         if self.game.ult == False:
             # Cooldown for player receiving damage
             if self.game.damaged == True:
@@ -45,7 +47,7 @@ class Stage(State):
             # Update player
             self.player.update(deltatime, player_action)
             self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
-                               self.player.rect.center[1], self.player.enemy1_collision) # pass player's position to enemy1
+                               self.player.rect.center[1], self.player.enemy1_collision, self.player.rect.x) # pass player's position to enemy1
             # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
             # self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
 
