@@ -24,7 +24,7 @@ class Stage(State):
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
         self.enemy1 = FrogEnemy(self.game)
         # self.enemy2 = FlyEnemy(self.game)
-        # self.enemy3 = Enemy3(self.game, self.camera)
+        self.enemy3 = Enemy3(self.game, self.camera)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.ultimate = False
@@ -92,7 +92,7 @@ class Stage(State):
         # self.enemy1.render(display)
         self.enemy1.render(display)
         # self.enemy2.render(display)
-        # self.enemy3.render(display)
+        self.enemy3.render(display)
         if self.game.ult:
             display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
             if self.init_stan:
