@@ -5,12 +5,12 @@ import spritesheet
 # from torres import Player
 
 class Stanley(pygame.sprite.Sprite):
-    def __init__(self, game, group):
-        super().__init__(group)
+    def __init__(self, game):
+        super().__init__()
         self.game = game
         self.load_sprites()
         self.rect = self.stanley.get_rect(width=150, height=200)
-        self.rect.x, self.rect.y = -500, 0
+        self.rect.x, self.rect.y = 0, 200
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
         self.fps = 0.2
         self.attack = False
@@ -37,9 +37,13 @@ class Stanley(pygame.sprite.Sprite):
                 self.current_time = 0
         
         # Move towards player always
-        self.move(player_x, player_y)
+        if not self.attack:
+            self.move(player_x, player_y)
 
         self.animate(deltatime, direction_x, direction_y, self.step_distance)
+
+        if self.game.ult_finish:
+            self.rect.x, self.rect.y = 0,200
         
         # print(self.fps)
         
@@ -68,12 +72,12 @@ class Stanley(pygame.sprite.Sprite):
         # Support doll walking
         if direction_x and self.attack == False:
             if direction_x > 0:
-                if distance > 0.6:
+                if distance > 0.4:
                     self.current_anim_list = self.walk_right
                 else:
                     self.current_anim_list = self.right_sprites
             else: 
-                if distance > 0.6:
+                if distance > 0.4:
                     self.current_anim_list = self.walk_left
                 else:
                     self.current_anim_list =self.left_sprites
@@ -95,7 +99,6 @@ class Stanley(pygame.sprite.Sprite):
             self.fps = 0.15
             # self.current_frame = 0
             self.current_anim_list = self.attack_left
-
 
         # Fps for each animation
         if self.current_anim_list == self.right_sprites or self.current_anim_list == self.left_sprites:

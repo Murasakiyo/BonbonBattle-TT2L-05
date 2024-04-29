@@ -9,6 +9,7 @@ class Enemy3(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
+        self.rect_draw = pygame.Rect(180, 180, 40, 40)
         self.enemy3_rect = pygame.Rect(180, 180, 40, 40)
         self.enemyborder1 = pygame.Rect(-895, 40, 900, 570) #left
         self.enemyborder2 = pygame.Rect(1095, 40, 900, 570) #right
@@ -69,18 +70,18 @@ class Enemy3(pygame.sprite.Sprite):
 
         ################## Print zone #############################
 
-        # print(self.current_time)
-        print(self.minionlist)
+        print(self.current_time)
+        # print(self.minionlist)
 
 
 
 
     def render(self, display):
         pygame.draw.rect(display, self.color, self.enemy3_rect)
-        pygame.draw.rect(display, self.color, self.enemyborder1)
-        pygame.draw.rect(display, self.color, self.enemyborder2)
-        pygame.draw.rect(display, self.color, self.enemyborder3)
-        pygame.draw.rect(display, self.color, self.enemyborder4) #draws the enemy border for refference
+        # pygame.draw.rect(display, self.color, self.enemyborder1)
+        # pygame.draw.rect(display, self.color, self.enemyborder2)
+        # pygame.draw.rect(display, self.color, self.enemyborder3)
+        # pygame.draw.rect(display, self.color, self.enemyborder4) #draws the enemy border for refference
 
         for self.minions in self.minionlist.sprites():
             self.minions.render(display)
