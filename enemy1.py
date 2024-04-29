@@ -21,7 +21,7 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.rect_draw = pygame.Rect(900,70,200,20)  # Placeholder for tongue
         self.color = (255,255,255)
         self.test = False
-        self.collision_time = False
+        self.collision = False
 
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect):
@@ -37,17 +37,18 @@ class FrogEnemy(pygame.sprite.Sprite):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
-        # if self.collision_time == False:
-            # self.speed = 3
-        if any(self.rect.clipline(*line) for line in player_rect):
-            self.test = True
+        if self.collision == False:
+            if any(self.rect.clipline(*line) for line in player_rect):
+                self.test = True
 
         if self.test == True:
             self.current_time += deltatime
             self.speed = 0
-            if self.current_time > 1:
+            if self.current_time > 3:
                 self.speed = 3
                 self.test = False
+            if self.current_time > 4:
+                self.collision = False
                 self.current_time = 0
 
         # if self.test == True:

@@ -7,6 +7,7 @@ from krie import Krie
 from enemy1 import FrogEnemy
 from enemy2 import FlyEnemy
 from enemy3 import Enemy3
+import random
 
 class Stage(State):
     def __init__(self, game):
@@ -43,8 +44,16 @@ class Stage(State):
             # self.louie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             # self.krie.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
             # self.enemy3.update(deltatime, player_action)
+            pass
         self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.enemy1_collision) # pass player's position to enemy1
         # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
+
+        # for i in range(3):
+            # random_x = random.randint(0, self.game.SCREENWIDTH)
+            # random_y = random.randint(0, self.game.SCREENHEIGHT)
+            # new_enemy = FlyEnemy(self.game)  # Create a new enemy instance
+            # new_enemy.rect.center = (random_x, random_y)  # Position
+            # self.enemy2.enemies.add(new_enemy)  # Add the enemy to the grp
 
 
     def render(self, display):
