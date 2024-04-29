@@ -24,7 +24,7 @@ class Stage(State):
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
         self.enemy1 = FrogEnemy(self.game)
         # self.enemy2 = FlyEnemy(self.game)
-        self.enemy3 = Enemy3(self.game, self.camera)
+        self.enemy3 = Enemy3(self.game)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.ultimate = False
@@ -44,9 +44,9 @@ class Stage(State):
 
             # Update player
             self.player.update(deltatime, player_action)
-            self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.enemy1_collision) # pass player's position to enemy1
+            # self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.enemy1_collision) # pass player's position to enemy1
             # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
-
+            self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
 
             # Sprite group update
             for support in self.support_dolls.sprites():
@@ -90,19 +90,19 @@ class Stage(State):
         # self.player.render(display)
          #test code for enemy1
         # self.enemy1.render(display)
-        self.enemy1.render(display)
+        # self.enemy1.render(display)
         # self.enemy2.render(display)
         self.enemy3.render(display)
-        if self.game.ult:
-            display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
-            if self.init_stan:
-                self.stan_ult.render(display)
-            elif self.init_louie:
-                self.louie_ult.render(display)
-            elif self.init_krie:
-                self.krie_ult.render(display)
-            else:
-                self.torres_ult.render(display)
+        # if self.game.ult:
+        #     display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
+        #     if self.init_stan:
+        #         self.stan_ult.render(display)
+        #     elif self.init_louie:
+        #         self.louie_ult.render(display)
+        #     elif self.init_krie:
+        #         self.krie_ult.render(display)
+        #     else:
+        #         self.torres_ult.render(display)
 
 
     def characters(self):
