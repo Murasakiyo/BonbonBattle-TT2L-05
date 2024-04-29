@@ -38,12 +38,9 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.move_towards_player(player_x, player_y, player_rectx)
 
         if self.collision == False:
-            if self.dx_new == 200 or self.dx_new == -200:
-                self.stop = True
+            if self.dx_new > 150 or self.dx_new <= -100:
                 self.speed = 0
-            #     print("Collision detected")
-            # else:
-            #     print("No collision detected")
+                self.stop = True
 
         if self.stop == True:
             self.current_time += deltatime
@@ -66,14 +63,14 @@ class FrogEnemy(pygame.sprite.Sprite):
 
     def render(self, display):
         display.blit(self.image, (self.rect.x, self.rect.y))
-        pygame.draw.rect(display, (255,255,255), self.rect, 2)
+        # pygame.draw.rect(display, (255,255,255), self.rect, 2)
         # pygame.draw.rect(display, self.color, self.rect_draw, 2)
 
 
     def animate(self, deltatime, distance, speed):
         self.last_frame_update += deltatime
 
-        if int(speed) == 0:
+        if int(speed) == 0 and not(self.attack):
             if (self.current_anim_list == self.right_sprites or self.current_anim_list == self.attack_right):
                 self.current_anim_list = self.right_sprites
                 self.image = self.current_anim_list[0]
@@ -88,13 +85,30 @@ class FrogEnemy(pygame.sprite.Sprite):
             elif self.dx_new < 0:
                 self.current_anim_list = self.left_sprites
 
-        # if self.attack == True:
-        #     self.current_anim_list = self.attack_left
+        if self.attack == True:
+            if self.current_anim_list == self.right_sprites:
+                self.current_frame = 0
+                self.current_anim_list = self.attack_right[0]
+                self.current_anim_list = self.attack_right
+            elif self.current_anim_list == self.left_sprites:
+                self.current_anim_list = self.attack_left
+                self.current_frame = 0
+                self.current_anim_list = self.attack_left[0]
+                self.current_anim_list = self.attack_left
 
         if self.last_frame_update > self.fps:
-            self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
-            self.image = self.current_anim_list[self.current_frame]
-            self.last_frame_update = 0  
+            if self.current_anim_list == self.attack_right or self.current_anim_list == self.attack_left:
+                if self.current_frame != 2:
+                    self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
+                    self.image = self.current_anim_list[self.current_frame]
+                    self.last_frame_update = 0
+                else:
+                    self.image = self.current_anim_list[2]
+                    self.last_frame_update = 0
+            else:
+                self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
+                self.image = self.current_anim_list[self.current_frame]
+                self.last_frame_update = 0  
         
     
     def move_towards_player(self, player_x, player_y, player_rectx):
