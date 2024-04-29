@@ -111,7 +111,7 @@ class Player(pygame.sprite.Sprite):
             pygame.draw.line(display, "white", *line)
             
         # pygame.draw.rect(display, self.color, self.rect_draw)
-        pygame.display.flip()
+       
 
         
 
