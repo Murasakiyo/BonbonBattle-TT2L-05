@@ -76,7 +76,7 @@ class Player(pygame.sprite.Sprite):
         if self.attack == True and self.defend != True:
             self.current_time += deltatime
             if self.current_frame >= 4:
-                if self.current_time > 0.3:
+                if self.current_time > 0.2:
                     player_action["attack"] = False
                     self.attack = False
                     self.current_time = 0
@@ -161,7 +161,7 @@ class Player(pygame.sprite.Sprite):
 
         # fps differs 
         if self.attack:
-            self.fps = 0.08
+            self.fps = 0.06
         else:
             self.fps = 0.1
 
