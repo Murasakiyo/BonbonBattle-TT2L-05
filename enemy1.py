@@ -63,7 +63,7 @@ class FrogEnemy(pygame.sprite.Sprite):
         #         self.current_time = 0
 
         # print(self.speed)
-        print(self.current_time)
+        # print(self.current_time)
         self.move_towards_player(player_x, player_y)
 
 
