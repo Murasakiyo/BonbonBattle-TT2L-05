@@ -10,6 +10,7 @@ from enemy3 import *
 from ultimates import *
 from confection import *
 
+
 class Stage(State):
     def __init__(self, game):
         State.__init__(self, game)
@@ -21,6 +22,9 @@ class Stage(State):
         self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
+        self.enemy1 = FrogEnemy(self.game)
+        # self.enemy2 = FlyEnemy(self.game)
+        # self.enemy3 = Enemy3(self.game, self.camera)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.ultimate = False
@@ -28,7 +32,6 @@ class Stage(State):
         self.immunity = False
 
     def update(self, deltatime, player_action):
-
         if self.game.ult == False:
 
             # Cooldown for player receiving damage
@@ -71,6 +74,8 @@ class Stage(State):
             self.ultimate_reset()
 
 
+        self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.enemy1_collision) # pass player's position to enemy1
+        # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
 
 
     def render(self, display):
@@ -82,7 +87,11 @@ class Stage(State):
             confection.render(display)
 
         # self.player.render(display)
-
+         #test code for enemy1
+        # self.enemy1.render(display)
+        self.enemy1.render(display)
+        # self.enemy2.render(display)
+        # self.enemy3.render(display)
         if self.game.ult:
             display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
             if self.init_stan:
