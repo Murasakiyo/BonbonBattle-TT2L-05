@@ -70,18 +70,18 @@ class Enemy3(pygame.sprite.Sprite):
 
         ################## Print zone #############################
 
-        # print(self.current_time)
-        print(self.minionlist)
+        print(self.current_time)
+        # print(self.minionlist)
 
 
 
 
     def render(self, display):
         pygame.draw.rect(display, self.color, self.enemy3_rect)
-        pygame.draw.rect(display, self.color, self.enemyborder1)
-        pygame.draw.rect(display, self.color, self.enemyborder2)
-        pygame.draw.rect(display, self.color, self.enemyborder3)
-        pygame.draw.rect(display, self.color, self.enemyborder4) #draws the enemy border for refference
+        # pygame.draw.rect(display, self.color, self.enemyborder1)
+        # pygame.draw.rect(display, self.color, self.enemyborder2)
+        # pygame.draw.rect(display, self.color, self.enemyborder3)
+        # pygame.draw.rect(display, self.color, self.enemyborder4) #draws the enemy border for refference
 
         for self.minions in self.minionlist.sprites():
             self.minions.render(display)
