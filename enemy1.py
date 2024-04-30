@@ -32,7 +32,6 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.rect.clamp_ip(self.game.screen_rect)
 
         self.move_towards_player(player_x, player_y, player_rectx)
-        print(self.collision)
 
         if self.collision == False:
             if self.dx_new > 115 or self.dx_new <= -100:
@@ -167,6 +166,7 @@ class Tongue(pygame.sprite.Sprite):
         self.fps = 0.1
         self.rect = self.tongue.get_rect(width= 175, height=53)
         self.rect.x, self.rect.y = 0,0
+        self.attack = False
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
 
     def update(self, deltatime, player_action, pos_x, pos_y, attack):
@@ -179,32 +179,59 @@ class Tongue(pygame.sprite.Sprite):
 
     def animate(self, deltatime, attack):
         self.last_frame_update += deltatime
+        print(self.current_frame)
 
         if not(attack):
+            self.current_anim_list = self.idle
             self.image = self.current_anim_list[0]
             return
-        if attack:
+        
+        if attack == True and self.current_anim_list == self.idle:
+            self.current_frame = 0
+            self.current_anim_list = self.attack_left[0]
             self.current_anim_list = self.attack_left
-            
-        if self.last_frame_update > self.fps:
-            self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
-            self.image = self.current_anim_list[self.current_frame]
-            self.last_frame_update = 0  
 
-    def load_sprites(self):
+            
+
+        if self.last_frame_update > self.fps:
+            if attack:
+                if self.current_frame != 7:
+                    self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
+                    self.image = self.current_anim_list[self.current_frame]
+                    self.last_frame_update = 0
+                else:
+                    # self.current_frame = 0
+                    self.image = self.current_anim_list[7]
+                    self.last_frame_update = 0
+            else:
+                self.current_frame = 0
+                self.current_anim_list = self.idle
+                self.image = self.current_anim_list[self.current_frame]
+                self.last_frame_update = 0  
+
+    def load_sprites(self, x=175, y=52):
         self.attack_left, self.attack_right = [], []
+        self.idle = []
 
         # Load frog sprite
-        tongue = pygame.image.load("sprites/tongue.png").convert()
-        self.tongue = pygame.transform.scale(tongue, (210,867)).convert_alpha() 
-        SP = spritesheet.Spritesheet(self.tongue)   
-  
-        # Walking sprites 
-        for y in range(6):
-            self.attack_left.append(SP.get_sprite(0, 75 * y, 210, 40, (0,0,0)))
-        for y in range(8,14):
-            self.attack_right.append(SP.get_sprite(0, 100*y, 280, 84, (0,0,0)))
+        self.tongue = pygame.image.load("sprites/tongue/000.png").convert_alpha()
+        tongue2 = pygame.image.load("sprites/tongue/001.png").convert_alpha()
+        tongue3 = pygame.image.load("sprites/tongue/002.png").convert_alpha()
+        tongue4 = pygame.image.load("sprites/tongue/003.png").convert_alpha()
+        tongue5 = pygame.image.load("sprites/tongue/004.png").convert_alpha()
+        tongue6 = pygame.image.load("sprites/tongue/005.png").convert_alpha()
+        tongue7 = pygame.image.load("sprites/tongue/006.png").convert_alpha()
 
-        self.image = self.attack_left[0]
-        self.current_anim_list = self.attack_left
+        self.idle.append(pygame.transform.scale(self.tongue, (x, y)).convert_alpha())
+        self.attack_left.append(pygame.transform.scale(tongue2, (x, y)).convert_alpha())
+        self.attack_left.append(pygame.transform.scale(tongue3, (x, y)).convert_alpha())
+        self.attack_left.append(pygame.transform.scale(tongue4, (x, y)).convert_alpha())
+        self.attack_left.append(pygame.transform.scale(tongue5, (x, y)).convert_alpha())
+        self.attack_left.append(pygame.transform.scale(tongue5, (x, y)).convert_alpha())
+        self.attack_left.append(pygame.transform.scale(tongue6, (x, y)).convert_alpha())
+        self.attack_left.append(pygame.transform.scale(tongue7, (x, y)).convert_alpha())
+        self.attack_left.append(pygame.transform.scale(self.tongue, (x, y)).convert_alpha())
+
+        self.image = self.idle[0]
+        self.current_anim_list = self.idle
 
