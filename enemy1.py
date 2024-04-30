@@ -7,9 +7,9 @@ class FrogEnemy(pygame.sprite.Sprite):
         super().__init__(group)
         self.game = game
         self.load_sprites()
-        self.rect = self.frog.get_rect(width= 200, height=165)   # Placeholder for enemy froggie 
+        self.rect = self.frog.get_rect(width= 150, height=165)   # Placeholder for enemy froggie 
         self.rect.x, self.rect.y = 700,200
-        self.rect_draw = pygame.Rect(900,70,200,20)  # Placeholder for tongue
+        self.tongue = Tongue(self.game)  # Placeholder for tongue
         self.color = (255,255,255)
         self.current_time = 0
         self.attack = False
@@ -19,26 +19,23 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.speed = 5
         self.stop = False
         self.collision = False
-        self.left = False
-        self.right = False
+        
 
 
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
+    
         # Tongue's position
         self.rect_draw = pygame.Rect(self.rect.centerx, self.rect.centery, 150, 20)
 
         # Collision with the screen
         self.rect.clamp_ip(self.game.screen_rect)
-        
-        # Get direction towards player # animation
-        direction_x = player_action["right"] - player_action["left"]
-        direction_y = player_action["down"] - player_action["up"]
 
         self.move_towards_player(player_x, player_y, player_rectx)
+        print(self.collision)
 
         if self.collision == False:
-            if self.dx_new > 150 or self.dx_new <= -100:
+            if self.dx_new > 115 or self.dx_new <= -100:
                 self.speed = 0
                 self.stop = True
 
@@ -47,8 +44,8 @@ class FrogEnemy(pygame.sprite.Sprite):
             self.attack = True
             if self.current_time > 2.5:
                 self.attack = False
-                self.speed = 5
                 self.stop = False
+                self.speed = 5
             if self.current_time > 3.2:
                 self.collision = False
                 self.current_time = 0
@@ -62,8 +59,8 @@ class FrogEnemy(pygame.sprite.Sprite):
 
 
     def render(self, display):
-        display.blit(self.image, (self.rect.x, self.rect.y))
-        # pygame.draw.rect(display, (255,255,255), self.rect, 2)
+        # display.blit(self.image, (self.rect.x, self.rect.y))
+        pygame.draw.rect(display, (255,255,255), self.rect, 2)
         # pygame.draw.rect(display, self.color, self.rect_draw, 2)
 
 
@@ -116,9 +113,9 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.dx, self.dy = player_x - self.rect.centerx , player_y - self.rect.centery 
         self.dx_new = player_rectx - self.rect.x
         if self.dx > 0:
-            self.dx -= 200
+            self.dx -= 150
         elif self.dx < 0:
-            self.dx += 200 
+            self.dx += 150
         else:
             self.dx = self.dx
         self.distance = math.sqrt(self.dx**2 + self.dy**2)
@@ -154,9 +151,60 @@ class FrogEnemy(pygame.sprite.Sprite):
         for x in range(6):
             self.right_sprites.append(SP.get_sprite(x, 175, 190, 165, (0,0,0)))
         for x in range(3):
-            self.attack_left.append(SP.get_sprite(x, 350, 194, 165, (0,0,0)))
+            self.attack_left.append(SP.get_sprite(x, 320, 194, 165, (0,0,0)))
         for x in range(3,6):
-            self.attack_right.append(SP.get_sprite(x, 350, 194, 165, (0,0,0)))
+            self.attack_right.append(SP.get_sprite(x, 320, 194, 165, (0,0,0)))
 
         self.image = self.left_sprites[0]
         self.current_anim_list = self.left_sprites
+
+
+class Tongue(pygame.sprite.Sprite):
+    def __init__(self, game):
+        super().__init__()
+        self.game = game
+        self.load_sprites()
+        self.fps = 0.1
+        self.rect = self.tongue.get_rect(width= 175, height=53)
+        self.rect.x, self.rect.y = 0,0
+        self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
+
+    def update(self, deltatime, player_action, pos_x, pos_y, attack):
+        self.rect.x, self.rect.y = pos_x, pos_y
+        self.animate(deltatime, attack)
+
+    def render(self, display):
+        display.blit(self.image, (self.rect.x, self.rect.y))
+        pygame.draw.rect(display, (255,255,255), self.rect, 2)
+
+    def animate(self, deltatime, attack):
+        self.last_frame_update += deltatime
+
+        if not(attack):
+            self.image = self.current_anim_list[0]
+            return
+        if attack:
+            self.current_anim_list = self.attack_left
+            
+        if self.last_frame_update > self.fps:
+            self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
+            self.image = self.current_anim_list[self.current_frame]
+            self.last_frame_update = 0  
+
+    def load_sprites(self):
+        self.attack_left, self.attack_right = [], []
+
+        # Load frog sprite
+        tongue = pygame.image.load("sprites/tongue.png").convert()
+        self.tongue = pygame.transform.scale(tongue, (210,867)).convert_alpha() 
+        SP = spritesheet.Spritesheet(self.tongue)   
+  
+        # Walking sprites 
+        for y in range(6):
+            self.attack_left.append(SP.get_sprite(0, 75 * y, 210, 40, (0,0,0)))
+        for y in range(8,14):
+            self.attack_right.append(SP.get_sprite(0, 100*y, 280, 84, (0,0,0)))
+
+        self.image = self.attack_left[0]
+        self.current_anim_list = self.attack_left
+
