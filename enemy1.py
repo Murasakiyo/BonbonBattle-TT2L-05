@@ -200,7 +200,6 @@ class Tongue(pygame.sprite.Sprite):
                     self.image = self.current_anim_list[self.current_frame]
                     self.last_frame_update = 0
                 else:
-                    # self.current_frame = 0
                     self.image = self.current_anim_list[7]
                     self.last_frame_update = 0
             else:
@@ -209,7 +208,7 @@ class Tongue(pygame.sprite.Sprite):
                 self.image = self.current_anim_list[self.current_frame]
                 self.last_frame_update = 0  
 
-    def load_sprites(self, x=175, y=52):
+    def load_sprites(self, x=200, y=60):
         self.attack_left, self.attack_right = [], []
         self.idle = []
 

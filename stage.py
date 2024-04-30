@@ -49,7 +49,7 @@ class Stage(State):
             self.player.update(deltatime, player_action)
             self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
                                self.player.rect.center[1], self.player.enemy1_collision, self.player.rect.x) # pass player's position to enemy1
-            self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery, self.enemy1.attack)
+            self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
             
             # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
             # self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
@@ -93,7 +93,7 @@ class Stage(State):
         for confection in self.confection_ult.sprites():
             confection.render(display)
         self.tongue.render(display)
-        # self.player.render(display)
+        self.player.render(display)
          # test code for enemy1
         # self.enemy1.render(display)
         # self.enemy2.render(display)
