@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.c_time = 0
         self.moxie_points = 0
         self.moxie_bool = False
-        self.moxie_rect = pygame.Rect(10, 100, 40, 500)
+        self.moxie_rect = pygame.Rect(10, 50, 40, 250)
         
 
 
@@ -105,12 +105,12 @@ class Player(pygame.sprite.Sprite):
 
         # Moxie function for Player
         if moxie_activate == True:
-            self.moxie_points += 25
+            self.moxie_points += 12.5
             self.collide = False
                 
 
 
-        self.moxie_bar = pygame.Rect(10, 100, 40, 500 - self.moxie_points)
+        self.moxie_bar = pygame.Rect(10, 50, 40, 250 - self.moxie_points)
 
         # print(self.collide_time)
         print(self.collide)

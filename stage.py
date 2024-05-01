@@ -62,7 +62,7 @@ class Stage(State):
             self.check_specifics()
            
         if player_action["ultimate"]:
-            if self.player.moxie_points >= 500:
+            if self.player.moxie_points >= 250:
                 self.game.ult = True
                 self.player.moxie_points = 0
 
@@ -165,7 +165,7 @@ class Stage(State):
     # Check the specific confection that is picked up
     def check_specifics(self):
 
-        Enable ultimate initiation and adding sprites into sprite groups
+        # Enable ultimate initiation and adding sprites into sprite groups
         if self.init_louie == False and self.init_krie == False:
             if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
                 self.init_stan = True
