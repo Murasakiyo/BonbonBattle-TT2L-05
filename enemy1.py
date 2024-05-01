@@ -67,7 +67,7 @@ class FrogEnemy(pygame.sprite.Sprite):
     def animate(self, deltatime, distance, speed):
         self.last_frame_update += deltatime
 
-        if int(speed) == 0 and not(self.attack):
+        if int(speed) == 0 and self.attack == False:
             if (self.current_anim_list == self.right_sprites or self.current_anim_list == self.attack_right):
                 self.current_anim_list = self.right_sprites
                 self.image = self.current_anim_list[0]
@@ -180,7 +180,7 @@ class Tongue(pygame.sprite.Sprite):
 
     def animate(self, deltatime, attack):
         self.last_frame_update += deltatime
-        print(self.current_frame)
+        
 
         if not(attack):
             self.current_anim_list = self.idle
