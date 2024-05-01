@@ -165,19 +165,19 @@ class Stage(State):
     # Check the specific confection that is picked up
     def check_specifics(self):
 
-        # Enable ultimate initiation and adding sprites into sprite groups
-        # if self.init_louie == False and self.init_krie == False:
-        #     if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
-        #         self.init_stan = True
-        #         self.camera.add(self.stan)
-        # if self.init_stan == False and self.init_krie == False:
-        #     if pygame.sprite.spritecollide(self.player, self.float_grp, False, pygame.sprite.collide_mask):
-        #         self.init_louie = True
-        #         self.camera.add(self.louie)
-        # if self.init_louie == False and self.init_stan == False:
-        #     if pygame.sprite.spritecollide(self.player, self.strawb_grp, False, pygame.sprite.collide_mask):
-        #         self.init_krie = True
-        #         self.camera.add(self.krie)
+        Enable ultimate initiation and adding sprites into sprite groups
+        if self.init_louie == False and self.init_krie == False:
+            if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
+                self.init_stan = True
+                self.camera.add(self.stan)
+        if self.init_stan == False and self.init_krie == False:
+            if pygame.sprite.spritecollide(self.player, self.float_grp, False, pygame.sprite.collide_mask):
+                self.init_louie = True
+                self.camera.add(self.louie)
+        if self.init_louie == False and self.init_stan == False:
+            if pygame.sprite.spritecollide(self.player, self.strawb_grp, False, pygame.sprite.collide_mask):
+                self.init_krie = True
+                self.camera.add(self.krie)
 
         # Add sprites into support doll sprite grp for UPDATES
         if self.init_stan:

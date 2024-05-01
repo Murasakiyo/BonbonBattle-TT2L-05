@@ -102,20 +102,12 @@ class Player(pygame.sprite.Sprite):
         # self.enemy1_collision = [((self.rect.midleft[0] - 100, self.rect.midleft[1]), (self.rect.midright[0] + 100, self.rect.midright[1]))]
         self.enemy3_collisions(deltatime, direction_x, direction_y, collide_bool)
 
+
+        # Moxie function for Player
         if moxie_activate == True:
             self.moxie_points += 25
             self.collide = False
                 
-
-
-
-
-        # if self.moxie_points <= 100:
-        #     self.moxie_points += 1
-        # if self.moxie_points >= 500:
-        #     self.moxie_points = 500
-
-    
 
 
         self.moxie_bar = pygame.Rect(10, 100, 40, 500 - self.moxie_points)
