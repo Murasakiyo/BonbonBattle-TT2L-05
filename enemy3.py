@@ -20,8 +20,12 @@ class Enemy3(pygame.sprite.Sprite):
         self.attractspeed = 0
         self.minionspeed = 0
         self.current_time = 0
+        self.minion_time = 0
+        self.collide_time = 0
         self.start_time = time.time()
         self.avoid = False
+        self.collide = False
+        self.moxie_activate = False
         self.minions = Minions(self.game, self.enemy3_rect.centerx, self.enemy3_rect.centery)
         self.minions2 = Minions2(self.game, self.enemy3_rect.centerx, self.enemy3_rect.centery)
         self.minions3 = Minions3(self.game, self.enemy3_rect.centerx, self.enemy3_rect.centery)
@@ -30,7 +34,7 @@ class Enemy3(pygame.sprite.Sprite):
         
 
 
-    def update(self, deltatime, player_action, player_x, player_y, player_lines):
+    def update(self, deltatime, player_action, player_x, player_y, player_lines, p_move_x, p_move_y, collide_bool):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
@@ -61,17 +65,43 @@ class Enemy3(pygame.sprite.Sprite):
             self.attractspeed = 8
             self.speed = 0
         elif self.avoid == False:
-            self.speed = -4
+            self.speed = -4 # -4
             self.attractspeed = 0
 
-        self.minion_spawn()   
+        if self.collide == True:
+            self.collide_time += deltatime
+            if self.collide_time > 3:
+                self.collide = False
+                self.collide_time = 0
+
+        if self.moxie_activate == True:
+            self.moxie_activate = False
+
+        self.minion_spawn(deltatime)   
         self.minionlist.update(deltatime, player_action, player_x, player_y)
         self.update_minions(player_lines)
 
+    
+
+
+        # if self.collide == True:
+        #     self.collide_time += deltatime
+        #     if self.collide_time > 0.1:
+        #         p_move_x += 200 * deltatime * direction_x 
+        #         p_move_y += 225 * deltatime * direction_y
+
+        #     if self.collide_time > 3:
+        #         self.collide_time = 0
+        #         self.collide = False 
+
+
+
         ################## Print zone #############################
 
-        print(self.current_time)
+        # print(self.current_time)
         # print(self.minionlist)
+        # print(p_move_x)
+        # print(self.collide)
 
 
 
@@ -93,30 +123,44 @@ class Enemy3(pygame.sprite.Sprite):
         for self.minions in self.minionlist.copy():
             if any(self.minions.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions)
+                self.collide = True
+                self.moxie_activate = True
+
+        # if any(self.minions.rect.clipline(*line) for line in player_lines):
+        #     self.collide = True
 
         for self.minions2 in self.minionlist.copy():
             if any(self.minions2.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions2)
+                self.collide = True
+                self.moxie_activate = True
 
         for self.minions3 in self.minionlist.copy():
             if any(self.minions3.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions3)
+                self.collide = True
+                self.moxie_activate = True
 
         for self.minions4 in self.minionlist.copy():
             if any(self.minions4.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions4)
+                self.collide = True
+                self.moxie_activate = True
 
 
-    def minion_spawn(self):
+    def minion_spawn(self, deltatime):
         if len(self.minionlist) == 0:
-                new_minion = Minions(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                self.minionlist.add(new_minion) 
-                new_minion = Minions2(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                self.minionlist.add(new_minion) 
-                new_minion = Minions3(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                self.minionlist.add(new_minion) 
-                new_minion = Minions4(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                self.minionlist.add(new_minion) 
+                self.minion_time += deltatime
+                if self.minion_time > 3:
+                    new_minion = Minions(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
+                    self.minionlist.add(new_minion) 
+                    new_minion = Minions2(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
+                    self.minionlist.add(new_minion) 
+                    new_minion = Minions3(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
+                    self.minionlist.add(new_minion) 
+                    new_minion = Minions4(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
+                    self.minionlist.add(new_minion) 
+                    self.minion_time = 0
 
 ##############################################
 

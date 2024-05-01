@@ -21,16 +21,24 @@ class Player(pygame.sprite.Sprite):
         self.fps = 0
         self.color = "white"
         self.rect_draw = pygame.Rect(180, 180, 40, 40) #for clipline collision testing
+        self.collide = False
+        self.collide_time = 0
+        self.c_time = 0
+        self.moxie_points = 0
+        self.moxie_bool = False
+        self.moxie_rect = pygame.Rect(10, 100, 40, 500)
+        
 
 
 
-    def update(self,deltatime,player_action):
+    def update(self,deltatime,player_action, minion1_rect, minion2_rect, minion3_rect, minion4_rect, collide_bool, moxie_activate):
         # Get direction from input
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
         # collision with the screen
         self.rect.clamp_ip(self.game.screen_rect)
+
 
         # Check for defense button
         if player_action["defend"]:
@@ -85,11 +93,38 @@ class Player(pygame.sprite.Sprite):
         self.animate(deltatime, direction_x, direction_y)
 
         # position
-        self.rect.x += 400 * deltatime * direction_x 
-        self.rect.y += 450 * deltatime * direction_y 
+        if collide_bool == False:
+            self.rect.x += 400 * deltatime * direction_x 
+            self.rect.y += 450 * deltatime * direction_y
 
+##################################################################################
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
-        self.enemy1_collision = [((self.rect.midleft), (self.rect.midright))]
+        # self.enemy1_collision = [((self.rect.midleft[0] - 100, self.rect.midleft[1]), (self.rect.midright[0] + 100, self.rect.midright[1]))]
+        self.enemy3_collisions(deltatime, direction_x, direction_y, collide_bool)
+
+        if moxie_activate == True:
+            self.moxie_points += 25
+            self.collide = False
+                
+
+
+
+
+        # if self.moxie_points <= 100:
+        #     self.moxie_points += 1
+        # if self.moxie_points >= 500:
+        #     self.moxie_points = 500
+
+    
+
+
+        self.moxie_bar = pygame.Rect(10, 100, 40, 500 - self.moxie_points)
+
+        # print(self.collide_time)
+        print(self.collide)
+        # print(self.moxie_points)
+        # print(collide_bool)
+    
 
         # if any(self.rect_draw.clipline(*line) for line in self.lines):
         #     print("Collision detected")
@@ -105,15 +140,30 @@ class Player(pygame.sprite.Sprite):
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
         pygame.draw.rect(display, (255,255,255), self.rect,2)
+        pygame.draw.rect(display, "purple", self.moxie_rect)
+        pygame.draw.rect(display, "black", self.moxie_bar)
+        
 
         for line in self.lines:
             pygame.draw.line(display, "white", *line)
-            pygame.draw.line(display, "white", *line)
+        # for line in self.enemy1_collision:
+        #     pygame.draw.line(display, "white", *line)
+
             
         # pygame.draw.rect(display, self.color, self.rect_draw)
         pygame.display.flip()
 
-        
+    def enemy3_collisions(self, deltatime, direction_x, direction_y, collide_bool):       
+       if collide_bool == True:
+            self.collide_time += deltatime
+            if self.collide_time > 0.1:
+                self.rect.x += 200 * deltatime * direction_x 
+                self.rect.y += 225 * deltatime * direction_y
+
+            if self.collide_time > 3:
+                self.collide = True
+                self.collide_time = 0
+                
 
 
     def animate(self, deltatime, direction_x, direction_y):

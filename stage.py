@@ -43,10 +43,11 @@ class Stage(State):
                     self.immunity = False
 
             # Update player
-            self.player.update(deltatime, player_action)
+            self.player.update(deltatime, player_action, self.enemy3.minions.rect, self.enemy3.minions2.rect, self.enemy3.minions3.rect, self.enemy3.minions4.rect, self.enemy3.collide, self.enemy3.moxie_activate)
             # self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.enemy1_collision) # pass player's position to enemy1
             # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
-            self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
+            self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], 
+                               self.player.lines, self.player.rect.x, self.player.rect.y, self.player.collide)
 
             # Sprite group update
             for support in self.support_dolls.sprites():
@@ -61,7 +62,9 @@ class Stage(State):
             self.check_specifics()
            
         if player_action["ultimate"]:
-            self.game.ult = True
+            if self.player.moxie_points >= 500:
+                self.game.ult = True
+                self.player.moxie_points = 0
 
         if self.game.ult:
             if self.init_stan:
@@ -87,22 +90,22 @@ class Stage(State):
         for confection in self.confection_ult.sprites():
             confection.render(display)
 
-        # self.player.render(display)
+        self.player.render(display)
          #test code for enemy1
         # self.enemy1.render(display)
         # self.enemy1.render(display)
         # self.enemy2.render(display)
         self.enemy3.render(display)
-        # if self.game.ult:
-        #     display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
-        #     if self.init_stan:
-        #         self.stan_ult.render(display)
-        #     elif self.init_louie:
-        #         self.louie_ult.render(display)
-        #     elif self.init_krie:
-        #         self.krie_ult.render(display)
-        #     else:
-        #         self.torres_ult.render(display)
+        if self.game.ult:
+            display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
+            if self.init_stan:
+                self.stan_ult.render(display)
+            elif self.init_louie:
+                self.louie_ult.render(display)
+            elif self.init_krie:
+                self.krie_ult.render(display)
+            else:
+                self.torres_ult.render(display)
 
 
     def characters(self):
@@ -163,18 +166,18 @@ class Stage(State):
     def check_specifics(self):
 
         # Enable ultimate initiation and adding sprites into sprite groups
-        if self.init_louie == False and self.init_krie == False:
-            if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
-                self.init_stan = True
-                self.camera.add(self.stan)
-        if self.init_stan == False and self.init_krie == False:
-            if pygame.sprite.spritecollide(self.player, self.float_grp, False, pygame.sprite.collide_mask):
-                self.init_louie = True
-                self.camera.add(self.louie)
-        if self.init_louie == False and self.init_stan == False:
-            if pygame.sprite.spritecollide(self.player, self.strawb_grp, False, pygame.sprite.collide_mask):
-                self.init_krie = True
-                self.camera.add(self.krie)
+        # if self.init_louie == False and self.init_krie == False:
+        #     if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
+        #         self.init_stan = True
+        #         self.camera.add(self.stan)
+        # if self.init_stan == False and self.init_krie == False:
+        #     if pygame.sprite.spritecollide(self.player, self.float_grp, False, pygame.sprite.collide_mask):
+        #         self.init_louie = True
+        #         self.camera.add(self.louie)
+        # if self.init_louie == False and self.init_stan == False:
+        #     if pygame.sprite.spritecollide(self.player, self.strawb_grp, False, pygame.sprite.collide_mask):
+        #         self.init_krie = True
+        #         self.camera.add(self.krie)
 
         # Add sprites into support doll sprite grp for UPDATES
         if self.init_stan:

@@ -8,7 +8,7 @@ class Minions(pygame.sprite.Sprite):
         self.game = game
         self.camera = state.CameraGroup(self.game)
         self.rect = pygame.Rect(enemy3_rectx - 100, enemy3_recty, 30, 30) #left
-        self.speed = 2
+        self.minion_speed = 2 # 2
 
     def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]
@@ -24,7 +24,7 @@ class Minions(pygame.sprite.Sprite):
 
     def render(self, display):
         pygame.draw.rect(display, (255, 0, 255), self.rect)
-        pygame.display.flip()
+        # pygame.display.flip()
 
     def move_towards_player(self, player_x, player_y):
         # Find direction vector (dx, dy) between enemy and player.
@@ -33,8 +33,8 @@ class Minions(pygame.sprite.Sprite):
 
         dx, dy = dx / (dist + 1), dy / (dist + 1)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
-        self.rect.x += dx * self.speed
-        self.rect.y += dy * self.speed
+        self.rect.x += dx * self.minion_speed
+        self.rect.y += dy * self.minion_speed
 
 #############################################################################################
 
@@ -44,7 +44,7 @@ class Minions2(pygame.sprite.Sprite):
         self.game = game
         self.camera = state.CameraGroup(self.game)
         self.rect = pygame.Rect(enemy3_rectx + 100, enemy3_recty, 30, 30) #right
-        self.speed = 3
+        self.minion_speed = 3
 
     def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]
@@ -70,8 +70,8 @@ class Minions2(pygame.sprite.Sprite):
         dx2, dy2 = dx2 / (dist + 1), dy2 / (dist + 1)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
 
-        self.rect.x += dx2 * self.speed
-        self.rect.y += dy2 * self.speed
+        self.rect.x += dx2 * self.minion_speed
+        self.rect.y += dy2 * self.minion_speed
 
 #######################################################################################
 
@@ -81,7 +81,7 @@ class Minions3(pygame.sprite.Sprite):
         self.game = game
         self.camera = state.CameraGroup(self.game)
         self.rect = pygame.Rect(enemy3_rectx, enemy3_recty + 100, 30, 30) #bottom
-        self.speed = 4
+        self.minion_speed = 4
 
     def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]
@@ -107,8 +107,8 @@ class Minions3(pygame.sprite.Sprite):
         dx3, dy3 = dx3 / (dist + 1), dy3 / (dist + 1)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
 
-        self.rect.x += dx3 * self.speed
-        self.rect.y += dy3 * self.speed
+        self.rect.x += dx3 * self.minion_speed
+        self.rect.y += dy3 * self.minion_speed
 
 ###############################################################################################
 
@@ -118,7 +118,7 @@ class Minions4(pygame.sprite.Sprite):
         self.game = game
         self.camera = state.CameraGroup(self.game)
         self.rect = pygame.Rect(enemy3_rectx, enemy3_recty - 100, 30, 30) #top
-        self.speed = 5
+        self.minion_speed = 5
 
     def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]
@@ -144,6 +144,6 @@ class Minions4(pygame.sprite.Sprite):
         dx4, dy4 = dx4 / (dist + 1), dy4 / (dist + 1)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
 
-        self.rect.x += dx4 * self.speed
-        self.rect.y += dy4 * self.speed
+        self.rect.x += dx4 * self.minion_speed
+        self.rect.y += dy4 * self.minion_speed
         
