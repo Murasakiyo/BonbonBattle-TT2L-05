@@ -90,6 +90,7 @@ class Player(pygame.sprite.Sprite):
 
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         self.enemy1_collision = [((self.rect.midleft), (self.rect.midright))]
+        # self.enemy2_collision = [((self.rect.midleft), (self.rect.midright))]
 
         # if any(self.rect_draw.clipline(*line) for line in self.lines):
         #     print("Collision detected")
@@ -108,7 +109,8 @@ class Player(pygame.sprite.Sprite):
 
         for line in self.lines:
             pygame.draw.line(display, "white", *line)
-            pygame.draw.line(display, "white", *line)
+        # for line in self.enemy2_collision:
+        #     pygame.draw.line(display, "red", *line)
             
         # pygame.draw.rect(display, self.color, self.rect_draw)
         pygame.display.flip()

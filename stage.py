@@ -6,6 +6,7 @@ from louie import *
 from krie import *
 from ultimates import *
 from enemy1 import *
+from enemy2 import *
 from enemy3 import *
 from ultimates import *
 from confection import *
@@ -23,7 +24,7 @@ class Stage(State):
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
         self.enemy1 = FrogEnemy(self.game)
-        # self.enemy2 = FlyEnemy(self.game)
+        self.enemy2 = FlyEnemy(self.game)
         self.enemy3 = Enemy3(self.game)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
@@ -33,12 +34,6 @@ class Stage(State):
 
     def update(self, deltatime, player_action):
 
-        for i in range(3):
-            random_x = random.randint(0, self.game.SCREENWIDTH)
-            random_y = random.randint(0, self.game.SCREENHEIGHT)
-            new_enemy = FlyEnemy(self.game)  # Create a new enemy instance
-            new_enemy.rect.center = (random_x, random_y)  # Position
-            self.enemy2.enemies.add(new_enemy)  # Add the enemy to the grp
         if self.game.ult == False:
             # Cooldown for player receiving damage
             if self.game.damaged == True:
@@ -50,10 +45,12 @@ class Stage(State):
 
             # Update player
             self.player.update(deltatime, player_action)
-            # self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.enemy1_collision) # pass player's position to enemy1
-            # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
-            self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
+            # self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.enemy1_collision) 
+            self.enemy2.update(deltatime, player_action, self.player.rect.center[0], 
+                               self.player.rect.center[1], self.player.rect) 
+            # self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
 
+        
             # Sprite group update
             for support in self.support_dolls.sprites():
                 support.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
@@ -93,12 +90,10 @@ class Stage(State):
         for confection in self.confection_ult.sprites():
             confection.render(display)
 
-        # self.player.render(display)
-         #test code for enemy1
+        self.player.render(display)
         # self.enemy1.render(display)
-        # self.enemy1.render(display)
-        # self.enemy2.render(display)
-        self.enemy3.render(display)
+        self.enemy2.render(display)
+        # self.enemy3.render(display)
         # if self.game.ult:
         #     display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
         #     if self.init_stan:
