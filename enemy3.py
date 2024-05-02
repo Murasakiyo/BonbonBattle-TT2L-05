@@ -2,7 +2,6 @@ import pygame
 import time
 import math
 import spritesheet
-import state
 from minions import *
 
 class Enemy3(pygame.sprite.Sprite):
@@ -163,6 +162,11 @@ class Enemy3(pygame.sprite.Sprite):
                     self.minion_time = 0
 
 ##############################################
+
+    def enemy3_moxie_function(self):
+        if self.moxie_activate == True:
+            pass
+
 
     def enemy3_movement(self, player_x, player_y):
         # Find direction vector (dx, dy) between enemy and player.

@@ -26,7 +26,10 @@ class Player(pygame.sprite.Sprite):
         self.c_time = 0
         self.moxie_points = 0
         self.moxie_bool = False
-        self.moxie_rect = pygame.Rect(10, 50, 40, 250)
+        self.moxie_rect = pygame.Rect(10, 150, 40, 250)
+        self.healthpoints = 100
+        self.attackpoints = 10
+        self.defensepoints = 10
         
 
 
@@ -110,7 +113,7 @@ class Player(pygame.sprite.Sprite):
                 
 
 
-        self.moxie_bar = pygame.Rect(10, 50, 40, 250 - self.moxie_points)
+        self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
 
         # print(self.collide_time)
         print(self.collide)
@@ -144,6 +147,11 @@ class Player(pygame.sprite.Sprite):
             
         # pygame.draw.rect(display, self.color, self.rect_draw)
         pygame.display.flip()
+
+    def player_stats(self):
+        self.healthpoints = 100
+        self.attackpoints = 10
+        self.defense = 10 # defense formula
 
     def enemy3_collisions(self, deltatime, direction_x, direction_y, collide_bool):       
        if collide_bool == True:
