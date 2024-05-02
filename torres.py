@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
         if self.defend:
             self.attack = False
             self.current_time += deltatime
-            if self.current_time > 0.5:
+            if self.current_time > 0.8:
                 player_action["defend"] = False
                 self.defend = False
                 self.current_time = 0
