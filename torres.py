@@ -104,7 +104,7 @@ class Player(pygame.sprite.Sprite):
 
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
-        # pygame.draw.rect(display, (255,255,255), self.rect,2)
+        pygame.draw.rect(display, (255,255,255), self.rect,2)
 
         for line in self.lines:
             pygame.draw.line(display, "white", *line)
@@ -188,7 +188,7 @@ class Player(pygame.sprite.Sprite):
         self.right_sprites, self.left_sprites = [], []
         self.attack_right, self.attack_left = [], []
         self.defend_sprites = []
-        torres = pygame.image.load("sprites/torres_sp.png").convert()
+        torres = pygame.image.load("sprites/torres_sp1.png").convert()
         self.torres_walk = pygame.transform.scale(torres, (1038,1200)).convert_alpha()
         SP = spritesheet.Spritesheet(self.torres_walk)
 
@@ -196,7 +196,7 @@ class Player(pygame.sprite.Sprite):
         self.defend_sprites.append(SP.get_sprite(0, 800, 198, 200, (0,0,0)))
         self.defend_sprites.append(SP.get_sprite(1, 800, 198, 200, (0,0,0)))
         for x in range(5):
-            self.right_sprites.append(SP.get_sprite(x, 0, 171,190, (0,0,0)))
+            self.right_sprites.append(SP.get_sprite(x, 0, 193,190, (0,0,0)))
         for x in range(5):
             self.left_sprites.append(SP.get_sprite(x, 190, 171, 190, (0,0,0)))
         for x in range(5):
