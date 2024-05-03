@@ -1,6 +1,7 @@
 import pygame
 import sys
 from stage import Stage
+from menu import MainMenu
 
 class Game():
     def __init__(self):
@@ -107,7 +108,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = Stage(self)
+        self.title_screen = MainMenu(self)
         self.state_stack.append(self.title_screen)
 
     def reset_keys(self):

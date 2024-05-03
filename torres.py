@@ -107,13 +107,12 @@ class Player(pygame.sprite.Sprite):
         # display.blit(self.image, (self.rect.x, self.rect.y))
         pygame.draw.rect(display, (255,255,255), self.rect,2)
 
-        for line in self.lines:
-            pygame.draw.line(display, "white", *line)
+        # for line in self.lines:
+        #     pygame.draw.line(display, "white", *line)
         # for line in self.enemy2_collision:
         #     pygame.draw.line(display, "red", *line)
             
         # pygame.draw.rect(display, self.color, self.rect_draw)
-        pygame.display.flip()
 
         
 

@@ -46,8 +46,7 @@ class Stage(State):
             # Update player
             self.player.update(deltatime, player_action)
             # self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.enemy1_collision) 
-            self.enemy2.update(deltatime, player_action, self.player.rect.center[0], 
-                               self.player.rect.center[1], self.player.rect) 
+            self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect) 
             # self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
 
         
