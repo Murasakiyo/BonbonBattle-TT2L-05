@@ -6,8 +6,16 @@ class MainMenu(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.game = game
-        self.rect_START = pygame.Rect(600,465,250,100)
-        self.rect_SETTING = pygame.Rect(900,465,150,100)
+        self.start_button = pygame.image.load("sprites/start_button.png").convert_alpha()
+        self.start_button_hover = pygame.image.load("sprites/start_button_hover.png").convert_alpha()
+        self.current_start = self.start_button
+        self.rect_START = self.start_button.get_rect(width= 200, height=150)
+        self.rect_START.x, self.rect_START.y = 600, 465
+        self.set_button = pygame.image.load("sprites/set_button.png").convert_alpha()
+        self.set_button_hover = pygame.image.load("sprites/set_button_hover.png").convert_alpha()
+        self.rect_SET = self.set_button.get_rect(width=100, height=100)
+        self.rect_SET.x, self.rect_SET.y = 900, 465
+        self.current_set = self.set_button
         self.click = False
         self.next = False
 
@@ -21,12 +29,7 @@ class MainMenu(State):
             if not pygame.mouse.get_pressed()[0]:
                 self.next = False
                 self.click = False
-
-        # if self.rect_SETTING.collidepoint(self.mouse):
-        #     if pygame.mouse.get_pressed()[0] and not self.click:
-        #         self.click = True
-        #     if not pygame.mouse.get_pressed()[0]:
-        #         self.click = False
+        
 
         if self.next:
             player_action["transition"] = True
@@ -40,5 +43,13 @@ class MainMenu(State):
     
     def render(self, display):
         display.blit(pygame.image.load("sprites/main_screen.bmp").convert(), (0,0))
-        pygame.draw.rect(display, (255,207,71), self.rect_START)
-        pygame.draw.rect(display, (102,102,255), self.rect_SETTING)
+        if self.rect_START.collidepoint(self.mouse):
+            self.current_start = self.start_button_hover
+        else:
+            self.current_start = self.start_button
+        if self.rect_SET.collidepoint(self.mouse):
+            self.current_set = self.set_button_hover
+        else:
+            self.current_set = self.set_button
+        display.blit(self.current_start, (self.rect_START.x, self.rect_START.y))
+        display.blit(self.current_set, (self.rect_SET.x, self.rect_SET.y))

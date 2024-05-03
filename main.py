@@ -34,7 +34,6 @@ class Game():
             self.get_events() # check what is press
             self.update() # update the game according to presses
             self.render() # render to screen
-
             self.clock.tick((60))
             # print(self.alpha)
 
