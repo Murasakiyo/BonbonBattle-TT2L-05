@@ -1,5 +1,6 @@
 import pygame
 import spritesheet
+import copy
 
 
 class Player(pygame.sprite.Sprite):
@@ -16,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = position_x, position_y
         self.torres_mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.torres_mask.to_surface()
+        
         # self.line = self.rect.clipline(50, 50)
         self.current_frame, self.last_frame_update = 0,0
         self.fps = 0
@@ -25,6 +27,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self,deltatime,player_action):
+
         # Get direction from input
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
@@ -81,6 +84,7 @@ class Player(pygame.sprite.Sprite):
                     self.attack = False
                     self.current_time = 0
 
+        
         # animation for sprite
         self.animate(deltatime, direction_x, direction_y)
 
@@ -90,13 +94,6 @@ class Player(pygame.sprite.Sprite):
 
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         self.enemy1_collision = [((self.rect.midleft), (self.rect.midright))]
-
-        # if any(self.rect_draw.clipline(*line) for line in self.enemy1_collision):
-        #     print("Collision detected")
-        # else:
-        #     print("No collision detected")
-
-        
 
 
 
@@ -110,6 +107,8 @@ class Player(pygame.sprite.Sprite):
             pygame.draw.line(display, "white", *line)
         for line in self.enemy1_collision:
             pygame.draw.line(display, "white", *line)
+
+        
             
         # pygame.draw.rect(display, self.color, self.rect_draw)
        
@@ -208,6 +207,9 @@ class Player(pygame.sprite.Sprite):
         self.current_anim_list = self.right_sprites
 
 
+    
 
-class Hitbox(pygame.sprite.Sprite):
-    pass
+
+
+        
+
