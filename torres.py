@@ -13,12 +13,9 @@ class Player(pygame.sprite.Sprite):
         self.right = 1
         self.load_sprites()
         self.rect = self.torres_walk.get_rect(width= 200, height=200)
-        # self.rect.center = (295, 373)
         self.rect.x, self.rect.y = position_x, position_y
         self.torres_mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.torres_mask.to_surface()
-        
-        # self.line = self.rect.clipline(50, 50)
         self.current_frame, self.last_frame_update = 0,0
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         self.enemy1_collision = [((self.rect.midleft), (self.rect.midright))]
@@ -63,17 +60,6 @@ class Player(pygame.sprite.Sprite):
                 self.attack = True
                 direction_x = 0
                 direction_y = 0
-
-        # if direction_y != 0:
-        #     self.attack = False
-            
-        # if self.attack == True:
-        #     self.current_time = time.time()
-        #     if self.current_frame >= 4:
-        #         if self.current_time - self.prev_time > 1:
-        #             player_action["attack"] = False
-        #             self.attack = False
-        #             self.prev_time = self.current_time
 
         # Attack timer
         if self.attack == True and self.defend != True:
