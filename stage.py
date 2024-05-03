@@ -23,7 +23,7 @@ class Stage(State):
         self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
-        self.enemy1 = FrogEnemy(self.game)
+        self.enemy1 = FrogEnemy(self.game, self.camera)
         self.enemy2 = FlyEnemy(self.game)
         self.enemy3 = Enemy3(self.game)
         self.tongue = Tongue(self.game)
@@ -49,10 +49,10 @@ class Stage(State):
 
             # Update player
             self.player.update(deltatime, player_action)
-            # self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
-            #                    self.player.rect.center[1], self.player.enemy1_collision, self.player.rect.x) # pass player's position to enemy1
-            # self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
-            # self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
+            self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
+                               self.player.rect.center[1], self.player.enemy1_collision, self.player.rect.x) 
+            self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
+            self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
             self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect) 
             # self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
             
