@@ -29,9 +29,13 @@ class MainMenu(State):
         #         self.click = False
 
         if self.next:
+            player_action["transition"] = True
+
+        if self.game.alpha == 255:
             new_state = Stage(self.game)
             new_state.enter_state()
-            self.game.reset_keys()
+            player_action["transition"] =  False
+            
 
     
     def render(self, display):

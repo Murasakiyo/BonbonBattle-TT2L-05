@@ -53,7 +53,7 @@ class Stage(State):
                                self.player.rect.center[1], self.player.enemy1_collision, self.player.rect.x) 
             self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
             self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
-            self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect) 
+            # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect) 
             # self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
             
 
@@ -106,7 +106,7 @@ class Stage(State):
 
         self.player.render(display)
         # self.enemy1.render(display)
-        self.enemy2.render(display)
+        # self.enemy2.render(display)
         # self.enemy3.render(display)
     
         if self.game.ult:

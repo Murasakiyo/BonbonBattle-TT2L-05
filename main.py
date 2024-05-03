@@ -7,16 +7,19 @@ class Game():
     def __init__(self):
         pygame.init()
         self.SCREENWIDTH, self.SCREENHEIGHT = 1100, 600
-        self.game_canvas = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT))
+        self.game_canvas = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.screen = pygame.display.set_mode((self.SCREENWIDTH, self.SCREENHEIGHT))
         self.screen_rect = self.screen.get_rect()
         self.run, self.play = True, True
-        self.damaged = True
+        self.damaged = False
         self.clock = pygame.time.Clock()
+        self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
+        self.alpha = 0
+        
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
-                              "ultimate": False} 
+                              "ultimate": False, "transition": False} 
         self.deltatime, self.prevtime = 0 , 0
         self.state_stack = []
         self.load_states()
@@ -31,7 +34,9 @@ class Game():
             self.get_events() # check what is press
             self.update() # update the game according to presses
             self.render() # render to screen
+
             self.clock.tick((60))
+            # print(self.alpha)
 
 
     # Modified with self-learning
@@ -84,6 +89,7 @@ class Game():
     def render(self):
         self.state_stack[-1].render(self.game_canvas)
         self.screen.blit(pygame.transform.scale(self.game_canvas,(self.SCREENWIDTH, self.SCREENHEIGHT)), (0,0)) #image, (width, height), coordinates
+        self.transition()
         pygame.display.flip()
 
 
@@ -118,6 +124,18 @@ class Game():
     def ultimates(self):
         self.ult = False
         self.ult_finish = False
+    
+    def transition(self):
+        if self.player_action["transition"]:
+            self.alpha = min(self.alpha + 10, 255)
+        else:
+            if self.alpha != 0:
+                self.alpha = max(self.alpha - 10, 0)
+        self.black_surface.fill((0,0,0, self.alpha))
+
+
+        self.screen.blit(self.black_surface, (0,0))
+        pygame.display.flip()
 
 
 if __name__ == "__main__":
