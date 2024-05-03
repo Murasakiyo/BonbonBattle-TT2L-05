@@ -18,11 +18,10 @@ class Player(pygame.sprite.Sprite):
         self.mask_image = self.torres_mask.to_surface()
         # self.line = self.rect.clipline(50, 50)
         self.current_frame, self.last_frame_update = 0,0
+        self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         self.fps = 0
         self.color = "white"
-        self.rect_draw = pygame.Rect(180, 180, 40, 40) #for clipline collision testing
-
-
+        
 
     def update(self,deltatime,player_action):
         # Get direction from input
@@ -90,6 +89,7 @@ class Player(pygame.sprite.Sprite):
 
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         self.enemy1_collision = [((self.rect.midleft), (self.rect.midright))]
+        # self.enemy2_collision = [((self.rect.midleft), (self.rect.midright))]
 
         # if any(self.rect_draw.clipline(*line) for line in self.enemy1_collision):
         #     print("Collision detected")
@@ -98,21 +98,15 @@ class Player(pygame.sprite.Sprite):
 
         
 
-
-
-
-
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
-        # pygame.draw.rect(display, (255,255,255), self.rect,2)
+        pygame.draw.rect(display, (255,255,255), self.rect,2)
 
         for line in self.lines:
             pygame.draw.line(display, "white", *line)
-        for line in self.enemy1_collision:
-            pygame.draw.line(display, "white", *line)
+        
             
-        # pygame.draw.rect(display, self.color, self.rect_draw)
-       
+
 
         
 
