@@ -256,7 +256,6 @@ class Tongue2(pygame.sprite.Sprite):
 
     def animate(self, deltatime, attack):
         self.last_frame_update += deltatime
-        print(self.current_frame)
 
         if not(attack):
             self.current_anim_list = self.idle

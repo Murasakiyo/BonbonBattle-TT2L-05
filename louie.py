@@ -108,12 +108,12 @@ class Louie(pygame.sprite.Sprite):
         # Updating frames
         if self.last_frame_update > self.fps:
             if self.current_anim_list == self.attack_right or self.current_anim_list == self.attack_left:
-                if self.current_frame != 4:
+                if self.current_frame != 5:
                     self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
                     self.image = self.current_anim_list[self.current_frame]
                     self.last_frame_update = 0
                 else:
-                    self.image = self.current_anim_list[4]
+                    self.image = self.current_anim_list[5]
                     self.last_frame_update = 0
             else:
                 self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
@@ -155,7 +155,7 @@ class Louie(pygame.sprite.Sprite):
         self.walk_right, self.walk_left = [], []
         self.attack_right, self.attack_left = [], []
         louis = pygame.image.load("sprites/louie_sp.png").convert()
-        self.louie = pygame.transform.scale(louis, (775,800)).convert_alpha()
+        self.louie = pygame.transform.scale(louis, (938,800)).convert_alpha()
         SP = spritesheet.Spritesheet(self.louie)
 
         # Walking sprites
@@ -167,9 +167,9 @@ class Louie(pygame.sprite.Sprite):
             self.walk_right.append(SP.get_sprite(x, 200, 190, 190, (0,0,0)))
         for x in range(2,4):
             self.walk_left.append(SP.get_sprite(x, 200, 183, 190, (0,0,0)))
-        for x in range(5):
+        for x in range(6):
             self.attack_right.append(SP.get_sprite(x, 390, 157, 190, (0,0,0)))
-        for x in range(5):
+        for x in range(6):
             self.attack_left.append(SP.get_sprite(x, 600, 157, 190, (0,0,0)))
 
         self.image = self.right_sprites[0]

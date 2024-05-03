@@ -99,6 +99,7 @@ class Stage(State):
         elif self.enemy1.current_anim_list == self.enemy1.attack_right:
             self.tongue2.render(display)
         display.blit(pygame.transform.scale(self.trees, (1200,600)), (-60,0))
+        # self.player.render(display)
         
         for confection in self.confection_ult.sprites():
             confection.render(display)

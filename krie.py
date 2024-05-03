@@ -41,7 +41,6 @@ class Krie(pygame.sprite.Sprite):
             self.move(player_x, player_y)
 
         self.animate(deltatime, direction_x, direction_y, self.step_distance)
-                
     
     def render(self, display):
         display.blit(self.image, (self.krie_vector.x, self.krie_vector.y))
@@ -85,15 +84,15 @@ class Krie(pygame.sprite.Sprite):
 
         # Support doll attacking animation
         if self.attack == True and (self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right):
-            self.current_anim_list.clear
-            self.fps = 0.15
             self.current_frame = 0
+            self.current_anim_list.clear
+            self.fps = 0.1
             self.current_anim_list = self.attack_right[0]
             self.current_anim_list = self.attack_right
         if self.attack == True and (self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left):
-            self.current_anim_list.clear
-            self.fps = 0.15
             self.current_frame = 0
+            self.current_anim_list.clear
+            self.fps = 0.1
             self.current_anim_list = self.attack_left[0]
             self.current_anim_list = self.attack_left
 
@@ -107,12 +106,12 @@ class Krie(pygame.sprite.Sprite):
         # Updating frames
         if self.last_frame_update > self.fps:
             if self.current_anim_list == self.attack_right or self.current_anim_list == self.attack_left:
-                if self.current_frame != 3:
+                if self.current_frame != 4:
                     self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
                     self.image = self.current_anim_list[self.current_frame]
                     self.last_frame_update = 0
                 else:
-                    self.image = self.current_anim_list[3]
+                    self.image = self.current_anim_list[4]
                     self.last_frame_update = 0
             else:
                 self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
@@ -153,22 +152,22 @@ class Krie(pygame.sprite.Sprite):
         self.walk_right, self.walk_left = [], []
         self.attack_right, self.attack_left = [], []
         klubnika = pygame.image.load("sprites/krie_sp.png").convert()
-        self.krie = pygame.transform.scale(klubnika, (600,800)).convert_alpha()
+        self.krie = pygame.transform.scale(klubnika, (750,800)).convert_alpha()
         SP = spritesheet.Spritesheet(self.krie)
 
         # Walking sprites
         for x in range(2):
-            self.right_sprites.append(SP.get_sprite(x, 0, 132,186, (0,0,0)))
+            self.right_sprites.append(SP.get_sprite(x, 0, 132,190, (0,0,0)))
         for x in range(2, 4):
-            self.left_sprites.append(SP.get_sprite(x, 0, 132, 186, (0,0,0)))
+            self.left_sprites.append(SP.get_sprite(x, 0, 132, 190, (0,0,0)))
         for x in range(2):
             self.walk_right.append(SP.get_sprite(x, 200, 132, 190, (0,0,0)))
         for x in range(2,4):
             self.walk_left.append(SP.get_sprite(x, 200, 132, 190, (0,0,0)))
-        for x in range(4):
+        for x in range(5):
             self.attack_right.append(SP.get_sprite(x, 400, 146, 190, (0,0,0)))
-        for x in range(4):
-            self.attack_left.append(SP.get_sprite(x, 590, 144, 190, (0,0,0)))
+        for x in range(5):
+            self.attack_left.append(SP.get_sprite(x, 590, 144, 195, (0,0,0)))
 
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites
