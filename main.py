@@ -18,7 +18,7 @@ class Game():
         self.start = False
         # self.ct_display = 1
         self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 5
-        
+        self.backgrounds()
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
@@ -146,6 +146,10 @@ class Game():
             self.start = True
             self.current_time = 0
         
+    def backgrounds(self):
+        self.forest = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
+        self.black = pygame.image.load("sprites/black.png").convert_alpha()
+        self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
 
 
 if __name__ == "__main__":
