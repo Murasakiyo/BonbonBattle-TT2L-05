@@ -22,7 +22,7 @@ class Sec_Stage(State, Ults):
         self.immunity = False
 
     def update(self, deltatime, player_action):
-        # print(int(self.player.rect.x - self.enemy1.rect.x))
+        # print(int(self.enemy2.flies.rect.x-self.player.rect.x))
 
         if self.game.start == True:
             if self.game.ult == False:
@@ -36,7 +36,8 @@ class Sec_Stage(State, Ults):
 
                 # Update player and enemies
                 self.player.update(deltatime, player_action)
-                self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect) 
+                self.enemy2.update(deltatime, player_action, self.player.rect.center[0], 
+                                   self.player.rect.center[1], self.player.rect, self.player.rect.x) 
                 
                 self.update_ultimate(deltatime, player_action)
 
@@ -49,11 +50,10 @@ class Sec_Stage(State, Ults):
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
-
         self.camera.custom_draw(display)
+        self.enemy2.render(display)
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
         
-        self.enemy2.render(display)
 
         self.ultimate_display(display)
     
