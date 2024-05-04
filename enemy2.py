@@ -52,7 +52,7 @@ class FlyEnemy(pygame.sprite.Sprite):
         color_list = [(255,0,0), (0,255,0), (0,0,255)]
         if len(self.flylist) == 0:
             for i in range(3):
-                new_fly = Fly(self, moving_speed=1+(i*1), color = color_list[i])
+                new_fly = Fly(self, moving_speed=1+(i+0.5), color = color_list[i])
                 self.flylist.add(new_fly)
 
 

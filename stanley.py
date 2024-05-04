@@ -33,23 +33,7 @@ class Stanley(pygame.sprite.Sprite, Support):
         self.last_frame_update += deltatime
 
         # Code for all support doll's walking and idle animation
-        self.idle_walking(direction_x, direction_y, distance)
-
-        # walk animation after attacking
-        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]): 
-            self.current_anim_list = self.right_sprites
-        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]): 
-            self.current_anim_list = self.left_sprites
-
-        # Support doll attacking animation
-        if self.attack == True and (self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right):
-            self.fps = 0.15
-            self.current_anim_list = self.attack_right
-
-        if self.attack == True and (self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left):
-            self.fps = 0.15
-            self.current_anim_list = self.attack_left
-
+        self.idle_walking(direction_x, direction_y, distance, 0.15)
 
         # Fps for each animation
         if self.current_anim_list == self.right_sprites or self.current_anim_list == self.left_sprites:

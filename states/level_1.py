@@ -12,7 +12,7 @@ from ultimates import *
 from confection import *
 
 
-class Stage(State):
+class First_Stage(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.camera = CameraGroup(self.game)
@@ -93,13 +93,17 @@ class Stage(State):
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
+
         self.camera.custom_draw(display)
+        
         if self.enemy1.current_anim_list == self.enemy1.attack_left:
             self.tongue.render(display)
         elif self.enemy1.current_anim_list == self.enemy1.attack_right:
             self.tongue2.render(display)
         display.blit(pygame.transform.scale(self.trees, (1200,600)), (-60,0))
         
+        # self.enemy2.render(display)
+
         for confection in self.confection_ult.sprites():
             confection.render(display)
     
@@ -121,7 +125,7 @@ class Stage(State):
 
 
     def characters(self):
-        self.player = Player(self.game, self.camera, 200,150) 
+        self.player = Player(self.game, self.camera, 200,200) 
         self.louie = Louie(self.game) 
         self.stan = Stanley(self.game) 
         self.krie = Krie(self.game)

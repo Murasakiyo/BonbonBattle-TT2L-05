@@ -51,7 +51,7 @@ class Support():
             self.doll_vector += self.direction_vector * self.step_distance * 0.1
             self.rect.x, self.rect.y = self.doll_vector.x, self.doll_vector.y
 
-    def idle_walking(self, direction_x, direction_y, distance):
+    def idle_walking(self, direction_x, direction_y, distance, fps):
 
         # Support doll idle
         if not(direction_x or direction_y) and (self.attack == False):
@@ -78,3 +78,18 @@ class Support():
                     self.current_anim_list = self.walk_left
                 else:
                     self.current_anim_list =self.left_sprites
+
+        # Walk animation after attacking
+        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]): 
+            self.current_anim_list = self.right_sprites
+        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]): 
+            self.current_anim_list = self.left_sprites
+
+        # Support doll attacking animation
+        if self.attack == True and (self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right):
+            self.fps = fps
+            self.current_anim_list = self.attack_right
+
+        if self.attack == True and (self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left):
+            self.fps = fps
+            self.current_anim_list = self.attack_left
