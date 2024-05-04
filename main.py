@@ -15,12 +15,13 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
+        self.start = False
         
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
                               "ultimate": False, "transition": False} 
-        self.deltatime, self.prevtime = 0 , 0
+        self.deltatime, self.prevtime, self.current_time = 0 , 0, 0
         self.state_stack = []
         self.load_states()
         self.ultimates()
@@ -35,7 +36,6 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
-            # print(self.alpha)
 
 
     # Modified with self-learning
@@ -135,6 +135,12 @@ class Game():
 
         self.screen.blit(self.black_surface, (0,0))
         pygame.display.flip()
+
+    def start_timer(self):
+        self.current_time += self.deltatime
+        if self.current_time > 4:
+            self.start = True
+            self.current_time = 0
 
 
 if __name__ == "__main__":

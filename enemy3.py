@@ -2,7 +2,7 @@ import pygame
 import time
 import math
 import spritesheet
-import state
+import parent_classes.state as state
 from minions import *
 
 class Enemy3(pygame.sprite.Sprite):

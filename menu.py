@@ -1,5 +1,5 @@
 import pygame
-from state import State
+from parent_classes.state import State
 from stage import Stage
 
 class MainMenu(State):
