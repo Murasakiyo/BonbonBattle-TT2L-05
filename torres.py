@@ -24,7 +24,6 @@ class Player(pygame.sprite.Sprite):
         
 
     def update(self,deltatime,player_action):
-
         # Get direction from input
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]

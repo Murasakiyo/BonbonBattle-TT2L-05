@@ -1,7 +1,7 @@
 import pygame
 import sys
-from stage import Stage
-from menu import MainMenu
+from states.level_1 import First_Stage
+from states.menu import MainMenu
 
 class Game():
     def __init__(self):
@@ -15,12 +15,15 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        
+        self.start = False
+        # self.ct_display = 1
+        self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 5
+        self.backgrounds()
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
                               "ultimate": False, "transition": False} 
-        self.deltatime, self.prevtime = 0 , 0
+    
         self.state_stack = []
         self.load_states()
         self.ultimates()
@@ -35,10 +38,8 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
-            # print(self.alpha)
 
 
-    # Modified with self-learning
     # All key events are here. Receive input from player, display output for player
     def get_events(self):
 
@@ -82,6 +83,8 @@ class Game():
     # Updates the state stack
     def update(self):
         self.state_stack[-1].update(self.deltatime, self.player_action)
+        self.ct_display = str(int(self.countdown -self.current_time))
+
 
 
     # Rendering images on screen
@@ -92,7 +95,6 @@ class Game():
         pygame.display.flip()
 
 
-    # Modified from original code (self-learning)-------------------------------
     # Frame time (Delta time: elapsed time since the last update/ 
     # Time difference between last frame and current frame)
     def getdeltatime(self):
@@ -101,7 +103,6 @@ class Game():
         self.prevtime = currenttime
         
 
-    # Modified by adding input size (self-learning)----------------------------------
     # Function to draw texts
     def draw_text(self, surface, text, colour, x, y, size):
         self.font = pygame.font.Font("Fonts/retro-pixel-cute-prop.ttf", size)
@@ -116,14 +117,17 @@ class Game():
         self.title_screen = MainMenu(self)
         self.state_stack.append(self.title_screen)
 
+    # Reset all player keys
     def reset_keys(self):
         for actions in self.player_action:
             self.player_action[actions] = False
 
+    # For all ultimates
     def ultimates(self):
         self.ult = False
         self.ult_finish = False
     
+    # Transition screen between states
     def transition(self):
         if self.player_action["transition"]:
             self.alpha = min(self.alpha + 10, 255)
@@ -132,9 +136,20 @@ class Game():
                 self.alpha = max(self.alpha - 10, 0)
         self.black_surface.fill((0,0,0, self.alpha))
 
-
         self.screen.blit(self.black_surface, (0,0))
         pygame.display.flip()
+
+    # Timer before Game Start
+    def start_timer(self):
+        self.current_time += self.deltatime
+        if int(self.countdown - self.current_time) == 0:
+            self.start = True
+            self.current_time = 0
+        
+    def backgrounds(self):
+        self.forest = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
+        self.black = pygame.image.load("sprites/black.png").convert_alpha()
+        self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
 
 
 if __name__ == "__main__":

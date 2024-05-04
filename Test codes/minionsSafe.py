@@ -1,6 +1,6 @@
 import pygame
 import math
-import state
+import parent_classes.state as state
 
 # This file is just for safekeeping in case the original code descends to hell
 
