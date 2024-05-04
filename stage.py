@@ -85,6 +85,8 @@ class Stage(State):
 
             if self.game.ult_finish:
                 self.ultimate_reset()
+        else:
+            self.game.start_timer()
 
 
 
@@ -101,6 +103,11 @@ class Stage(State):
         for confection in self.confection_ult.sprites():
             confection.render(display)
     
+        if self.game.start == False:
+            display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
+            if self.game.alpha == 0:
+                self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
+
         if self.game.ult:
             display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
             if self.init_stan:
