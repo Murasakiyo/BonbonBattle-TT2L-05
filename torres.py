@@ -27,14 +27,15 @@ class Player(pygame.sprite.Sprite):
         self.moxie_points = 0
         self.moxie_bool = False
         self.moxie_rect = pygame.Rect(10, 150, 40, 250)
-        self.healthpoints = 100
+        self.health_rect = pygame.Rect(10, 10, 250, 40)
+        self.healthpoints = 250
         self.attackpoints = 10
         self.defensepoints = 10
         
 
 
 
-    def update(self,deltatime,player_action, minion1_rect, minion2_rect, minion3_rect, minion4_rect, collide_bool, moxie_activate):
+    def update(self,deltatime,player_action, collide_bool, moxie_activate, take_damage):
         # Get direction from input
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
@@ -110,10 +111,18 @@ class Player(pygame.sprite.Sprite):
         if moxie_activate == True:
             self.moxie_points += 12.5
             self.collide = False
+
+        if take_damage == True:
+            self.healthpoints -= 5
+            
+        
+        elif self.healthpoints <= 0:
+            self.healthpoints += 250
                 
 
 
         self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
+        self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
 
         # print(self.collide_time)
         print(self.collide)
@@ -137,6 +146,8 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(display, (255,255,255), self.rect,2)
         pygame.draw.rect(display, "purple", self.moxie_rect)
         pygame.draw.rect(display, "black", self.moxie_bar)
+        pygame.draw.rect(display, "black", self.health_rect)
+        pygame.draw.rect(display, "green", self.health_bar)
         
 
         for line in self.lines:

@@ -25,6 +25,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.avoid = False
         self.collide = False
         self.moxie_activate = False
+        self.take_damage = False
         self.minions = Minions(self.game, self.enemy3_rect.centerx, self.enemy3_rect.centery)
         self.minions2 = Minions2(self.game, self.enemy3_rect.centerx, self.enemy3_rect.centery)
         self.minions3 = Minions3(self.game, self.enemy3_rect.centerx, self.enemy3_rect.centery)
@@ -76,6 +77,9 @@ class Enemy3(pygame.sprite.Sprite):
         if self.moxie_activate == True:
             self.moxie_activate = False
 
+        if self.take_damage == True:
+            self.take_damage = False
+
         self.minion_spawn(deltatime)   
         self.minionlist.update(deltatime, player_action, player_x, player_y)
         self.update_minions(player_lines)
@@ -124,6 +128,7 @@ class Enemy3(pygame.sprite.Sprite):
                 self.minionlist.remove(self.minions)
                 self.collide = True
                 self.moxie_activate = True
+                self.take_damage = True
 
         # if any(self.minions.rect.clipline(*line) for line in player_lines):
         #     self.collide = True
@@ -133,18 +138,21 @@ class Enemy3(pygame.sprite.Sprite):
                 self.minionlist.remove(self.minions2)
                 self.collide = True
                 self.moxie_activate = True
+                self.take_damage = True
 
         for self.minions3 in self.minionlist.copy():
             if any(self.minions3.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions3)
                 self.collide = True
                 self.moxie_activate = True
+                self.take_damage = True
 
         for self.minions4 in self.minionlist.copy():
             if any(self.minions4.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions4)
                 self.collide = True
                 self.moxie_activate = True
+                self.take_damage = True
 
 
     def minion_spawn(self, deltatime):

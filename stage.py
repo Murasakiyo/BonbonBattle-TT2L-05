@@ -43,7 +43,7 @@ class Stage(State):
                     self.immunity = False
 
             # Update player
-            self.player.update(deltatime, player_action, self.enemy3.minions.rect, self.enemy3.minions2.rect, self.enemy3.minions3.rect, self.enemy3.minions4.rect, self.enemy3.collide, self.enemy3.moxie_activate)
+            self.player.update(deltatime, player_action, self.enemy3.collide, self.enemy3.moxie_activate, self.enemy3.take_damage)
             # self.enemy1.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.enemy1_collision) # pass player's position to enemy1
             # self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1]) # pass player's position to enemy2
             self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], 
