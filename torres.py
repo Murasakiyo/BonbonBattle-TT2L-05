@@ -18,20 +18,20 @@ class Player(pygame.sprite.Sprite):
         self.mask_image = self.torres_mask.to_surface()
         self.current_frame, self.last_frame_update = 0,0
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
-        self.enemy1_collision = [((self.rect.midleft), (self.rect.midright))]
+        self.horiz_line = [((self.rect.midleft), (self.rect.midright))]
         self.fps = 0
         self.color = "white"
         self.collide = False
         self.collide_time = 0
         self.c_time = 0
-        self.moxie_points = 0
+        # self.moxie_points = 0
         self.moxie_bool = False
-        self.moxie_rect = pygame.Rect(10, 150, 40, 250)
+        # self.moxie_rect = pygame.Rect(10, 150, 40, 250)
         # self.health_rect = pygame.Rect(10, 10, 250, 40)
         # self.healthpoints = 250
         self.attackpoints = 10
         self.defensepoints = 10
-        self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
+        # self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
         # self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
         
 # , collide_bool, moxie_activate, take_damage
@@ -123,15 +123,15 @@ class Player(pygame.sprite.Sprite):
         
 
 
-        self.enemy1_collision = [((self.rect.midleft), (self.rect.midright))]
+        self.horiz_line = [((self.rect.midleft), (self.rect.midright))]
         # self.enemy2_collision = [((self.rect.midleft), (self.rect.midright))]
 
 
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
         pygame.draw.rect(display, (255,255,255), self.rect,2)
-        pygame.draw.rect(display, "purple", self.moxie_rect)
-        pygame.draw.rect(display, "black", self.moxie_bar)
+        # pygame.draw.rect(display, "purple", self.moxie_rect)
+        # pygame.draw.rect(display, "black", self.moxie_bar)
         # pygame.draw.rect(display, "black", self.health_rect)
         # pygame.draw.rect(display, "green", self.health_bar)
         pygame.display.flip()
@@ -141,7 +141,7 @@ class Player(pygame.sprite.Sprite):
             pygame.draw.line(display, "white", *line)
         # for line in self.enemy1_collision:
         #     pygame.draw.line(display, "white", *line)
-        for line in self.enemy1_collision:
+        for line in self.horiz_line:
             pygame.draw.line(display, "white", *line)
             
         # pygame.draw.rect(display, self.color, self.rect_draw)

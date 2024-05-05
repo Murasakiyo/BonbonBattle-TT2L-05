@@ -12,6 +12,7 @@ class Collisions():
         self.tongue2 = Tongue2(self.game)
         self.health_bar = pygame.Rect(10, 10, 250, 40)
         self.health_rect = pygame.Rect(10, 10, 250, 40)
+        self.moxie_rect = pygame.Rect(10, 150, 40, 250)
 
     def update_collisions(self, deltatime, player_lines, healthpoints):
         if any(self.tongue.rect.clipline(*line) for line in player_lines):

@@ -21,9 +21,12 @@ class First_Stage(State, Ults, Collisions):
         self.tongue = Tongue(self.game)
         self.tongue2 = Tongue2(self.game)
         self.tongue_group = pygame.sprite.Group()
+        self.frog_group = pygame.sprite.Group()
         self.tongue_group.add(self.tongue, self.tongue2)
+        self.frog_group.add(self.enemy1)
         # self.health = Health(self.game)
         self.healthpoints = 250
+        self.moxie_points = 0
         self.take_damage = False
         # self.collision = Collisions(self.game)
         self.c_time = 0
@@ -33,8 +36,14 @@ class First_Stage(State, Ults, Collisions):
         self.immunity = False
         self.take_damage = False
         self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
+        self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
         self.attack_time = 0
         self.let_attack = True
+        self.deal_damage = False
+        self.player_attack = True
+        self.attack_cooldown = 0
+        self.frog_HP = 150
+        self.frog_health = pygame.Rect(self.enemy1.rect.x, self.enemy1.rect.y, self.frog_HP, 10)
 
 
     def update(self, deltatime, player_action):
@@ -53,46 +62,71 @@ class First_Stage(State, Ults, Collisions):
                 # Update player and enemies
                 self.player.update(deltatime, player_action)
                 self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
-                                self.player.rect.center[1], self.player.enemy1_collision, self.player.rect.x) 
+                                self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
                 self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
                 self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
                 self.update_ultimate(deltatime, player_action)
 
 
-
+                # For enemy1 and player damage response
                 if self.take_damage == True:
                     self.attack_time += deltatime
                     self.let_attack = False
-                    if self.attack_time > 3:
+                    if self.attack_time > 1:
                         self.let_attack = True
                         self.take_damage = False
                         self.attack_time = 0
-                if self.take_damage == False:
+                if self.take_damage == False and not player_action["defend"]:
                     if self.enemy1.attack:
                             if pygame.sprite.spritecollide(self.player, self.tongue_group, False): #first check: rectangular collision
                                 if pygame.sprite.spritecollide(self.player, self.tongue_group, False, pygame.sprite.collide_mask): #second check: mask collision
-                                    if any(self.tongue.rect.clipline(*line) for line in self.player.lines):
-                                        self.healthpoints -= 5
-                                        self.take_damage = True
-                                    if any(self.tongue2.rect.clipline(*line) for line in self.player.lines):
-                                        self.healthpoints -= 5
-                                        self.take_damage = True
-  
+                                    if self.enemy1.current_anim_list == self.enemy1.attack_left:
+                                        if any(self.tongue.rect.clipline(*line) for line in self.player.lines):
+                                            self.healthpoints -= 20
+                                            self.take_damage = True
+                                    if self.enemy1.current_anim_list == self.enemy1.attack_right:
+                                        if any(self.tongue2.rect.clipline(*line) for line in self.player.lines):
+                                            self.healthpoints -= 20
+                                            self.take_damage = True
+                    if pygame.sprite.spritecollide(self.player, self.frog_group, False):
+                        if pygame.sprite.spritecollide(self.player, self.frog_group, False, pygame.sprite.collide_mask):
+                            self.healthpoints -= 40
+                            self.take_damage = True
+
+
+                # for dealing damage to the enemies
+                if self.deal_damage == True:
+                    self.attack_cooldown += deltatime
+                    self.player_attack = False
+                    if self.attack_cooldown > 0.5:
+                        self.player_attack = True
+                        self.deal_damage = False
+                        self.attack_cooldown = 0
+                if self.player.attack == True and not self.deal_damage:
+                    if pygame.sprite.spritecollide(self.player, self.frog_group, False): #first check: rectangular collision
+                                if pygame.sprite.spritecollide(self.player, self.frog_group, False, pygame.sprite.collide_mask):
+                                    if any(self.enemy1.rect.clipline(*line) for line in self.player.horiz_line):
+                                        self.moxie_points += 25
+                                        self.frog_HP -= 10
+                                        self.deal_damage = True
+                                    
+
+
                 if self.healthpoints <= 0:
                     self.healthpoints += 250
                 self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
 
-                # if self.take_damage == True:
-                #     self.take_damage = False
-                print(self.attack_time)
+
                 
-
-
-
+                self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
             if player_action["ultimate"]:
-                if self.player.moxie_points >= 250:
+                if self.moxie_points >= 250:
                     self.game.ult = True
-                    self.player.moxie_points = 0
+                    self.moxie_points = 0
+
+
+            self.frog_health = pygame.Rect(self.enemy1.rect.x, self.enemy1.rect.y, self.frog_HP, 10)
+            
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -101,7 +135,7 @@ class First_Stage(State, Ults, Collisions):
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
-
+        self.player.render(display)
         self.camera.custom_draw(display)
         
         if self.enemy1.current_anim_list == self.enemy1.attack_left:
@@ -121,7 +155,11 @@ class First_Stage(State, Ults, Collisions):
         pygame.draw.rect(display, "black", self.health_rect)
         pygame.draw.rect(display, "green", self.health_bar)
 
+        pygame.draw.rect(display, "purple", self.moxie_rect)
+        pygame.draw.rect(display, "black", self.moxie_bar)
         
+        pygame.draw.rect(display, "black", (self.enemy1.rect.x, self.enemy1.rect.y, 150, 10))
+        pygame.draw.rect(display, "green", self.frog_health)
 
     
 
