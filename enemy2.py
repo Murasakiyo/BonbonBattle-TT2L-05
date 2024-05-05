@@ -1,110 +1,58 @@
 import pygame
 import spritesheet
 import math
+import random
 
 class FlyEnemy(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.rect = pygame.Rect(900,70,60,60)  # Placeholder
-        self.color = (255,0,0)
-        self.current_time = 0       
-        # self.rect = self.fly.get_rect(width=800, height=0)
-        # self.rect.x, self.rect.y = 800, 0 # Initial position
+        self.flies = Fly(self.game)
+        self.flylist = pygame.sprite.Group()  # List of the flies
         # self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0 #animation
         # self.fps = 0.2
-        self.attack = False
-        self.attack_cooldown = 0 # Before the next attack
-        # self.min_step, self.max_step = 0,0
-        self.speed = 3
-        
-        self.mask = None
-        self.enemies = pygame.sprite.Group()
-        # self.spawn_enemies()
-        self.load_sprites()
 
-
-
-    def update(self, deltatime, player_action, player_x, player_y):
-        # collision with the screen
-        self.rect.clamp_ip(self.game.screen_rect)
-    
-
-        # Increment current_time
-        self.current_time += deltatime
-        
-        # Get direction towards player # animation
+    def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
+       
+        self.flies.rect.clamp_ip(self.game.screen_rect)
 
-        self.move_towards_player(player_x, player_y)
+        self.flies_spawn()
+        for flies in self.flylist.sprites():
+           flies.update(deltatime, player_action, player_x, player_y, player_rect, player_rectx)
 
-        # Check distance between enemy and player
-        dx, dy = player_x - self.rect.centerx, player_y - self.rect.centery
-        if dx > 0:
-            dx -= 200
-        elif dx < 0:
-            dx += 200
-        else:
-            dx = dx
-        distance = math.sqrt(dx**2 + dy**2)
-
-        # Attack and Cooldown
-        if distance == 0:
-            # print("You get hit!")
-            self.attack = True
-            self.attack_cooldown += deltatime
-            
-            if self.attack_cooldown > 0.5:
-                # print("Wait, let me rest first.")
-                self.attack = False
-                self.attack_cooldown = 0
-                self.current_time = 0
-
-
-    def move_towards_player(self, player_x, player_y):
-        # Find direction vector (dx, dy) and distance between enemy and player.
-        dx, dy = player_x - self.rect.centerx, player_y - self.rect.centery
-        if dx > 0:
-            dx -= 200
-        elif dx < 0:
-            dx += 200
-        else:
-            dx = dx
-        distance = math.sqrt(dx**2 + dy**2)
-        # print(int(distance))
-
-        if distance != 0:  # Ensure to not divide by zero
-            dx, dy = dx / distance, dy / distance
-        
-        self.rect.centerx += dx * self.speed
-        self.rect.centery += dy * self.speed
-
-
-    # Test code
-    # def spawn_enemies(self):
-    #     for i in range(3):
-    #         random_x = random.randint(0, self.game.SCREENWIDTH)
-    #         random_y = random.randint(0, self.game.SCREENHEIGHT)
-    #         new_enemy = FlyEnemy(self.game)  # Create a new enemy instance
-    #         new_enemy.rect.center = (random_x, random_y)  # Position
-    #         self.enemies.add(new_enemy)  # Add the enemy to the grp
-            
-
-    def take_damage(self, damage):
-        # self.health -= damage
-        pass
-
-    def destroy(self):
-        # self.image.remove(self)
-        pass
+        # self.avoid_rect(deltatime)
 
 
     def render(self, display):
-        # display.blit(self.image, (self.rect.x, self.rect.y))
-        # pygame.draw.rect(display, (255,255,255), self.rect, 2)
-        # for enemy in self.enemies.sprites():
-        pygame.draw.rect(display, self.color, self.rect)
+        for self.flies in self.flylist.sprites():
+            self.flies.render(display)
+
+    # # To avoid overlap among flies
+    # def avoid_rect(self, deltatime):  
+    #     FACTOR = 20
+    #     for follower in self.flylist.sprites():
+    #         for target in self.flylist.sprites():
+    #             if follower == target:
+    #                 continue
+    #             if pygame.Rect.colliderect(follower.rect, target.rect):
+    #                 # print("Flies collide")
+    #                 if follower.rect.centerx <= target.rect.centerx:    
+    #                     follower.rect.right = target.rect.left - FACTOR   # Move left
+    #                 if follower.rect.centerx > target.rect.centerx:
+    #                     follower.rect.left = target.rect.right + FACTOR   # Move right
+    #                 if follower.rect.centery <= target.rect.centery:
+    #                     follower.rect.bottom = target.rect.top - FACTOR   # Move up
+    #                 if follower.rect.centery > target.rect.centery:
+    #                     follower.rect.top = target.rect.bottom + FACTOR   # Move down
+
+
+    def flies_spawn(self):
+        if len(self.flylist) == 0:
+            for i in range(3):
+                new_fly = Fly(self, moving_speed= 1+(i+1))
+                self.flylist.add(new_fly)
 
 
     def animate(self, deltatime, direction_x, direction_y, distance):
@@ -117,33 +65,133 @@ class FlyEnemy(pygame.sprite.Sprite):
         self.jump_left, self.jump_right = [], [] 
         self.attack_left, self.attack_right = [], []
 
-        # # Load frog sprite
-        # frog = pygame.image.load("sprites/frog_enemy.png").convert()
-        # self.frog = pygame.transform.scale(frog, (1175, 525)).convert_alpha() #Note for Yaro: 1175,525 - 25% of the initial sprite png
-        # SP = spritesheet.Spritesheet(self.frog)   
 
-    ## NOT SURE - HAVENT TEST WITH SPRITE ##    
-        # # Walking sprites 
-        # for x in range(3):
-        #     self.left_sprites.append(SP.get_sprite(x, 0, 187, 175, (0,0,0)))
-        # for x in range(3):
-        #     self.right_sprites.append(SP.get_sprite(x, 175, 187, 175, (0,0,0)))
-        # for x in range(3,6):
-        #     self.jump_left.append(SP.get_sprite(x, 0, 198, 175, (0,0,0)))
-        # for x in range(3,6):
-        #     self.jump_right.append(SP.get_sprite(x, 175, 198, 175, (0,0,0)))
-        # for x in range(2):
-        #     self.attack_left.append(SP.get_sprite(x, 350, 187, 175, (0,0,0)))
-        # for x in range(2):
-        #     self.attack_right.append(SP.get_sprite(x, 350, 187, 175, (0,0,0)))
+class Fly(pygame.sprite.Sprite):
+    def __init__(self, game, moving_speed=0.5, color=(0,255,0)):
+        super().__init__()
+        self.game = game
+        random_x = random.randint(500, 1100)
+        random_y = random.randint(0, 600)
+        self.load_sprites()
+        self.rect = self.fly.get_rect(width= 130, height=119)
+        self.rect.x, self.rect.y = random_x, random_y
+        self.color = color
+        self.bigger_rect = self.rect.scale_by(1.5)
+        self.fps = 0.07
+        self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
+        self.cooldown_duration = 2
+        self.cooldown_timer = 0
+        self.moving_speed = moving_speed
+        self.attacking = False
+        self.teleport_x = None
+        self.teleport_y = None
 
-        # self.image = self.right_sprites[0]
-        # # self.current_anim_list = self.right_sprites
+    def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
+        self.bigger_rect.center = self.rect.center
+        if not self.attacking:
+            if self.cooldown_timer <= 0:  # When the cooldown timer is end // when the player starts the game
+                self.move_towards_player(player_x, player_y)
+            else:
+                self.cooldown_timer -= deltatime   # Update the remaining timer 
+        else:
+            self.attacking_after_player()
+
+        self.direction = int(self.rect.x - player_rectx)
+
+        # Teleport flies
+        if self.bigger_rect.colliderect(player_rect):
+            if self.cooldown_timer <= 0:
+                if not self.attacking:
+                    self.attacking = True
+                    FACTOR = 200
+                    if self.rect.centerx > player_rect.centerx:
+                        self.teleport_x = player_rect.left - (self.rect.width / 2) - FACTOR 
+                        self.teleport_y = random.uniform(player_rect.bottom - FACTOR, player_rect.top + FACTOR)
+                    elif self.rect.centerx < player_rect.centerx:
+                        self.teleport_x = player_rect.right + (self.rect.width / 2) + FACTOR
+                        self.teleport_y = random.uniform(player_rect.bottom - FACTOR, player_rect.top + FACTOR)
+                    elif self.rect.centery > player_rect.centery:
+                        self.teleport_y = player_rect.top - (self.rect.height / 2) - FACTOR
+                        self.teleport_x = random.uniform(player_rect.left - FACTOR, player_rect.right + FACTOR)
+                    elif self.rect.centery < player_rect.centery:
+                        self.teleport_y = player_rect.bottom + (self.rect.height / 2) + FACTOR
+                        self.teleport_x = random.uniform(player_rect.left - FACTOR, player_rect.right + FACTOR)
+            else:
+                self.cooldown_timer -= deltatime
+        else:
+            self.attacking = False
+        self.animate(deltatime, self.direction)
+        
+       
+    def move_towards_player(self, player_x, player_y):
+        dx, dy = player_x - self.rect.centerx, player_y - self.rect.centery
+        distance = math.sqrt(dx**2 + dy**2)
+
+        # Normalize
+        dx, dy = dx / (distance + 1), dy / (distance + 1)
+        # Move towards player
+        self.rect.centerx += dx * self.moving_speed
+        self.rect.centery += dy * self.moving_speed
+
+
+    def attacking_after_player(self):
+        dx, dy = self.teleport_x - self.rect.centerx, self.teleport_y - self.rect.centery
+        distance = math.sqrt(dx**2 + dy**2)
+
+        # Normalize
+        dx, dy = dx / (distance + 1), dy / (distance + 1)
+
+        self.rect.centerx += dx * (self.moving_speed*2) 
+        self.rect.centery += dy * (self.moving_speed*2)
+
+        # Set a cooldown timer after attack
+        self.cooldown_timer = self.cooldown_duration
+
+    def render(self, display):
+        display.blit(self.image, (self.rect.x, self.rect.y))
+        # pygame.draw.rect(display, (255,0,0), self.rect, 2)
+        # pygame.draw.rect(display, (255,255,255), self.bigger_rect, 2)
+
+
+    def animate(self, deltatime, direction):
+        self.last_frame_update += deltatime
+
+        if direction > 0 and not(self.attacking):
+            self.current_anim_list = self.right_sprites
+        elif direction < 0 and not(self.attacking):
+            self.current_anim_list = self.left_sprites
+
+        if self.attacking and self.image == self.right_sprites[self.current_frame]:
+            self.current_anim_list = self.attack_right
+        elif self.attacking and self.image == self.left_sprites[self.current_frame]:
+            self.current_anim_list = self.attack_left
 
 
 
+        if self.last_frame_update > self.fps:
+            self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
+            self.image = self.current_anim_list[self.current_frame]
+            self.last_frame_update = 0  
 
-        # Test code - enemy movement with placeholder image
-        # self.image = pygame.image.load("sprites/placeholder.png").convert_alpha()
-        # self.image = pygame.transform.scale(self.image, (150,100))
-        # self.mask = pygame.mask.from_surface(self.image)
+
+    def load_sprites(self):
+        self.left_sprites, self.right_sprites = [], []
+        self.attack_left, self.attack_right = [], []
+        # Load frog sprite
+        fly = pygame.image.load("sprites/fly_enemy.png").convert()
+        self.fly = pygame.transform.scale(fly, (413, 250)).convert_alpha() 
+        SP = spritesheet.Spritesheet(self.fly)   
+  
+        # Walking sprites 
+        for x in range(2):
+            self.left_sprites.append(SP.get_sprite(x, 0, 130, 119, (0,0,0)))
+        for x in range(2):
+            self.right_sprites.append(SP.get_sprite(x, 130, 130, 119, (0,0,0)))
+        for x in range(2,3):
+            self.attack_left.append(SP.get_sprite(x, 0, 130, 119, (0,0,0)))
+        for x in range(2,3):
+            self.attack_right.append(SP.get_sprite(x, 130, 130, 119, (0,0,0)))
+
+
+        self.image = self.right_sprites[0]
+        self.current_anim_list = self.right_sprites

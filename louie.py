@@ -2,9 +2,11 @@ import pygame
 import time
 import math
 import spritesheet
+from parent_classes.support_dolls import *
 
 
-class Louie(pygame.sprite.Sprite):
+
+class Louie(pygame.sprite.Sprite, Support):
     def __init__(self, game,):
         super().__init__()
         self.game = game
@@ -21,83 +23,19 @@ class Louie(pygame.sprite.Sprite):
 
  
     def update(self,deltatime, player_action, player_x, player_y):
-        self.current_time += deltatime
+        self.update_movement(deltatime, player_action, player_x, player_y, self.animate)
 
-        # Check player direction
-        direction_x = player_action["right"] - player_action["left"]
-        direction_y = player_action["down"] - player_action["up"]
-
-        # Cooldown for attack
-        if self.current_time > 3:
-            self.attack = True
-            self.attack_cooldown += deltatime
-            if self.attack_cooldown > 0.8:
-                self.attack = False
-                self.attack_cooldown = 0
-                self.current_time = 0
-        
-        # Move towards player always
-        if not self.attack:
-            self.move(player_x, player_y)
-
-        self.animate(deltatime, direction_x, direction_y, self.step_distance)
-    
-        
     
     def render(self, display):
-        display.blit(self.image, (self.louie_vector.x, self.louie_vector.y))
+        display.blit(self.image, (self.doll_vector.x, self.doll_vector.y))
         # pygame.draw.rect(display, (255,255,255), self.rect,2)
 
 
     def animate(self, deltatime, direction_x, direction_y, distance):
         self.last_frame_update += deltatime
 
-        # Support doll idle
-        if not(direction_x or direction_y) and (self.attack == False):
-            if self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right or self.current_anim_list == self.attack_right:
-                self.current_anim_list = self.right_sprites
-                self.image = self.current_anim_list[self.current_frame_unique]
-            elif self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left or self.current_anim_list == self.attack_left:
-                self.current_anim_list = self.left_sprites
-                self.image = self.current_anim_list[self.current_frame_unique]
-            if self.last_frame_update > 0.5:
-                self.current_frame_unique = (self.current_frame_unique + 1) % len(self.right_sprites)
-                self.last_frame_update = 0 
-            return
-        
-        # Support doll walking
-        if direction_x and self.attack == False:
-            if direction_x > 0:
-                if distance > 0.4:
-                    self.current_anim_list = self.walk_right
-                else:
-                    self.current_anim_list = self.right_sprites
-            else: 
-                if distance > 0.4:
-                    self.current_anim_list = self.walk_left
-                else:
-                    self.current_anim_list =self.left_sprites
-
-        # walk animation after attacking
-        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]) and self.attack == False: 
-            self.current_anim_list = self.right_sprites
-        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]) and self.attack == False: 
-            self.current_anim_list = self.left_sprites
-
-        # Support doll attacking animation
-        if self.attack == True and (self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right):
-            self.current_anim_list.clear
-            self.fps = 0.15
-            self.current_frame = 0
-            self.current_anim_list = self.attack_right[0]
-            self.current_anim_list = self.attack_right
-        if self.attack == True and (self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left):
-            self.current_anim_list.clear
-            self.fps = 0.15
-            self.current_frame = 0
-            self.current_anim_list = self.attack_left[0]
-            self.current_anim_list = self.attack_left
-
+        # Code for all support doll's walking and idle animation
+        self.idle_walking(direction_x, direction_y, distance, 0.15)
 
         # Fps for each animation
         if self.current_anim_list == self.right_sprites or self.current_anim_list == self.left_sprites:
@@ -108,54 +46,26 @@ class Louie(pygame.sprite.Sprite):
         # Updating frames
         if self.last_frame_update > self.fps:
             if self.current_anim_list == self.attack_right or self.current_anim_list == self.attack_left:
-                if self.current_frame != 4:
+                if self.current_frame != 5:
                     self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
                     self.image = self.current_anim_list[self.current_frame]
                     self.last_frame_update = 0
                 else:
-                    self.image = self.current_anim_list[4]
+                    self.image = self.current_anim_list[5]
                     self.last_frame_update = 0
             else:
                 self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
                 self.image = self.current_anim_list[self.current_frame]
                 self.last_frame_update = 0 
 
-        
 
-
-    # This code is to make sure Support doll is always in range of Player
-    def move(self, player_x, player_y):
-
-        self.torres_vector = pygame.math.Vector2(player_x, player_y)
-        self.louie_vector = pygame.math.Vector2(self.rect.x, self.rect.y)
-        self.step_distance = 0
-        self.min_distance = 300
-        self.max_distance = 500
-        # print(self.follower_vector)
-
-
-        # distance_to returns the pythagorean distance between two points
-        self.distance = self.louie_vector.distance_to(self.torres_vector)
-        
-        if self.distance > self.min_distance:
-            self.direction_vector = (self.torres_vector - self.louie_vector) / self.distance
-            self.min_step        = max(0, self.distance - self.max_distance)
-            self.max_step        = self.distance - self.min_distance
-            #step_distance       = min(max_step, max(min_step, VELOCITY))
-            self.step_distance   = self.min_step + (self.max_step - self.min_step) 
-            # self.new_stan_vector = self.stan_vector + self.direction_vector * self.step_distance
-            self.louie_vector += self.direction_vector * self.step_distance * 0.2
-            self.rect.x, self.rect.y = self.louie_vector.x, self.louie_vector.y
-
-
-        
 
     def load_sprites(self):
         self.right_sprites, self.left_sprites = [], []
         self.walk_right, self.walk_left = [], []
         self.attack_right, self.attack_left = [], []
         louis = pygame.image.load("sprites/louie_sp.png").convert()
-        self.louie = pygame.transform.scale(louis, (775,800)).convert_alpha()
+        self.louie = pygame.transform.scale(louis, (938,800)).convert_alpha()
         SP = spritesheet.Spritesheet(self.louie)
 
         # Walking sprites
@@ -167,9 +77,9 @@ class Louie(pygame.sprite.Sprite):
             self.walk_right.append(SP.get_sprite(x, 200, 190, 190, (0,0,0)))
         for x in range(2,4):
             self.walk_left.append(SP.get_sprite(x, 200, 183, 190, (0,0,0)))
-        for x in range(5):
+        for x in range(6):
             self.attack_right.append(SP.get_sprite(x, 390, 157, 190, (0,0,0)))
-        for x in range(5):
+        for x in range(6):
             self.attack_left.append(SP.get_sprite(x, 600, 157, 190, (0,0,0)))
 
         self.image = self.right_sprites[0]

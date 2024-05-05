@@ -1,6 +1,6 @@
 import pygame
 import math
-import state
+import parent_classes.state as state
 
 class Minions(pygame.sprite.Sprite):
     def __init__(self, game, enemy3_rectx, enemy3_recty):

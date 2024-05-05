@@ -1,6 +1,8 @@
 import os
 import random
 import pygame
+import math
+import parent_classes.state as state
 
 # Class for the orange dude
 class Player(object):
