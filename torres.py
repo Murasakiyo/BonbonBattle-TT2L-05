@@ -27,16 +27,16 @@ class Player(pygame.sprite.Sprite):
         self.moxie_points = 0
         self.moxie_bool = False
         self.moxie_rect = pygame.Rect(10, 150, 40, 250)
-        self.health_rect = pygame.Rect(10, 10, 250, 40)
-        self.healthpoints = 250
+        # self.health_rect = pygame.Rect(10, 10, 250, 40)
+        # self.healthpoints = 250
         self.attackpoints = 10
         self.defensepoints = 10
         self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
-        self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
+        # self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
         
+# , collide_bool, moxie_activate, take_damage
 
-
-    def update(self,deltatime,player_action, collide_bool, moxie_activate, take_damage):
+    def update(self,deltatime,player_action):
         # Get direction from input
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
@@ -88,35 +88,35 @@ class Player(pygame.sprite.Sprite):
         self.animate(deltatime, direction_x, direction_y)
 
         # position
-        if collide_bool == False:
-            self.rect.x += 400 * deltatime * direction_x 
-            self.rect.y += 450 * deltatime * direction_y
+        # if collide_bool == False:
+        self.rect.x += 400 * deltatime * direction_x 
+        self.rect.y += 450 * deltatime * direction_y
 
 ##################################################################################
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         # self.enemy1_collision = [((self.rect.midleft[0] - 100, self.rect.midleft[1]), (self.rect.midright[0] + 100, self.rect.midright[1]))]
-        self.enemy3_collisions(deltatime, direction_x, direction_y, collide_bool)
+        # self.enemy3_collisions(deltatime, direction_x, direction_y, collide_bool)
 
 
         # Moxie function for Player
-        if moxie_activate == True:
-            self.moxie_points += 12.5
-            self.collide = False
+        # if moxie_activate == True:
+            # self.moxie_points += 12.5
+            # self.collide = False
 
-        if take_damage == True:
-            self.healthpoints -= 5
+        # if take_damage == True:
+        #     self.healthpoints -= 5
             
         
-        elif self.healthpoints <= 0:
-            self.healthpoints += 250
+        # elif self.healthpoints <= 0:
+        #     self.healthpoints += 250
                 
 
 
-        self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
-        self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
+        # self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
+        # self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
 
         # print(self.collide_time)
-        print(self.collide)
+        # print(self.collide)
         # print(self.moxie_points)
         # print(collide_bool)
 
@@ -132,8 +132,8 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(display, (255,255,255), self.rect,2)
         pygame.draw.rect(display, "purple", self.moxie_rect)
         pygame.draw.rect(display, "black", self.moxie_bar)
-        pygame.draw.rect(display, "black", self.health_rect)
-        pygame.draw.rect(display, "green", self.health_bar)
+        # pygame.draw.rect(display, "black", self.health_rect)
+        # pygame.draw.rect(display, "green", self.health_bar)
         pygame.display.flip()
         
 
