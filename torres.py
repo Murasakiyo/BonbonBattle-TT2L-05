@@ -31,6 +31,8 @@ class Player(pygame.sprite.Sprite):
         self.healthpoints = 250
         self.attackpoints = 10
         self.defensepoints = 10
+        self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
+        self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
         
 
 
@@ -132,6 +134,7 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(display, "black", self.moxie_bar)
         pygame.draw.rect(display, "black", self.health_rect)
         pygame.draw.rect(display, "green", self.health_bar)
+        pygame.display.flip()
         
 
         for line in self.lines:
