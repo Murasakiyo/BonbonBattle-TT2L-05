@@ -38,6 +38,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
+            print(self.deltatime)
 
 
     # All key events are here. Receive input from player, display output for player
