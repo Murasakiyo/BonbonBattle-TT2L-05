@@ -16,7 +16,7 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.attack_cooldown = 0 
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0 #animation
         self.fps = 0.05
-        self.speed = 5
+        self.speed = 4
         self.stop = False
         self.collision = False
         
@@ -45,7 +45,7 @@ class FrogEnemy(pygame.sprite.Sprite):
             if self.current_time > 2:
                 self.attack = False
                 self.stop = False
-                self.speed = 5
+                self.speed = 4
             if self.current_time > 3:
                 self.collision = False
                 self.current_time = 0
@@ -159,6 +159,8 @@ class Tongue(pygame.sprite.Sprite):
         self.fps = 0.1
         self.rect = self.tongue.get_rect(width= 175, height=53)
         self.rect.x, self.rect.y = 0,0
+        self.tongue_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.tongue_mask.to_surface()
         self.attack = False
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
 
@@ -235,6 +237,8 @@ class Tongue2(pygame.sprite.Sprite):
         self.fps = 0.1
         self.rect = self.tongue.get_rect(width= 175, height=53)
         self.rect.x, self.rect.y = 0,0
+        self.tongue_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.tongue_mask.to_surface()
         self.attack = False
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
 

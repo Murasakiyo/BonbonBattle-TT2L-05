@@ -2,6 +2,7 @@ import pygame
 from parent_classes.state import State
 from states.level_1 import First_Stage
 from states.level_2 import Sec_Stage
+from states.level_4 import Quad_Stage
 
 
 class MainMenu(State):
