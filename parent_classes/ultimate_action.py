@@ -16,11 +16,6 @@ class Ults():
         self.stan = Stanley(self.game) 
         self.krie = Krie(self.game)
 
-        # Initiation of a specific support doll
-        self.init_stan = False
-        self.init_louie = False
-        self.init_krie = False
-
     def update_ultimate(self, deltatime, player_action):
             # Sprite group update
             for support in self.support_dolls.sprites():
@@ -53,7 +48,7 @@ class Ults():
 
         for confection in self.confection_ult.sprites():
             confection.render(display)
-    
+
         if self.game.ult:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.init_stan:

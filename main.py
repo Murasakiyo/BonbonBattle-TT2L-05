@@ -15,7 +15,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = False
+        self.start = True
         # self.ct_display = 1
         self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 5
         self.backgrounds()
@@ -38,6 +38,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
+            # print(self.deltatime)
 
 
     # All key events are here. Receive input from player, display output for player
