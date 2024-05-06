@@ -11,7 +11,7 @@ class MainMenu(State):
         self.start_button = pygame.image.load("sprites/start_button.png").convert_alpha()
         self.start_button_hover = pygame.image.load("sprites/start_button_hover.png").convert_alpha()
         self.current_start = self.start_button
-        self.rect_START = self.start_button.get_rect(width= 200, height=150)
+        self.rect_START = self.start_button.get_rect(width= 250, height=100)
         self.rect_START.x, self.rect_START.y = 600, 465
         self.set_button = pygame.image.load("sprites/set_button.png").convert_alpha()
         self.set_button_hover = pygame.image.load("sprites/set_button_hover.png").convert_alpha()

@@ -38,6 +38,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
+            print(self.deltatime)
 
 
     # All key events are here. Receive input from player, display output for player
@@ -74,6 +75,8 @@ class Game():
                     self.player_action["up"] = False
                 if event.key == pygame.K_s:
                     self.player_action["down"] = False
+                # if event.key == pygame.K_k:
+                #     self.player_action["defend"] = False
                 if event.key == pygame.K_q:
                     self.player_action["ultimate"] = False
         
@@ -150,6 +153,9 @@ class Game():
         self.forest = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
+        self.forest2 = pygame.image.load("sprites/bg_lvl2.bmp").convert()
+
+        
 
 
 if __name__ == "__main__":

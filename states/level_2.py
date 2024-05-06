@@ -49,7 +49,7 @@ class Sec_Stage(State, Ults):
 
 
     def render(self, display):
-        display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
+        display.blit(pygame.transform.scale(self.game.forest2, (1100,600)), (0,0))
         self.camera.custom_draw(display)
         self.enemy2.render(display)
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
