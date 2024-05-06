@@ -16,7 +16,7 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.attack_cooldown = 0 
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0 #animation
         self.fps = 0.05
-        self.speed = 5
+        self.speed = 4
         self.stop = False
         self.collision = False
         
@@ -45,7 +45,7 @@ class FrogEnemy(pygame.sprite.Sprite):
             if self.current_time > 2:
                 self.attack = False
                 self.stop = False
-                self.speed = 5
+                self.speed = 4
             if self.current_time > 3:
                 self.collision = False
                 self.current_time = 0

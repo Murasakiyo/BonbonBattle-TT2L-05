@@ -88,6 +88,7 @@ class First_Stage(State, Ults, Collisions):
                                         if any(self.tongue2.rect.clipline(*line) for line in self.player.lines):
                                             self.healthpoints -= 20
                                             self.take_damage = True
+                                            
                     if pygame.sprite.spritecollide(self.player, self.frog_group, False):
                         if any(self.enemy1.rect.clipline(*line) for line in self.player.lines):
                             if pygame.sprite.spritecollide(self.player, self.frog_group, False, pygame.sprite.collide_mask):
