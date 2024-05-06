@@ -89,9 +89,10 @@ class First_Stage(State, Ults, Collisions):
                                             self.healthpoints -= 20
                                             self.take_damage = True
                     if pygame.sprite.spritecollide(self.player, self.frog_group, False):
-                        if pygame.sprite.spritecollide(self.player, self.frog_group, False, pygame.sprite.collide_mask):
-                            self.healthpoints -= 40
-                            self.take_damage = True
+                        if any(self.enemy1.rect.clipline(*line) for line in self.player.lines):
+                            if pygame.sprite.spritecollide(self.player, self.frog_group, False, pygame.sprite.collide_mask):
+                                self.healthpoints -= 40
+                                self.take_damage = True
 
 
                 # for dealing damage to the enemies
@@ -135,7 +136,7 @@ class First_Stage(State, Ults, Collisions):
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
-        self.player.render(display)
+        # self.player.render(display)
         self.camera.custom_draw(display)
         
         if self.enemy1.current_anim_list == self.enemy1.attack_left:
@@ -145,7 +146,6 @@ class First_Stage(State, Ults, Collisions):
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
         
         self.collision_render(display)
-        self.ultimate_display(display)
     
         if self.game.start == False:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
@@ -160,6 +160,8 @@ class First_Stage(State, Ults, Collisions):
         
         pygame.draw.rect(display, "black", (self.enemy1.rect.x, self.enemy1.rect.y, 150, 10))
         pygame.draw.rect(display, "green", self.frog_health)
+        self.ultimate_display(display)
+
 
     
 
