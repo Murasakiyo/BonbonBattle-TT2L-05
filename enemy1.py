@@ -19,6 +19,9 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.speed = 4
         self.stop = False
         self.collision = False
+        self.HP = 150
+        self.body_damage = 40
+        self.tongue_damage = 20
         
 
 
@@ -50,10 +53,7 @@ class FrogEnemy(pygame.sprite.Sprite):
                 self.collision = False
                 self.current_time = 0
 
-        # if pygame.Rect.colliderect(self.rect.left, rect_right):
-        #     self.left = True
-        # if pygame.Rect.colliderect(self.rect.right, rect_left):
-        #     self.right = True
+        # self.frog_health = pygame.Rect(self.rect.x, self.rect.y, self.HP, 10)
         
         self.animate(deltatime, self.dx, self.speed)
 

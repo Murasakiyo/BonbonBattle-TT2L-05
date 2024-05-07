@@ -82,13 +82,16 @@ class Fly(pygame.sprite.Sprite):
         self.cooldown_duration = 2
         self.cooldown_timer = 0
         self.moving_speed = moving_speed
-        self.attacking = False
+        self.attack = False
         self.teleport_x = None
         self.teleport_y = None
+        self.HP = 50
+        self.damage = 10
+        self.body_damage = 15
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
         self.bigger_rect.center = self.rect.center
-        if not self.attacking:
+        if not self.attack:
             if self.cooldown_timer <= 0:  # When the cooldown timer is end // when the player starts the game
                 self.move_towards_player(player_x, player_y)
             else:
@@ -101,8 +104,8 @@ class Fly(pygame.sprite.Sprite):
         # Teleport flies
         if self.bigger_rect.colliderect(player_rect):
             if self.cooldown_timer <= 0:
-                if not self.attacking:
-                    self.attacking = True
+                if not self.attack:
+                    self.attack = True
                     FACTOR = 200
                     if self.rect.centerx > player_rect.centerx:
                         self.teleport_x = player_rect.left - (self.rect.width / 2) - FACTOR 
@@ -119,7 +122,7 @@ class Fly(pygame.sprite.Sprite):
             else:
                 self.cooldown_timer -= deltatime
         else:
-            self.attacking = False
+            self.attack = False
         self.animate(deltatime, self.direction)
         
        
@@ -156,14 +159,14 @@ class Fly(pygame.sprite.Sprite):
     def animate(self, deltatime, direction):
         self.last_frame_update += deltatime
 
-        if direction > 0 and not(self.attacking):
+        if direction > 0 and not(self.attack):
             self.current_anim_list = self.right_sprites
-        elif direction < 0 and not(self.attacking):
+        elif direction < 0 and not(self.attack):
             self.current_anim_list = self.left_sprites
 
-        if self.attacking and self.image == self.right_sprites[self.current_frame]:
+        if self.attack and self.image == self.right_sprites[self.current_frame]:
             self.current_anim_list = self.attack_right
-        elif self.attacking and self.image == self.left_sprites[self.current_frame]:
+        elif self.attack and self.image == self.left_sprites[self.current_frame]:
             self.current_anim_list = self.attack_left
 
 
