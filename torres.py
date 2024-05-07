@@ -231,6 +231,12 @@ class Player(pygame.sprite.Sprite):
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites
 
+    def cooldown_variable(self):
+        self.take_damage = False
+        self.attack_time = 0
+        self.let_attack = True
+        self.deal_damage = False
+        self.attack_cooldown = 0
 
     
 

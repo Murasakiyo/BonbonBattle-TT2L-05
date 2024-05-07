@@ -93,7 +93,7 @@ class Collisions():
         # for dealing damage to the enemies (Player attacking)
         if self.deal_damage == True:
             self.attack_cooldown += deltatime
-            if self.attack_cooldown > 0.5:
+            if self.attack_cooldown > 0.3:
                 self.deal_damage = False
                 self.attack_cooldown = 0
 

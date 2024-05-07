@@ -13,29 +13,27 @@ from parent_classes.enemyhealthbar import *
 class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
     def __init__(self, game):
         super().__init__(game)
+
+        # Sprite groups
         self.camera = CameraGroup(self.game)
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
+        self.attack_group = pygame.sprite.Group()
+        self.body_group = pygame.sprite.Group()
         self.enemy1 = FrogEnemy(self.game, self.camera)
         self.tongue = Tongue(self.game)
         self.tongue2 = Tongue2(self.game)
+
         self.ultimates()
         self.characters()
         self.load_health_bar()
         self.load_moxie_bar()
-        self.load_enemy_health(self.enemy1, self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
-        self.attack_group = pygame.sprite.Group()
-        self.body_group = pygame.sprite.Group()
+        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+
         self.attack_group.add(self.tongue, self.tongue2)
         self.body_group.add(self.enemy1)
         self.moxie_points = 0
-        self.take_damage = False
-        self.c_time = 0
-        self.newctime = pygame.time.get_ticks()
-        self.ultimate = False
-        self.countdown = 0
-        self.immunity = False
-
+      
         self.take_damage = False
         self.attack_time = 0
         self.let_attack = True
@@ -48,14 +46,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         if self.game.start == True:
             if self.game.ult == False:
-                # Cooldown for player receiving damage
-                if self.game.damaged == True:
-                    self.immunity = True
-                    self.c_time += deltatime
-                    if self.c_time > 2:
-                        self.game.damaged = False
-                        self.immunity = False
-
+                
                 # Update player and enemies
                 self.player.update(deltatime, player_action)
                 self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
@@ -67,7 +58,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                                       self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
                 self.health_update()
                 self.moxie_update(player_action)
-                self.enemy_health_update(self.enemy1, self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+                self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
 
 
             self.add_ultimate(deltatime, player_action)
