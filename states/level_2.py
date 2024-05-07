@@ -15,11 +15,6 @@ class Sec_Stage(State, Ults):
         self.ultimates()
         self.characters()
         self.enemy2 = FlyEnemy(self.game)
-        self.c_time = 0
-        self.newctime = pygame.time.get_ticks()
-        self.ultimate = False
-        self.countdown = 0
-        self.immunity = False
 
     def update(self, deltatime, player_action):
         # print(int(self.enemy2.flies.rect.x-self.player.rect.x))

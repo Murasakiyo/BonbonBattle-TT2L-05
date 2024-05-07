@@ -29,11 +29,6 @@ class First_Stage(State, Ults, Collisions):
         self.moxie_points = 0
         self.take_damage = False
         # self.collision = Collisions(self.game)
-        self.c_time = 0
-        self.newctime = pygame.time.get_ticks()
-        self.ultimate = False
-        self.countdown = 0
-        self.immunity = False
         self.take_damage = False
         self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
         self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
@@ -51,6 +46,7 @@ class First_Stage(State, Ults, Collisions):
 
         if self.game.start == True:
             if self.game.ult == False:
+
                 # Cooldown for player receiving damage
                 if self.game.damaged == True:
                     self.immunity = True
@@ -117,10 +113,8 @@ class First_Stage(State, Ults, Collisions):
                 if self.healthpoints <= 0:
                     self.healthpoints += 250
                 self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
-
-
-                
                 self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
+
             if player_action["ultimate"]:
                 if self.moxie_points >= 250:
                     self.game.ult = True
