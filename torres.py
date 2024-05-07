@@ -1,5 +1,6 @@
 import pygame
 import spritesheet
+import copy
 
 
 class Player(pygame.sprite.Sprite):
@@ -12,16 +13,28 @@ class Player(pygame.sprite.Sprite):
         self.right = 1
         self.load_sprites()
         self.rect = self.torres_walk.get_rect(width= 200, height=200)
-        # self.rect.center = (295, 373)
         self.rect.x, self.rect.y = position_x, position_y
         self.torres_mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.torres_mask.to_surface()
-        # self.line = self.rect.clipline(50, 50)
         self.current_frame, self.last_frame_update = 0,0
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
+        self.horiz_line = [((self.rect.midleft), (self.rect.midright))]
         self.fps = 0
         self.color = "white"
+        self.collide = False
+        self.collide_time = 0
+        self.c_time = 0
+        # self.moxie_points = 0
+        self.moxie_bool = False
+        # self.moxie_rect = pygame.Rect(10, 150, 40, 250)
+        # self.health_rect = pygame.Rect(10, 10, 250, 40)
+        # self.healthpoints = 250
+        self.attackpoints = 10
+        self.defensepoints = 10
+        # self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
+        # self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
         
+# , collide_bool, moxie_activate, take_damage
 
     def update(self,deltatime,player_action):
         # Get direction from input
@@ -30,6 +43,7 @@ class Player(pygame.sprite.Sprite):
 
         # collision with the screen
         self.rect.clamp_ip(self.game.screen_rect)
+
 
         # Check for defense button
         if player_action["defend"]:
@@ -42,7 +56,7 @@ class Player(pygame.sprite.Sprite):
         if self.defend:
             self.attack = False
             self.current_time += deltatime
-            if self.current_time > 0.5:
+            if self.current_time > 0.8:
                 player_action["defend"] = False
                 self.defend = False
                 self.current_time = 0
@@ -60,17 +74,6 @@ class Player(pygame.sprite.Sprite):
                 direction_x = 0
                 direction_y = 0
 
-        # if direction_y != 0:
-        #     self.attack = False
-            
-        # if self.attack == True:
-        #     self.current_time = time.time()
-        #     if self.current_frame >= 4:
-        #         if self.current_time - self.prev_time > 1:
-        #             player_action["attack"] = False
-        #             self.attack = False
-        #             self.prev_time = self.current_time
-
         # Attack timer
         if self.attack == True and self.defend != True:
             self.current_time += deltatime
@@ -80,36 +83,86 @@ class Player(pygame.sprite.Sprite):
                     self.attack = False
                     self.current_time = 0
 
+        
         # animation for sprite
         self.animate(deltatime, direction_x, direction_y)
 
         # position
+        # if collide_bool == False:
         self.rect.x += 400 * deltatime * direction_x 
-        self.rect.y += 450 * deltatime * direction_y 
+        self.rect.y += 450 * deltatime * direction_y
 
+##################################################################################
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
-        self.enemy1_collision = [((self.rect.midleft), (self.rect.midright))]
-        # self.enemy2_collision = [((self.rect.midleft), (self.rect.midright))]
+        # self.enemy1_collision = [((self.rect.midleft[0] - 100, self.rect.midleft[1]), (self.rect.midright[0] + 100, self.rect.midright[1]))]
+        # self.enemy3_collisions(deltatime, direction_x, direction_y, collide_bool)
 
-        # if any(self.rect_draw.clipline(*line) for line in self.enemy1_collision):
-        #     print("Collision detected")
-        # else:
-        #     print("No collision detected")
+
+        # Moxie function for Player
+        # if moxie_activate == True:
+            # self.moxie_points += 12.5
+            # self.collide = False
+
+        # if take_damage == True:
+        #     self.healthpoints -= 5
+            
+        
+        # elif self.healthpoints <= 0:
+        #     self.healthpoints += 250
+                
+
+
+        # self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
+        # self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
+
+        # print(self.collide_time)
+        # print(self.collide)
+        # print(self.moxie_points)
+        # print(collide_bool)
 
         
+
+
+        self.horiz_line = [((self.rect.midleft), (self.rect.midright))]
+        # self.enemy2_collision = [((self.rect.midleft), (self.rect.midright))]
+
 
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
         pygame.draw.rect(display, (255,255,255), self.rect,2)
+        # pygame.draw.rect(display, "purple", self.moxie_rect)
+        # pygame.draw.rect(display, "black", self.moxie_bar)
+        # pygame.draw.rect(display, "black", self.health_rect)
+        # pygame.draw.rect(display, "green", self.health_bar)
+        pygame.display.flip()
+        
 
         for line in self.lines:
             pygame.draw.line(display, "white", *line)
-        
+        # for line in self.enemy1_collision:
+        #     pygame.draw.line(display, "white", *line)
+        for line in self.horiz_line:
+            pygame.draw.line(display, "white", *line)
             
+        # pygame.draw.rect(display, self.color, self.rect_draw)
 
+    def player_stats(self):
+        self.healthpoints = 100
+        self.attackpoints = 10
+        self.defense = 10 # defense formula
 
+    def enemy3_collisions(self, deltatime, direction_x, direction_y, collide_bool):       
+       if collide_bool == True:
+            self.collide_time += deltatime
+            if self.collide_time > 0.1:
+                self.rect.x += 200 * deltatime * direction_x 
+                self.rect.y += 225 * deltatime * direction_y
+
+            if self.collide_time > 3:
+                self.collide = True
+                self.collide_time = 0
+                
         
-
 
     def animate(self, deltatime, direction_x, direction_y):
 
@@ -182,7 +235,7 @@ class Player(pygame.sprite.Sprite):
         self.right_sprites, self.left_sprites = [], []
         self.attack_right, self.attack_left = [], []
         self.defend_sprites = []
-        torres = pygame.image.load("sprites/torres_sp.png").convert()
+        torres = pygame.image.load("sprites/torres_sp1.png").convert()
         self.torres_walk = pygame.transform.scale(torres, (1038,1200)).convert_alpha()
         SP = spritesheet.Spritesheet(self.torres_walk)
 
@@ -190,7 +243,7 @@ class Player(pygame.sprite.Sprite):
         self.defend_sprites.append(SP.get_sprite(0, 800, 198, 200, (0,0,0)))
         self.defend_sprites.append(SP.get_sprite(1, 800, 198, 200, (0,0,0)))
         for x in range(5):
-            self.right_sprites.append(SP.get_sprite(x, 0, 171,190, (0,0,0)))
+            self.right_sprites.append(SP.get_sprite(x, 0, 193,190, (0,0,0)))
         for x in range(5):
             self.left_sprites.append(SP.get_sprite(x, 190, 171, 190, (0,0,0)))
         for x in range(5):
@@ -202,6 +255,9 @@ class Player(pygame.sprite.Sprite):
         self.current_anim_list = self.right_sprites
 
 
+    
 
-class Hitbox(pygame.sprite.Sprite):
-    pass
+
+
+        
+

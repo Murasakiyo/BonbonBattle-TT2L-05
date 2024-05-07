@@ -128,14 +128,6 @@ class FrogEnemy(pygame.sprite.Sprite):
         # print(self.dx)
 
 
-
-    def take_damage(self, damage):
-        pass
-
-    def destroy(self):
-        pass
-
-
     def load_sprites(self):
         self.left_sprites, self.right_sprites = [], []
         self.attack_left, self.attack_right = [], []
@@ -167,6 +159,8 @@ class Tongue(pygame.sprite.Sprite):
         self.fps = 0.1
         self.rect = self.tongue.get_rect(width= 175, height=53)
         self.rect.x, self.rect.y = 0,0
+        self.tongue_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.tongue_mask.to_surface()
         self.attack = False
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
 
@@ -243,6 +237,8 @@ class Tongue2(pygame.sprite.Sprite):
         self.fps = 0.1
         self.rect = self.tongue.get_rect(width= 175, height=53)
         self.rect.x, self.rect.y = 0,0
+        self.tongue_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.tongue_mask.to_surface()
         self.attack = False
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
 
@@ -256,7 +252,6 @@ class Tongue2(pygame.sprite.Sprite):
 
     def animate(self, deltatime, attack):
         self.last_frame_update += deltatime
-        print(self.current_frame)
 
         if not(attack):
             self.current_anim_list = self.idle

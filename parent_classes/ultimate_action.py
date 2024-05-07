@@ -1,65 +1,22 @@
 import pygame
-from state import *
 from torres import *
 from stanley import *
 from louie import *
 from krie import *
 from ultimates import *
-from enemy1 import *
-from enemy2 import *
-from enemy3 import *
-from ultimates import *
 from confection import *
 
-
-class Stage(State):
+class Ults():
     def __init__(self, game):
-        State.__init__(self, game)
-        self.camera = CameraGroup(self.game)
-        self.confection_ult = pygame.sprite.Group()
-        self.support_dolls = pygame.sprite.Group()
-        self.ultimates()
-        self.characters()
-        self.background = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
-        self.black = pygame.image.load("sprites/black.png").convert_alpha()
-        self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
-        self.enemy1 = FrogEnemy(self.game, self.camera)
-        self.enemy2 = FlyEnemy(self.game)
-        self.enemy3 = Enemy3(self.game)
-        self.tongue = Tongue(self.game)
-        self.tongue2 = Tongue2(self.game)
-        self.c_time = 0
-        self.newctime = pygame.time.get_ticks()
-        self.ultimate = False
-        self.countdown = 0
-        self.immunity = False
+        self.game = game
 
-    def update(self, deltatime, player_action):
+    def characters(self):
+        self.player = Player(self.game, self.camera, 200,200) 
+        self.louie = Louie(self.game) 
+        self.stan = Stanley(self.game) 
+        self.krie = Krie(self.game)
 
-        # print(int(self.player.rect.x - self.enemy1.rect.x))
-
-        if self.game.ult == False:
-            # Cooldown for player receiving damage
-            if self.game.damaged == True:
-                self.immunity = True
-                self.c_time += deltatime
-                if self.c_time > 2:
-                    self.game.damaged = False
-                    self.immunity = False
-
-            # Update player
-            self.player.update(deltatime, player_action)
-            self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
-                               self.player.rect.center[1], self.player.enemy1_collision, self.player.rect.x) 
-            self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
-            self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
-            self.enemy2.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect) 
-            # self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.lines)
-            
-
-            
-
-        
+    def update_ultimate(self, deltatime, player_action):
             # Sprite group update
             for support in self.support_dolls.sprites():
                 support.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
@@ -71,45 +28,29 @@ class Stage(State):
                         self.confection_ult.empty() # Remove everything in the sprite group
 
             self.check_specifics()
-           
-        if player_action["ultimate"]:
-            self.game.ult = True
+            
+    def add_ultimate(self, deltatime, player_action):
+            if self.game.ult:
+                if self.init_stan:
+                    self.stan_ult.update(deltatime, player_action)
+                elif self.init_louie:
+                    self.louie_ult.update(deltatime, player_action)
+                elif self.init_krie:
+                    self.krie_ult.update(deltatime,player_action)
+                else:
+                    self.torres_ult.update(deltatime,player_action)
 
-        if self.game.ult:
-            if self.init_stan:
-                self.stan_ult.update(deltatime, player_action)
-            elif self.init_louie:
-                self.louie_ult.update(deltatime, player_action)
-            elif self.init_krie:
-                self.krie_ult.update(deltatime,player_action)
-            else:
-                self.torres_ult.update(deltatime,player_action)
-
-        if self.game.ult_finish:
-            self.ultimate_reset()
+            if self.game.ult_finish:
+                self.ultimate_reset()
 
 
+    def ultimate_display(self, display):
 
-
-    def render(self, display):
-        display.blit(pygame.transform.scale(self.background, (1100,600)), (0,0))
-        self.camera.custom_draw(display)
-        if self.enemy1.current_anim_list == self.enemy1.attack_left:
-            self.tongue.render(display)
-        elif self.enemy1.current_anim_list == self.enemy1.attack_right:
-            self.tongue2.render(display)
-        display.blit(pygame.transform.scale(self.trees, (1200,600)), (-60,0))
-        
         for confection in self.confection_ult.sprites():
             confection.render(display)
 
-        self.player.render(display)
-        # self.enemy1.render(display)
-        self.enemy2.render(display)
-        # self.enemy3.render(display)
-    
         if self.game.ult:
-            display.blit(pygame.transform.scale(self.black, (1100,600)), (0,0))
+            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.init_stan:
                 self.stan_ult.render(display)
             elif self.init_louie:
@@ -121,7 +62,7 @@ class Stage(State):
 
 
     def characters(self):
-        self.player = Player(self.game, self.camera, 200,150) 
+        self.player = Player(self.game, self.camera, 200,200) 
         self.louie = Louie(self.game) 
         self.stan = Stanley(self.game) 
         self.krie = Krie(self.game)
@@ -198,6 +139,3 @@ class Stage(State):
             self.support_dolls.add(self.louie)
         if self.init_krie:
             self.support_dolls.add(self.krie)
-
-
-

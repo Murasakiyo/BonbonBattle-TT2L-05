@@ -1,84 +1,121 @@
+import os
+import random
 import pygame
 import math
-import state
+import parent_classes.state as state
 
-# This file is just for safekeeping in case the original code descends to hell
+# Class for the orange dude
+class Player(object):
+    
+    def __init__(self):
+        self.rect = pygame.Rect(32, 32, 16, 16)
 
-class Minions(pygame.sprite.Sprite):
-    def __init__(self, game, enemy3_rectx, enemy3_recty):
-        super().__init__()
-        self.game = game
-        self.camera = state.CameraGroup(self.game)
-        self.rect = pygame.Rect(enemy3_rectx - 100, enemy3_recty, 30, 30) #left
-        # self.rect2 = pygame.Rect(enemy3_rectx + 100, enemy3_recty, 30, 30) #right
-        # self.rect3 = pygame.Rect(enemy3_rectx, enemy3_recty + 100, 30, 30) #bottom
-        # self.rect4 = pygame.Rect(enemy3_rectx, enemy3_recty - 100, 30, 30) #top
-        self.speed = 3
+    def move(self, dx, dy):
+        
+        # Move each axis separately. Note that this checks for collisions both times.
+        if dx != 0:
+            self.move_single_axis(dx, 0)
+        if dy != 0:
+            self.move_single_axis(0, dy)
+    
+    def move_single_axis(self, dx, dy):
+        
+        # Move the rect
+        self.rect.x += dx
+        self.rect.y += dy
 
-    def update(self, deltatime, player_action, player_x, player_y, enemy3_rectx, enemy3_recty):
-        direction_x = player_action["right"] - player_action["left"]
-        direction_y = player_action["down"] - player_action["up"]
+        # If you collide with a wall, move out based on velocity
+        for wall in walls:
+            if self.rect.colliderect(wall.rect):
+                if dx > 0: # Moving right; Hit the left side of the wall
+                    self.rect.right = wall.rect.left
+                if dx < 0: # Moving left; Hit the right side of the wall
+                    self.rect.left = wall.rect.right
+                if dy > 0: # Moving down; Hit the top side of the wall
+                    self.rect.bottom = wall.rect.top
+                if dy < 0: # Moving up; Hit the bottom side of the wall
+                    self.rect.top = wall.rect.bottom
 
+# Nice class to hold a wall rect
+class Wall(object):
+    
+    def __init__(self, pos):
+        walls.append(self)
+        self.rect = pygame.Rect(pos[0], pos[1], 16, 16)
 
-        self.rect.clamp_ip(self.game.screen_rect)
-        # player_rect.clamp_ip(self.game.screen_rect)
+# Initialise pygame
+os.environ["SDL_VIDEO_CENTERED"] = "1"
+pygame.init()
 
-        self.move_towards_player(player_x, player_y)
+# Set up the display
+pygame.display.set_caption("Get to the red square!")
+screen = pygame.display.set_mode((320, 240))
 
+clock = pygame.time.Clock()
+walls = [] # List to hold the walls
+player = Player() # Create the player
 
+# Holds the level layout in a list of strings.
+level = [
+"WWWWWWWWWWWWWWWWWWWW",
+"W                  W",
+"W         WWWWWW   W",
+"W   WWWW       W   W",
+"W   W        WWWW  W",
+"W WWW  WWWW        W",
+"W   W     W W      W",
+"W   W     W   WWW WW",
+"W   WWW WWW   W W  W",
+"W     W   W   W W  W",
+"WWW   W   WWWWW W  W",
+"W W      WW        W",
+"W W   WWWW   WWW   W",
+"W     W    E   W   W",
+"WWWWWWWWWWWWWWWWWWWW",
+]
 
-    def render(self, display):
-        pygame.draw.rect(display, (255, 0, 255), self.rect)
-        pygame.draw.rect(display, (255, 0, 255), self.rect2)
-        pygame.draw.rect(display, (255, 0, 255), self.rect3)
-        pygame.draw.rect(display, (255, 0, 255), self.rect4)
-        pygame.display.flip()
+# Parse the level string above. W = wall, E = exit
+x = y = 0
+for row in level:
+    for col in row:
+        if col == "W":
+            Wall((x, y))
+        if col == "E":
+            end_rect = pygame.Rect(x, y, 16, 16)
+        x += 16
+    y += 16
+    x = 0
 
-    def move_towards_player(self, player_x, player_y):
-        # Find direction vector (dx, dy) between enemy and player.
-        dx, dy = player_x - self.rect.x, player_y - self.rect.y
-        dx2, dy2 = player_x - self.rect2.x, player_y - self.rect2.y
-        dx3, dy3 = player_x - self.rect3.x, player_y - self.rect3.y
-        dx4, dy4 = player_x - self.rect4.x, player_y - self.rect4.y
-        dist = math.hypot(dx, dy)
-
-        dx, dy = dx / (dist + 1), dy / (dist + 1)
-        dx2, dy2 = dx2 / (dist + 1), dy2 / (dist + 1)
-        dx3, dy3 = dx3 / (dist + 1), dy3 / (dist + 1)
-        dx4, dy4 = dx4 / (dist + 1), dy4 / (dist + 1)  # Normalize.
-        # Move along this normalized vector towards the player at current speed.
-        self.rect.x += dx * self.speed
-        self.rect.y += dy * self.speed
-
-        self.rect2.x += dx2 * self.speed
-        self.rect2.y += dy2 * self.speed
-
-        self.rect3.x += dx3 * self.speed
-        self.rect3.y += dy3 * self.speed
-
-        self.rect4.x += dx4 * self.speed
-        self.rect4.y += dy4 * self.speed
-
-
-    def minion_spawn(self):
-        if len(self.minionlist) == 0:
-                new_minion = Minions(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                self.minionlist.add(new_minion) 
-
-        if len(self.minionlist) == 1:
-            for self.minions in self.minionlist.sprites():
-                # if self.cupcake.rect.bottom > 200:
-                    new_minion = Minions2(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                    self.minionlist.add(new_minion)
-
-        if len(self.minionlist) == 2:
-            for self.minions in self.minionlist.sprites():
-                # if self.cupcake.rect.bottom > 200:
-                    new_minion = Minions3(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                    self.minionlist.add(new_minion)
-
-        if len(self.minionlist) == 3:
-            for self.minions in self.minionlist.sprites():
-                # if self.cupcake.rect.bottom > 200:
-                    new_minion = Minions4(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                    self.minionlist.add(new_minion)
+running = True
+while running:
+    
+    clock.tick(60)
+    
+    for e in pygame.event.get():
+        if e.type == pygame.QUIT:
+            running = False
+        if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
+            running = False
+    
+    # Move the player if an arrow key is pressed
+    key = pygame.key.get_pressed()
+    if key[pygame.K_LEFT]:
+        player.move(-2, 0)
+    if key[pygame.K_RIGHT]:
+        player.move(2, 0)
+    if key[pygame.K_UP]:
+        player.move(0, -2)
+    if key[pygame.K_DOWN]:
+        player.move(0, 2)
+    
+    # Just added this to make it slightly fun ;)
+    # if player.rect.colliderect(end_rect):
+    #     raise SystemExit, "You win!"
+    
+    # Draw the scene
+    screen.fill((0, 0, 0))
+    for wall in walls:
+        pygame.draw.rect(screen, (255, 255, 255), wall.rect)
+    pygame.draw.rect(screen, (255, 0, 0), end_rect)
+    pygame.draw.rect(screen, (255, 200, 0), player.rect)
+    pygame.display.flip()
