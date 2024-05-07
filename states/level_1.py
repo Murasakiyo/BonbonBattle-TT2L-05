@@ -124,7 +124,11 @@ class First_Stage(State, Ults, Collisions):
             if player_action["ultimate"]:
                 if self.moxie_points >= 250:
                     self.game.ult = True
-                    self.moxie_points = 0
+                    if not(self.init_stan):
+                        self.moxie_points = 0
+                    else:
+                        self.moxie_points = 250
+
 
 
             self.frog_health = pygame.Rect(self.enemy1.rect.x, self.enemy1.rect.y, self.frog_HP, 10)
