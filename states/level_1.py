@@ -34,11 +34,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.body_group.add(self.enemy1)
         self.moxie_points = 0
       
-        self.take_damage = False
-        self.attack_time = 0
-        self.let_attack = True
-        self.deal_damage = False
-        self.attack_cooldown = 0
 
 
     def update(self, deltatime, player_action):

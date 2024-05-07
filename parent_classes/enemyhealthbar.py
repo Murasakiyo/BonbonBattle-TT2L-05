@@ -11,6 +11,7 @@ class EnemyHealthBar():
         pygame.draw.rect(display, "black", (enemyrectx, enemyrecty, 150, 10))
         pygame.draw.rect(display, "green", self.enemy_health)
     
+    # For sprite groups
     def groupenemy_health_render(self, display, group):
         for sprite in group:
             self.enemy_health_update(sprite.rect.x,sprite.rect.y, sprite.HP)

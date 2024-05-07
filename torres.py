@@ -12,6 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.defend = False
         self.right = 1
         self.load_sprites()
+        self.cooldown_variable()
         self.rect = self.torres_walk.get_rect(width= 200, height=200)
         self.rect.x, self.rect.y = position_x, position_y
         self.torres_mask = pygame.mask.from_surface(self.image)

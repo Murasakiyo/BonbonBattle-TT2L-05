@@ -24,16 +24,12 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.characters()
         self.load_health_bar()
         self.load_moxie_bar()
+        self.moxie_points = 0
        
 
-        self.take_damage = False
-        self.attack_time = 0
-        self.let_attack = True
-        self.deal_damage = False
-        self.attack_cooldown = 0
 
     def update(self, deltatime, player_action):
-        print(self.fly_swarm.flylist)
+        
         if self.game.start == True:
             if self.game.ult == False:
 
