@@ -38,12 +38,11 @@ class MainMenu(State):
             player_action["transition"] = True
 
         if self.game.alpha == 255:
-            new_state = First_Stage(self.game)
+            new_state = Sec_Stage(self.game)
             new_state.enter_state()
             player_action["transition"] =  False
             
 
-    
     def render(self, display):
         display.blit(pygame.image.load("sprites/main_screen.bmp").convert(), (0,0))
         if self.rect_START.collidepoint(self.mouse):

@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         # self.moxie_points = 0
         self.moxie_bool = False
         self.healthpoints = 250
-        self.attackpoints = 10
+        self.attackpoints = 20
         self.defensepoints = 10
         self.moxiepoints = 0
         
