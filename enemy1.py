@@ -8,6 +8,8 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.game = game
         self.load_sprites()
         self.rect = self.frog.get_rect(width= 150, height=165)   # Placeholder for enemy froggie 
+        self.frog_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.frog_mask.to_surface()
         self.rect.x, self.rect.y = 700,200
         self.tongue = Tongue(self.game)  # Placeholder for tongue
         self.color = (255,255,255)
@@ -23,7 +25,6 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.body_damage = 40
         self.tongue_damage = 20
         
-
 
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):

@@ -67,6 +67,8 @@ class Fly(pygame.sprite.Sprite):
         random_y = random.randint(0, 600)
         self.load_sprites()
         self.rect = self.fly.get_rect(width= 130, height=119)
+        self.fly_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.fly_mask.to_surface()
         self.rect.x, self.rect.y = random_x, random_y
         self.color = color
         self.bigger_rect = self.rect.scale_by(1.5)

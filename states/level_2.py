@@ -58,9 +58,9 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.health_update()
                 self.moxie_update(player_action)
                 for flies in self.fly_swarm.flylist.sprites():
-                    self.enemy_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
-                                        flies.damage, flies.body_damage, flies, flies, False)
-                    self.enemy_health_update(flies, flies.rect.x, flies.rect.y, flies.HP, False)
+                    self.flies_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
+                                        flies.damage, flies.body_damage)
+                    self.enemy_health_update(flies, flies.rect.x, flies.rect.y, flies.HP)
                     
 
             if player_action["ultimate"]:

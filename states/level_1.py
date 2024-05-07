@@ -23,7 +23,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.characters()
         self.load_health_bar()
         self.load_moxie_bar()
-        self.load_enemy_health(self.enemy1, self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP, True)
+        self.load_enemy_health(self.enemy1, self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
         self.attack_group = pygame.sprite.Group()
         self.body_group = pygame.sprite.Group()
         self.attack_group.add(self.tongue, self.tongue2)
@@ -64,10 +64,10 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
                 self.update_ultimate(deltatime, player_action)
                 self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
-                                      self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2, True)
+                                      self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
                 self.health_update()
                 self.moxie_update(player_action)
-                self.enemy_health_update(self.enemy1, self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP,True)
+                self.enemy_health_update(self.enemy1, self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
 
 
             self.add_ultimate(deltatime, player_action)
