@@ -13,7 +13,10 @@ class Moxie():
         if player_action["ultimate"]:
             if self.player.moxiepoints >= 250:
                 self.game.ult = True
-                self.player.moxiepoints = 0
+                if not(self.init_stan):
+                    self.player.moxiepoints = 0
+                else:
+                    self.player.moxiepoints = self.player.moxiepoints
 
 
     def moxie_render(self, display):

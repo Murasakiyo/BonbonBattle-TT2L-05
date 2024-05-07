@@ -11,6 +11,8 @@ from torres import *
                                                     # self.deal_damage = False
                                                     # self.attack_cooldown = 0
 
+################################################################################################################################################
+
 class Collisions():
     def __init__(self, game):
         self.game = game
@@ -29,7 +31,6 @@ class Collisions():
                 self.take_damage = False
                 self.attack_time = 0
         if self.take_damage == False and not player_action["defend"]:
-
             if activate_code == True:
                 if enemy.attack:
                         if pygame.sprite.spritecollide(self.player, attack_group, False): #first check: rectangular collision

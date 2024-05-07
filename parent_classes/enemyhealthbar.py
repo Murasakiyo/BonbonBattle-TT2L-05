@@ -5,7 +5,7 @@ class EnemyHealthBar():
         self.game = game
 
 
-    def load_enemy_health(self,enemy, enemyrectx, enemyrecty, HP, activate_code):
+    def load_enemy_health(self, enemy, enemyrectx, enemyrecty, HP, activate_code):
         if activate_code == False:
             self.enemy_health = pygame.Rect(enemyrectx, enemyrecty, enemy.HP, 10)
 
