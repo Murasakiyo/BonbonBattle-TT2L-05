@@ -2,8 +2,10 @@ import pygame
 import spritesheet
 import math
 import random
+from parent_classes.enemyhealthbar import *
 
-class FlyEnemy(pygame.sprite.Sprite):
+
+class FlyEnemy(pygame.sprite.Sprite, EnemyHealthBar):
     def __init__(self, game):
         super().__init__()
         self.game = game
@@ -18,7 +20,9 @@ class FlyEnemy(pygame.sprite.Sprite):
 
         self.flies_spawn()
         for flies in self.flylist.sprites():
-           flies.update(deltatime, player_action, player_x, player_y, player_rect, player_rectx)
+            flies.update(deltatime, player_action, player_x, player_y, player_rect, player_rectx)
+            self.load_enemy_health(flies, flies.rect.x, flies.rect.y, flies.HP)
+
 
         # self.avoid_rect(deltatime)
 
@@ -26,6 +30,8 @@ class FlyEnemy(pygame.sprite.Sprite):
     def render(self, display):
         for self.flies in self.flylist.sprites():
             self.flies.render(display)
+            # pygame.draw.rect(display, "black", (self.flies.rect.x, self.flies.rect.y, 150, 10))
+            # pygame.draw.rect(display, "green", self.flies.enemy_health)
 
     # # To avoid overlap among flies
     # def avoid_rect(self, deltatime):  
@@ -51,12 +57,6 @@ class FlyEnemy(pygame.sprite.Sprite):
             for i in range(3):
                 new_fly = Fly(self, moving_speed= 1+(i+1))
                 self.flylist.add(new_fly)
-    
-
-    def load_sprites(self):
-        self.left_sprites, self.right_sprites = [], []
-        self.jump_left, self.jump_right = [], [] 
-        self.attack_left, self.attack_right = [], []
 
 
 class Fly(pygame.sprite.Sprite):
@@ -83,9 +83,14 @@ class Fly(pygame.sprite.Sprite):
         self.HP = 150
         self.damage = 10
         self.body_damage = 15
+        # LAST RESORT
+        # self.enemy_health = pygame.Rect(self.rect.x, self.rect.y, self.HP, 10)
+
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
 
+        # self.enemy_health = pygame.Rect(self.rect.x, self.rect.y, self.HP, 10)
+        
         self.bigger_rect.center = self.rect.center
         if not self.attack:
             if self.cooldown_timer <= 0:  # When the cooldown timer is end // when the player starts the game
@@ -148,6 +153,9 @@ class Fly(pygame.sprite.Sprite):
 
     def render(self, display):
         display.blit(self.image, (self.rect.x, self.rect.y))
+
+        # LAST RESORT
+        # pygame.draw.rect(display, "green", self.enemy_health)
         # pygame.draw.rect(display, (255,0,0), self.rect, 2)
         # pygame.draw.rect(display, (255,255,255), self.bigger_rect, 2)
 

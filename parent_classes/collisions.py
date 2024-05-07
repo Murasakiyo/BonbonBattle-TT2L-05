@@ -65,14 +65,20 @@ class Collisions():
                         if any(enemy.rect.clipline(*line) for line in self.player.lines):
                             self.player.healthpoints -= enemy_damage
                             self.take_damage = True
-            if self.attack:
                 if pygame.sprite.spritecollide(self.player, body_group, False):
                     if any(enemy.rect.clipline(*line) for line in self.player.lines):
                         if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask):
                             self.player.healthpoints -= body_damage
                             self.take_damage = True
                             
-        
+            if self.player.attack == True and not self.deal_damage:
+                if pygame.sprite.spritecollide(self.player, body_group, False): #first check: rectangular collision
+                    if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask):
+                        if any(enemy.rect.clipline(*line) for line in self.player.horiz_line):
+                            self.player.moxiepoints += 25
+                            enemy.HP -= self.player.attackpoints
+                            self.deal_damage = True
+                            
         
     def cooldown_for_attacking(self, deltatime):
         # For enemy and player damage response

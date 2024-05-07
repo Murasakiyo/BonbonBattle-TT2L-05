@@ -155,7 +155,22 @@ class Game():
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
         self.forest2 = pygame.image.load("sprites/bg_lvl2.bmp").convert()
 
-        
+    # def cooldown_for_attacking(self):
+    #     # For enemy and player damage response
+    #     if self.take_damage == True:
+    #         self.attack_time += self.deltatime
+    #         self.let_attack = False
+    #         if self.attack_time > 1:
+    #             self.let_attack = True
+    #             self.take_damage = False
+    #             self.attack_time = 0
+
+    #     # for dealing damage to the enemies (Player attacking)
+    #     if self.deal_damage == True:
+    #         self.attack_cooldown += self.deltatime
+    #         if self.attack_cooldown > 0.5:
+    #             self.deal_damage = False
+    #             self.attack_cooldown = 0
 
 
 if __name__ == "__main__":

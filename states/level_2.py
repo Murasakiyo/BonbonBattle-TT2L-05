@@ -24,7 +24,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.characters()
         self.load_health_bar()
         self.load_moxie_bar()
-        # self.load_enemy_health(self.enemy2, self.enemy2.rect.centerx, self.enemy2.rect.centery)
+       
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.ultimate = False
@@ -38,7 +38,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.attack_cooldown = 0
 
     def update(self, deltatime, player_action):
-
+        print(self.fly_swarm.flylist)
         if self.game.start == True:
             if self.game.ult == False:
                 # Cooldown for player receiving damage
@@ -57,14 +57,14 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.update_ultimate(deltatime, player_action)
                 self.health_update()
                 self.moxie_update(player_action)
+
                 for flies in self.fly_swarm.flylist.sprites():
                     self.flies_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
                                         flies.damage, flies.body_damage)
-                    self.enemy_health_update(flies, flies.rect.x, flies.rect.y, flies.HP)
                     
-
             if player_action["ultimate"]:
-                self.game.ult = True            
+                self.game.ult = True          
+                  
             self.add_ultimate(deltatime, player_action)
         else:
             self.game.start_timer()
@@ -76,10 +76,11 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.fly_swarm.render(display)
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
         
+        # Player stats
         self.health_render(display)
         self.moxie_render(display)
-        for flies in self.fly_swarm.flylist.sprites():
-            self.enemy_health_render(display, flies.rect.x, flies.rect.y)
+
+        self.groupenemy_health_render(display)
 
         self.ultimate_display(display)
     
