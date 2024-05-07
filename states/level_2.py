@@ -59,7 +59,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.health_update()
                 self.moxie_update(player_action)
                 for self.enemy2 in self.fly_swarm.flylist.sprites():
-                    self.enemy_health_update(self.enemy2, self.enemy2.rect.x, self.enemy2.rect.y)
+                    self.enemy_health_update(self.enemy2, self.enemy2.rect.x, self.enemy2.rect.y, self.enemy2.HP, True)
                     self.enemy_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, self.enemy2, 
                                         self.enemy2.damage, self.enemy2.body_damage, self.enemy2, self.enemy2, False)
 
