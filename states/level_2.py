@@ -20,6 +20,9 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.swarming = True
         self.ultimates()
         self.characters()
+        self.load_health_bar()
+        self.load_moxie_bar()
+        self.moxie_points = 0
 
     def update(self, deltatime, player_action):
         
