@@ -4,56 +4,75 @@ from torres import *
 from enemy2 import *
 from confection import *
 from parent_classes.ultimate_action import *
+from parent_classes.health import *
+from parent_classes.collisions import *
+from parent_classes.moxie import *
+from parent_classes.enemyhealthbar import *
 
 
-class Sec_Stage(State, Ults):
+class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
     def __init__(self, game):
         super().__init__(game)
         self.camera = CameraGroup(self.game)
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
+        self.fly_swarm = FlyEnemy(self.game)
+        self.swarming = True
         self.ultimates()
         self.characters()
-        self.enemy2 = FlyEnemy(self.game)
-        self.c_time = 0
-        self.newctime = pygame.time.get_ticks()
-        self.ultimate = False
-        self.countdown = 0
-        self.immunity = False
+        self.load_health_bar()
+        self.load_moxie_bar()
+        self.moxie_points = 0
+       
+
 
     def update(self, deltatime, player_action):
-        # print(int(self.enemy2.flies.rect.x-self.player.rect.x))
-
+        
         if self.game.start == True:
             if self.game.ult == False:
-                # Cooldown for player receiving damage
-                if self.game.damaged == True:
-                    self.immunity = True
-                    self.c_time += deltatime
-                    if self.c_time > 2:
-                        self.game.damaged = False
-                        self.immunity = False
 
-                # Update player and enemies
+                # Update player
                 self.player.update(deltatime, player_action)
-                self.enemy2.update(deltatime, player_action, self.player.rect.center[0], 
-                                   self.player.rect.center[1], self.player.rect, self.player.rect.x) 
                 
                 self.update_ultimate(deltatime, player_action)
+                self.health_update()
+                self.moxie_update(player_action)
+                self.cooldown_for_attacked(deltatime)
 
-            if player_action["ultimate"]:
-                self.game.ult = True            
+
+                # Check if flies are all still alive
+                if self.swarming:
+                    self.fly_swarm.update(deltatime, player_action, self.player.rect.center[0], 
+                                        self.player.rect.center[1], self.player.rect, self.player.rect.x)
+                
+                for flies in self.fly_swarm.flylist.sprites():
+                    if not(flies.HP <= 0):
+                        self.flies_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
+                                            flies.damage, flies.body_damage)
+                    if flies.HP <= 0:
+                        flies.kill()
+                    if not self.fly_swarm.flylist.sprites():
+                        self.swarming = False        
+                  
             self.add_ultimate(deltatime, player_action)
         else:
             self.game.start_timer()
-
+        # print(self.attack_time)
 
     def render(self, display):
-        display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
+        display.blit(pygame.transform.scale(self.game.forest2, (1100,600)), (0,0))
         self.camera.custom_draw(display)
-        self.enemy2.render(display)
+        self.player.render(display)
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
         
+        # Player stats
+        self.health_render(display)
+        self.moxie_render(display)
+        
+        for flies in self.fly_swarm.flylist.sprites():
+            if not(flies.HP <= 0):
+                self.fly_swarm.render(display)
+                self.groupenemy_health_render(display,self.fly_swarm.flylist.sprites())
 
         self.ultimate_display(display)
     
