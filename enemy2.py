@@ -15,11 +15,13 @@ class FlyEnemy(pygame.sprite.Sprite):
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
 
-        self.flies.rect.clamp_ip(self.game.screen_rect)
+        
 
         self.flies_spawn()
         for flies in self.flylist.sprites():
             flies.update(deltatime, player_action, player_x, player_y, player_rect, player_rectx)
+            flies.rect.clamp_ip(self.game.screen_rect)
+
 
 
         # self.avoid_rect(deltatime)
@@ -79,12 +81,11 @@ class Fly(pygame.sprite.Sprite):
         self.teleport_y = None
         self.HP = 150
         self.damage = 5
-        self.body_damage = 5
+        self.body_damage = 15
 
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
 
-        
         self.bigger_rect.center = self.rect.center
         if not self.attack:
             if self.cooldown_timer <= 0:  # When the cooldown timer is end // when the player starts the game
@@ -147,6 +148,10 @@ class Fly(pygame.sprite.Sprite):
 
     def render(self, display):
         display.blit(self.image, (self.rect.x, self.rect.y))
+        pygame.draw.rect(display, "green", self.rect,2)
+        pygame.draw.rect(display, "blue", self.bigger_rect,2)
+
+
 
 
     def animate(self, deltatime, direction):

@@ -15,7 +15,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = False
+        self.start = True
         # self.ct_display = 1
         self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 5
         self.backgrounds()
@@ -75,8 +75,8 @@ class Game():
                     self.player_action["up"] = False
                 if event.key == pygame.K_s:
                     self.player_action["down"] = False
-                # if event.key == pygame.K_k:
-                #     self.player_action["defend"] = False
+                if event.key == pygame.K_k:
+                    self.player_action["defend"] = False
                 if event.key == pygame.K_q:
                     self.player_action["ultimate"] = False
         
