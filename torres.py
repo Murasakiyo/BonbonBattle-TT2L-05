@@ -51,19 +51,6 @@ class Player(pygame.sprite.Sprite):
             direction_y = 0
         else:
             self.defend = False
-            
-        # Defense timer
-        # if self.defend:
-        #     self.attack = False
-        #     self.current_time += deltatime
-        #     if self.current_time > 0.8:
-        #         player_action["defend"] = False
-        #         self.defend = False
-        #         self.current_time = 0
-        #         if self.right == 1:
-        #             self.current_anim_list = self.right_sprites
-        #         else:
-        #             self.current_anim_list = self.left_sprites
                     
         # Check for attack button
         if player_action["attack"]:

@@ -18,9 +18,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.support_dolls = pygame.sprite.Group()
         self.fly_swarm = FlyEnemy(self.game)
         self.swarming = True
-        # self.enemy2 = Fly(self.game)
-        # self.fly_group = pygame.sprite.Group()
-        # self.fly_group.add(self.enemy2)
         self.ultimates()
         self.characters()
         self.load_health_bar()
@@ -40,6 +37,8 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.update_ultimate(deltatime, player_action)
                 self.health_update()
                 self.moxie_update(player_action)
+                self.cooldown_for_attacked(deltatime)
+
 
                 # Check if flies are all still alive
                 if self.swarming:

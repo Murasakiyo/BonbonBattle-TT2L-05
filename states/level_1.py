@@ -45,6 +45,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 # Update player
                 self.player.update(deltatime, player_action)
                 self.update_ultimate(deltatime, player_action)
+                self.cooldown_for_attacked(deltatime)
+
 
 
                 # Update enemies

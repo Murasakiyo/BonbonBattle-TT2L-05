@@ -72,15 +72,6 @@ class Collisions():
                             
         
     def cooldown_for_attacking(self, deltatime):
-        # For enemy and player damage response
-        if self.player.take_damage == True:
-            self.player.attack_time += deltatime
-            self.player.let_attack = False
-            if self.player.attack_time > 1:
-                self.player.let_attack = True
-                self.player.take_damage = False
-                self.player.attack_time = 0
-
         # for dealing damage to the enemies (Player attacking)
         if self.player.deal_damage == True:
             self.player.attack_cooldown += deltatime
@@ -88,3 +79,12 @@ class Collisions():
                 self.player.deal_damage = False
                 self.player.attack_cooldown = 0
 
+    def cooldown_for_attacked(self, deltatime):
+         # For enemy and player damage response
+        if self.player.take_damage == True:
+            self.player.attack_time += deltatime
+            self.player.let_attack = False
+            if self.player.attack_time > 1:
+                self.player.let_attack = True
+                self.player.take_damage = False
+                self.player.attack_time = 0
