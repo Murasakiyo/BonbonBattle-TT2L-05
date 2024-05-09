@@ -3,6 +3,7 @@ import spritesheet
 import math
 import random
 
+
 class FlyEnemy(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
@@ -13,14 +14,15 @@ class FlyEnemy(pygame.sprite.Sprite):
         # self.fps = 0.2
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
-        direction_x = player_action["right"] - player_action["left"]
-        direction_y = player_action["down"] - player_action["up"]
-       
-        self.flies.rect.clamp_ip(self.game.screen_rect)
+
+        
 
         self.flies_spawn()
         for flies in self.flylist.sprites():
-           flies.update(deltatime, player_action, player_x, player_y, player_rect, player_rectx)
+            flies.update(deltatime, player_action, player_x, player_y, player_rect, player_rectx)
+            flies.rect.clamp_ip(self.game.screen_rect)
+
+
 
         # self.avoid_rect(deltatime)
 
@@ -28,6 +30,7 @@ class FlyEnemy(pygame.sprite.Sprite):
     def render(self, display):
         for self.flies in self.flylist.sprites():
             self.flies.render(display)
+            
 
     # # To avoid overlap among flies
     # def avoid_rect(self, deltatime):  
@@ -55,25 +58,16 @@ class FlyEnemy(pygame.sprite.Sprite):
                 self.flylist.add(new_fly)
 
 
-    def animate(self, deltatime, direction_x, direction_y, distance):
-        # self.last_frame_update += deltatime
-        pass
-    
-
-    def load_sprites(self):
-        self.left_sprites, self.right_sprites = [], []
-        self.jump_left, self.jump_right = [], [] 
-        self.attack_left, self.attack_right = [], []
-
-
 class Fly(pygame.sprite.Sprite):
     def __init__(self, game, moving_speed=0.5, color=(0,255,0)):
         super().__init__()
         self.game = game
-        random_x = random.randint(500, 1100)
+        random_x = random.randint(600, 1100)
         random_y = random.randint(0, 600)
         self.load_sprites()
         self.rect = self.fly.get_rect(width= 130, height=119)
+        self.fly_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.fly_mask.to_surface()
         self.rect.x, self.rect.y = random_x, random_y
         self.color = color
         self.bigger_rect = self.rect.scale_by(1.5)
@@ -82,13 +76,18 @@ class Fly(pygame.sprite.Sprite):
         self.cooldown_duration = 2
         self.cooldown_timer = 0
         self.moving_speed = moving_speed
-        self.attacking = False
+        self.attack = False
         self.teleport_x = None
         self.teleport_y = None
+        self.HP = 150
+        self.damage = 5
+        self.body_damage = 15
+
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
+
         self.bigger_rect.center = self.rect.center
-        if not self.attacking:
+        if not self.attack:
             if self.cooldown_timer <= 0:  # When the cooldown timer is end // when the player starts the game
                 self.move_towards_player(player_x, player_y)
             else:
@@ -101,8 +100,8 @@ class Fly(pygame.sprite.Sprite):
         # Teleport flies
         if self.bigger_rect.colliderect(player_rect):
             if self.cooldown_timer <= 0:
-                if not self.attacking:
-                    self.attacking = True
+                if not self.attack:
+                    self.attack = True
                     FACTOR = 200
                     if self.rect.centerx > player_rect.centerx:
                         self.teleport_x = player_rect.left - (self.rect.width / 2) - FACTOR 
@@ -119,7 +118,7 @@ class Fly(pygame.sprite.Sprite):
             else:
                 self.cooldown_timer -= deltatime
         else:
-            self.attacking = False
+            self.attack = False
         self.animate(deltatime, self.direction)
         
        
@@ -149,21 +148,23 @@ class Fly(pygame.sprite.Sprite):
 
     def render(self, display):
         display.blit(self.image, (self.rect.x, self.rect.y))
-        # pygame.draw.rect(display, (255,0,0), self.rect, 2)
-        # pygame.draw.rect(display, (255,255,255), self.bigger_rect, 2)
+        pygame.draw.rect(display, "green", self.rect,2)
+        pygame.draw.rect(display, "blue", self.bigger_rect,2)
+
+
 
 
     def animate(self, deltatime, direction):
         self.last_frame_update += deltatime
 
-        if direction > 0 and not(self.attacking):
+        if direction > 0 and not(self.attack):
             self.current_anim_list = self.right_sprites
-        elif direction < 0 and not(self.attacking):
+        elif direction < 0 and not(self.attack):
             self.current_anim_list = self.left_sprites
 
-        if self.attacking and self.image == self.right_sprites[self.current_frame]:
+        if self.attack and self.image == self.right_sprites[self.current_frame]:
             self.current_anim_list = self.attack_right
-        elif self.attacking and self.image == self.left_sprites[self.current_frame]:
+        elif self.attack and self.image == self.left_sprites[self.current_frame]:
             self.current_anim_list = self.attack_left
 
 

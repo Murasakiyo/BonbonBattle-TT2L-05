@@ -10,11 +10,6 @@ class Ults():
     def __init__(self, game):
         self.game = game
 
-    def characters(self):
-        self.player = Player(self.game, self.camera, 200,200) 
-        self.louie = Louie(self.game) 
-        self.stan = Stanley(self.game) 
-        self.krie = Krie(self.game)
 
     def update_ultimate(self, deltatime, player_action):
             # Sprite group update
