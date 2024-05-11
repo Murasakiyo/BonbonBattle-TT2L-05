@@ -27,10 +27,13 @@ class Enemy3(pygame.sprite.Sprite):
         self.moxie_activate = False
         self.minions = Minions(self.game, self.rect.centerx, self.rect.centery, speed=0)
         self.minionlist = pygame.sprite.Group()
-        self.HP = 500
+        self.HP = 5
         self.damage = 0
         self.body_damage = 50
         self.attack = False
+        self.ult_timer = 0
+        self.ult = False
+        self.leech = False
         
 
 
@@ -72,7 +75,20 @@ class Enemy3(pygame.sprite.Sprite):
         if self.moxie_activate == True:
             self.moxie_activate = False
 
+####################
+        self.ult_timer += deltatime
 
+        if self.ult_timer >= 5:
+            self.ult = True
+
+        if self.ult_timer < 5:
+            self.ult = False
+            self.leech = False
+
+        if self.ult == True:
+            self.leech = True
+            self.ult_timer = 0
+################################
         self.minion_spawn(deltatime)   
         self.minionlist.update(deltatime, player_action, player_x, player_y)
         # self.update_minions(player_lines)
@@ -98,6 +114,7 @@ class Enemy3(pygame.sprite.Sprite):
         # print(self.minionlist)
         # print(p_move_x)
         # print(self.collide)
+        print(self.leech)
 
 
 

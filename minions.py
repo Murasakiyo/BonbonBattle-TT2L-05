@@ -7,6 +7,7 @@ class Minions(pygame.sprite.Sprite):
         self.game = game
         self.rect = pygame.Rect(enemy3_rectx - 100, enemy3_recty, 30, 30) #left
         self.minion_speed = speed # 2
+        self.damage = 10
 
     def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]

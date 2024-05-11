@@ -20,6 +20,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.countdown = 0
         self.immunity = False
 
+        self.enemy3_heal = 0
+
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
         self.enemy3 = Enemy3(self.game)
@@ -51,11 +53,23 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 # Update player and enemies
                 self.player.update(deltatime, player_action)
                 self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1])
+
+                self.health_update()
+                self.moxie_update(player_action)
+                self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
                 
                 self.update_ultimate(deltatime, player_action)
 
                 self.flies_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy3, self.enemy3.damage, self.enemy3.body_damage)
                 self.minion_collisions(self.player.lines)
+
+                if self.enemy3.leech == True:
+                    self.player.healthpoints -= (self.player.healthpoints * 20/100)
+                    self.enemy3_heal = self.player.healthpoints
+                    self.enemy3.HP += self.enemy3_heal
+
+                if self.enemy3.HP > 300:
+                    self.enemy3.HP = 300
 
 
 
@@ -73,6 +87,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         
         self.health_render(display)
         self.moxie_render(display)
+        self.boss_health_render(display)
         
         self.ultimate_display(display)
     

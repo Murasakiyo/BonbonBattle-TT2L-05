@@ -75,6 +75,8 @@ class Collisions():
             if any(self.enemy3.minions.rect.clipline(*line) for line in player_lines):
                 self.enemy3.minionlist.remove(self.enemy3.minions)
                 self.enemy3.moxie_activate = True
+                self.player.healthpoints -= self.enemy3.minions.damage
+                self.player.moxiepoints += 10
 
      
     def cooldown_for_attacking(self, deltatime):
