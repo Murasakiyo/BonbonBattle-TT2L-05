@@ -2,7 +2,7 @@ import pygame
 import sys
 from states.level_1 import First_Stage
 from states.menu import MainMenu
-from states.level_choose import Level_Options
+
 
 class Game():
     def __init__(self):

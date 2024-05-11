@@ -74,10 +74,10 @@ class Level_Options(State):
         # display.fill((0,0,0))
         display.blit(self.show_bg, (0,0))
         display.blit(self.current_level1, (self.button1.x, self.button1.y))
-        display.blit(self.current_level2, (self.button1.x +200, self.button1.y))
-        display.blit(self.current_level3, (self.button1.x+400, self.button1.y))
-        display.blit(self.current_level4, (self.button1.x+600, self.button1.y))
-        display.blit(self.current_level5, (self.button1.x+800, self.button1.y))
+        display.blit(self.current_level2, (self.button1.x + 200, self.button1.y))
+        display.blit(self.current_level3, (self.button1.x + 400, self.button1.y))
+        display.blit(self.current_level4, (self.button1.x + 600, self.button1.y))
+        display.blit(self.current_level5, (self.button1.x + 800, self.button1.y))
 
 
     def update_keys(self, player_action, deltatime):
