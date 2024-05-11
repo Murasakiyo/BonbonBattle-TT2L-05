@@ -12,7 +12,7 @@ class MainMenu(State):
         self.start_button = pygame.image.load("sprites/start_button.png").convert_alpha()
         self.start_button_hover = pygame.image.load("sprites/start_button_hover.png").convert_alpha()
         self.current_start = self.start_button
-        self.rect_START = self.start_button.get_rect(width= 200, height=150)
+        self.rect_START = self.start_button.get_rect(width= 250, height=100)
         self.rect_START.x, self.rect_START.y = 600, 465
         self.set_button = pygame.image.load("sprites/set_button.png").convert_alpha()
         self.set_button_hover = pygame.image.load("sprites/set_button_hover.png").convert_alpha()
@@ -38,12 +38,11 @@ class MainMenu(State):
             player_action["transition"] = True
 
         if self.game.alpha == 255:
-            new_state = Sec_Stage(self.game)
+            new_state = First_Stage(self.game)
             new_state.enter_state()
             player_action["transition"] =  False
             
 
-    
     def render(self, display):
         display.blit(pygame.image.load("sprites/main_screen.bmp").convert(), (0,0))
         if self.rect_START.collidepoint(self.mouse):
