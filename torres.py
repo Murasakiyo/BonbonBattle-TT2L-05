@@ -41,7 +41,7 @@ class Player(pygame.sprite.Sprite):
 
         # collision with the screen
         self.rect.clamp_ip(self.game.screen_rect)
-        print(self.attack)
+        # print(self.attack)
 
         # Check for defense button
         if player_action["defend"] == True:
