@@ -148,8 +148,8 @@ class Fly(pygame.sprite.Sprite):
 
     def render(self, display):
         display.blit(self.image, (self.rect.x, self.rect.y))
-        pygame.draw.rect(display, "green", self.rect,2)
-        pygame.draw.rect(display, "blue", self.bigger_rect,2)
+        # pygame.draw.rect(display, "green", self.rect,2)
+        # pygame.draw.rect(display, "blue", self.bigger_rect,2)
 
 
 

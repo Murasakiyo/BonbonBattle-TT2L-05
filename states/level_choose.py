@@ -29,7 +29,6 @@ class Level_Options(State):
 
 
     def update(self, deltatime, player_action):
-        print(self.alpha)
         self.show_bg = self.current_background
         self.bg_transition(player_action)
         self.update_keys(player_action, deltatime)
@@ -63,6 +62,9 @@ class Level_Options(State):
             self.current_level5 = self.lvl5
 
         if player_action["go"]:
+            player_action["transition"] = True
+
+        if self.game.alpha == 255:
             new_state.enter_state()
             self.game.reset_keys()
 

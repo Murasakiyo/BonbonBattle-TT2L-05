@@ -16,9 +16,9 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = True
+        self.start = False
         # self.ct_display = 1
-        self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 5
+        self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 4
         self.backgrounds()
 
         # Action dictionary
@@ -39,7 +39,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
-            print(self.player_action["go"])
+            # print(self.player_action["go"])
 
 
     # All key events are here. Receive input from player, display output for player
@@ -122,7 +122,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = Level_Options(self)
+        self.title_screen = MainMenu(self)
         self.state_stack.append(self.title_screen)
 
     # Reset all player keys
