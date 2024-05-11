@@ -2,7 +2,7 @@ import pygame
 import sys
 from states.level_1 import First_Stage
 from states.menu import MainMenu
-
+from states.pause_menu import Pause
 
 class Game():
     def __init__(self):
@@ -23,7 +23,7 @@ class Game():
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
-                              "ultimate": False, "transition": False, "go": False} 
+                              "ultimate": False, "transition": False, "go": False, "pause": False} 
     
         self.state_stack = []
         self.load_states()
@@ -68,6 +68,8 @@ class Game():
                     self.player_action["ultimate"] = True
                 if event.key == pygame.K_RETURN:
                     self.player_action["go"] = True
+                if event.key == pygame.K_BACKSPACE:
+                    self.player_action["pause"] = True
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
@@ -84,6 +86,8 @@ class Game():
                     self.player_action["ultimate"] = False
                 if event.key == pygame.K_RETURN:
                     self.player_action["go"] = False
+                if event.key == pygame.K_BACKSPACE:
+                    self.player_action["pause"] = False
         
    
 

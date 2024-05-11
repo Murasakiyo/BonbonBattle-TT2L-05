@@ -1,5 +1,6 @@
 import pygame
 from parent_classes.state import *
+from states.pause_menu import *
 from torres import *
 from enemy2 import *
 from confection import *
@@ -17,6 +18,8 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
         self.fly_swarm = FlyEnemy(self.game)
+        self.pause = Pause(self.game)
+
         self.swarming = True
         self.ultimates()
         self.characters()
@@ -50,7 +53,13 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     if flies.HP <= 0:
                         flies.kill()
                     if not self.fly_swarm.flylist.sprites():
-                        self.swarming = False        
+                        self.swarming = False 
+
+                if player_action["pause"]:
+                    new_state = self.pause
+                    new_state.enter_state()
+                    self.game.start = False
+                    # self.game.reset_keys()       
                   
             self.add_ultimate(deltatime, player_action)
         else:

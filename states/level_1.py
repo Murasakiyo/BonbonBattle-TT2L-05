@@ -2,12 +2,14 @@ import pygame
 from parent_classes.state import *
 from torres import *
 from enemy1 import *
+from states.pause_menu import *
 from confection import *
 from parent_classes.ultimate_action import *
 from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
+
 
 
 class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
@@ -23,6 +25,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.enemy1 = FrogEnemy(self.game, self.camera)
         self.tongue = Tongue(self.game)
         self.tongue2 = Tongue2(self.game)
+        self.pause = Pause(self.game)
 
         self.ultimates()
         self.characters()
@@ -65,6 +68,13 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     self.enemy1.kill()
                     self.tongue.kill()
                     self.tongue2.kill()
+
+                if player_action["pause"]:
+                    new_state = self.pause
+                    new_state.enter_state()
+                    self.game.start = False
+                    # self.game.reset_keys()
+
 
 
             self.add_ultimate(deltatime, player_action)
