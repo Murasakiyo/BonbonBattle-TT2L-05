@@ -56,3 +56,6 @@ class MainMenu(State):
             self.current_set = self.set_button
         display.blit(self.current_start, (self.rect_START.x, self.rect_START.y))
         display.blit(self.current_set, (self.rect_SET.x, self.rect_SET.y))
+
+    def get_state_data(self):
+        return{}  # return an empty dictionary # no specific state data need to be saved for now

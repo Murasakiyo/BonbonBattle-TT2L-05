@@ -2,6 +2,7 @@ import pygame
 import sys
 from states.level_1 import First_Stage
 from states.menu import MainMenu
+from savefile import *
 
 class Game():
     def __init__(self):
@@ -28,7 +29,16 @@ class Game():
         self.load_states()
         self.ultimates()
         
-
+        self.save_system = SaveDataSystem()     
+        self.save_file_path = 'saved_state.pickle'  # File path for saving the game state  
+        # self.clear_save_file()  # call ONLY when want to RESTART the game
+        
+        if self.check_saved_state(): # check if saved game state data file exists
+            # print("check_save_state returns true")
+            self.load_saved_state(self.save_file_path)
+        else:
+            # print("check_save_state returns false")
+            self.load_states() 
 
     # Game loop
     def game_loop(self):
@@ -48,6 +58,7 @@ class Game():
             if event.type == pygame.QUIT:
                 self.run = False
                 self.play = False
+                self.save_game_state(self.save_file_path) # save game state before exiting
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
@@ -85,7 +96,6 @@ class Game():
     def update(self):
         self.state_stack[-1].update(self.deltatime, self.player_action)
         self.ct_display = str(int(self.countdown -self.current_time))
-
 
 
     # Rendering images on screen
@@ -151,6 +161,49 @@ class Game():
         self.forest = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
+
+
+    ### FILE SAVING ###
+    def check_saved_state(self):
+        return self.save_system.check_saved_state(self.save_file_path)
+
+    def save_game_state(self, file_path):
+        current_state = self.state_stack[-1]
+        current_state_data = current_state.get_state_data()  # saved in dictionary
+        self.save_system.save_game_state(current_state_data, file_path)
+         
+    def load_saved_state(self, file_path):
+        saved_state_data = self.save_system.load_game_state(file_path)  # return data in dictionary (saved_state_data is a dictionary)
+        
+        if saved_state_data:
+            saved_level = saved_state_data['level']
+            if saved_level == 1:
+                level_object = First_Stage(self)
+                level_object.player.rect.x, level_object.player.rect.y = saved_state_data['player_position']
+                level_object.player_attack = saved_state_data['player_attack']
+                level_object.healthpoints = saved_state_data['player_health']
+                # level_object.moxie_points = saved_state_data['player_moxie_points']
+                level_object.take_damage = saved_state_data['playerEnemy_take_damage']
+                level_object.ultimate = saved_state_data['player_ultimate']
+                level_object.attack_time = saved_state_data['player_attack_time']
+                level_object.let_attack = saved_state_data['player_let_attack']
+                level_object.attack_cooldown = saved_state_data['player_attack_cooldown']
+                level_object.enemy1.rect.x, level_object.enemy1.rect.y = saved_state_data['enemy_position']
+                # level_object.frog_HP = saved_state_data['enemy_health']
+                self.state_stack.append(level_object)
+            # elif saved_level == 2:
+            #     level_object = Sec_Stage(self)
+            #     self.state_stack.append(level_object)
+            # print("Game state loaded successfully.")
+        else:
+            print("No saved state data available.")
+
+    # be called when want to restart the game 
+    def clear_save_file(self):
+        import os
+        if os.path.exists(self.save_file_path):
+            os.remove(self.save_file_path)
+        self.save_game_state(self.save_file_path)
 
 
 if __name__ == "__main__":

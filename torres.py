@@ -33,7 +33,6 @@ class Player(pygame.sprite.Sprite):
         self.defensepoints = 10
         # self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.moxie_points)
         # self.health_bar = pygame.Rect(10, 10, self.healthpoints, 40)
-        
 # , collide_bool, moxie_activate, take_damage
 
     def update(self,deltatime,player_action):
@@ -253,9 +252,6 @@ class Player(pygame.sprite.Sprite):
             
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites
-
-
-    
 
 
 

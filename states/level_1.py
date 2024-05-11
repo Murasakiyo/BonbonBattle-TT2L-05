@@ -162,8 +162,19 @@ class First_Stage(State, Ults, Collisions):
         pygame.draw.rect(display, "green", self.frog_health)
 
     
-
-
-
-
-
+    def get_state_data(self):
+        state_data = {
+            'level' : 1,  # add the level number to the state data
+            'player_position' : (self.player.rect.x, self.player.rect.y),
+            'player_attack' : self.player_attack,
+            'player_health' : self.healthpoints,
+            # 'player_moxie_points' : self.moxie_points,
+            'playerEnemy_take_damage' : self.take_damage,
+            'player_ultimate' : self.ultimate,
+            'player_attack_time' : self.attack_time,
+            'player_let_attack' : self.let_attack,
+            'player_attack_cooldown' : self.attack_cooldown,
+            'enemy_position' : (self.enemy1.rect.x, self.enemy1.rect.y),
+            # 'enemy_health' : self.frog_HP,
+        }
+        return state_data
