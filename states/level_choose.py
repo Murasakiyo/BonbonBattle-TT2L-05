@@ -12,6 +12,9 @@ class Level_Options(State):
         self.buttons()
         self.make_button()
         self.current_time = 0
+        self.first_level = First_Stage(self.game)
+        self.second_level = Sec_Stage(self.game)
+        self.fourth_level= Quad_Stage(self.game)
         self.current_level1 = self.lvl1
         self.current_level2 = self.lvl2
         self.current_level3 = self.lvl3
@@ -33,11 +36,13 @@ class Level_Options(State):
         if self.menu_options[self.index] == "lvl1": 
             self.current_level1 = self.lvl1_hover
             self.current_background = self.level1
+            new_state = self.first_level
         else:
             self.current_level1 = self.lvl1
         if self.menu_options[self.index] == "lvl2": 
             self.current_level2 = self.lvl2_hover
             self.current_background = self.level2
+            new_state = self.second_level
         else:
             self.current_level2 = self.lvl2
         if self.menu_options[self.index] == "lvl3": 
@@ -48,6 +53,7 @@ class Level_Options(State):
         if self.menu_options[self.index] == "lvl4": 
             self.current_level4 = self.lvl4_hover
             self.current_background = self.level4
+            new_state = self.fourth_level
         else:
             self.current_level4 = self.lvl4
         if self.menu_options[self.index] == "lvl5": 
@@ -56,12 +62,15 @@ class Level_Options(State):
         else:
             self.current_level5 = self.lvl5
 
+        if player_action["go"]:
+            new_state.enter_state()
+            self.game.reset_keys()
+
             
 
     def render(self, display):
         # display.fill((0,0,0))
         display.blit(self.show_bg, (0,0))
-        pygame.display.flip()
         display.blit(self.current_level1, (self.button1.x, self.button1.y))
         display.blit(self.current_level2, (self.button1.x +200, self.button1.y))
         display.blit(self.current_level3, (self.button1.x+400, self.button1.y))

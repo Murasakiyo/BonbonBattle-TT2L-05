@@ -23,7 +23,7 @@ class Game():
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
-                              "ultimate": False, "transition": False} 
+                              "ultimate": False, "transition": False, "go": False} 
     
         self.state_stack = []
         self.load_states()
@@ -39,7 +39,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
-            # print(self.deltatime)
+            print(self.player_action["go"])
 
 
     # All key events are here. Receive input from player, display output for player
@@ -66,6 +66,8 @@ class Game():
                     self.player_action["defend"] = True
                 if event.key == pygame.K_q:
                     self.player_action["ultimate"] = True
+                if event.key == pygame.K_RETURN:
+                    self.player_action["go"] = True
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
@@ -80,6 +82,8 @@ class Game():
                     self.player_action["defend"] = False
                 if event.key == pygame.K_q:
                     self.player_action["ultimate"] = False
+                if event.key == pygame.K_RETURN:
+                    self.player_action["go"] = False
         
    
 
