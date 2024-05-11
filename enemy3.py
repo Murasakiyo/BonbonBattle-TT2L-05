@@ -9,7 +9,7 @@ class Enemy3(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.rect_draw = pygame.Rect(180, 180, 40, 40)
-        self.enemy3_rect = pygame.Rect(180, 180, 40, 40)
+        self.rect = pygame.Rect(180, 180, 40, 40)
         self.enemyborder1 = pygame.Rect(-895, 40, 900, 570) #left
         self.enemyborder2 = pygame.Rect(1095, 40, 900, 570) #right
         self.enemyborder3 = pygame.Rect(0, 560, 1100, 370) #bottom
@@ -25,34 +25,34 @@ class Enemy3(pygame.sprite.Sprite):
         self.avoid = False
         self.collide = False
         self.moxie_activate = False
-        self.take_damage = False
-        self.minions = Minions(self.game, self.enemy3_rect.centerx, self.enemy3_rect.centery)
-        self.minions2 = Minions2(self.game, self.enemy3_rect.centerx, self.enemy3_rect.centery)
-        self.minions3 = Minions3(self.game, self.enemy3_rect.centerx, self.enemy3_rect.centery)
-        self.minions4 = Minions4(self.game, self.enemy3_rect.centerx, self.enemy3_rect.centery)
+        self.minions = Minions(self.game, self.rect.centerx, self.rect.centery, speed=0)
         self.minionlist = pygame.sprite.Group()
+        self.HP = 500
+        self.damage = 0
+        self.body_damage = 50
+        self.attack = False
         
 
 
-    def update(self, deltatime, player_action, player_x, player_y, player_lines, p_move_x, p_move_y, collide_bool):
+    def update(self, deltatime, player_action, player_x, player_y):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
         self.enemy3_movement(player_x, player_y)
         self.move_towards_border()
         # self.minions_movement(player_x, player_y)
-        self.enemy3_rect.clamp_ip(self.game.screen_rect)
+        self.rect.clamp_ip(self.game.screen_rect)
 
-        if pygame.Rect.colliderect(self.enemy3_rect, self.enemyborder1) == True:
+        if pygame.Rect.colliderect(self.rect, self.enemyborder1) == True:
             self.avoid = True
 
-        if pygame.Rect.colliderect(self.enemy3_rect, self.enemyborder2) == True:
+        if pygame.Rect.colliderect(self.rect, self.enemyborder2) == True:
             self.avoid = True
 
-        if pygame.Rect.colliderect(self.enemy3_rect, self.enemyborder3) == True:
+        if pygame.Rect.colliderect(self.rect, self.enemyborder3) == True:
             self.avoid = True
 
-        if pygame.Rect.colliderect(self.enemy3_rect, self.enemyborder4) == True:
+        if pygame.Rect.colliderect(self.rect, self.enemyborder4) == True:
             self.avoid = True
 
         if self.avoid == True:
@@ -68,21 +68,14 @@ class Enemy3(pygame.sprite.Sprite):
             self.speed = -4 # -4
             self.attractspeed = 0
 
-        if self.collide == True:
-            self.collide_time += deltatime
-            if self.collide_time > 3:
-                self.collide = False
-                self.collide_time = 0
 
         if self.moxie_activate == True:
             self.moxie_activate = False
 
-        if self.take_damage == True:
-            self.take_damage = False
 
         self.minion_spawn(deltatime)   
         self.minionlist.update(deltatime, player_action, player_x, player_y)
-        self.update_minions(player_lines)
+        # self.update_minions(player_lines)
 
     
 
@@ -110,7 +103,7 @@ class Enemy3(pygame.sprite.Sprite):
 
 
     def render(self, display):
-        pygame.draw.rect(display, self.color, self.enemy3_rect)
+        pygame.draw.rect(display, self.color, self.rect)
         # pygame.draw.rect(display, self.color, self.enemyborder1)
         # pygame.draw.rect(display, self.color, self.enemyborder2)
         # pygame.draw.rect(display, self.color, self.enemyborder3)
@@ -126,9 +119,7 @@ class Enemy3(pygame.sprite.Sprite):
         for self.minions in self.minionlist.copy():
             if any(self.minions.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions)
-                self.collide = True
                 self.moxie_activate = True
-                self.take_damage = True
 
         # if any(self.minions.rect.clipline(*line) for line in player_lines):
         #     self.collide = True
@@ -136,38 +127,39 @@ class Enemy3(pygame.sprite.Sprite):
         for self.minions2 in self.minionlist.copy():
             if any(self.minions2.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions2)
-                self.collide = True
                 self.moxie_activate = True
-                self.take_damage = True
 
         for self.minions3 in self.minionlist.copy():
             if any(self.minions3.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions3)
-                self.collide = True
                 self.moxie_activate = True
-                self.take_damage = True
 
         for self.minions4 in self.minionlist.copy():
             if any(self.minions4.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions4)
-                self.collide = True
                 self.moxie_activate = True
-                self.take_damage = True
 
 
     def minion_spawn(self, deltatime):
         if len(self.minionlist) == 0:
                 self.minion_time += deltatime
                 if self.minion_time > 3:
-                    new_minion = Minions(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                    self.minionlist.add(new_minion) 
-                    new_minion = Minions2(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                    self.minionlist.add(new_minion) 
-                    new_minion = Minions3(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                    self.minionlist.add(new_minion) 
-                    new_minion = Minions4(self.game,self.enemy3_rect.x, self.enemy3_rect.y)
-                    self.minionlist.add(new_minion) 
+                    for i in range(3):
+                        if i == 1:
+                            new_minion = Minions(self.game, self.rect.centerx - 100, self.rect.centery, 1+(i * 1))
+                            self.minionlist.add(new_minion)
+                        if i == 2:
+                            new_minion = Minions(self.game, self.rect.centerx + 100, self.rect.centery, 1+(i * 1))
+                            self.minionlist.add(new_minion) 
+                    for i in range(3, 5):
+                        if i == 3:
+                            new_minion = Minions(self.game, self.rect.centerx, self.rect.centery + 100, 1+(i * 1))
+                            self.minionlist.add(new_minion)     
+                        if i == 4:
+                            new_minion = Minions(self.game, self.rect.centerx, self.rect.centery - 100, 1+(i * 1))
+                            self.minionlist.add(new_minion)                      
                     self.minion_time = 0
+
 
 ##############################################
 
@@ -178,7 +170,7 @@ class Enemy3(pygame.sprite.Sprite):
 
     def enemy3_movement(self, player_x, player_y):
         # Find direction vector (dx, dy) between enemy and player.
-        dx, dy = player_x - self.enemy3_rect.x, player_y - self.enemy3_rect.y
+        dx, dy = player_x - self.rect.x, player_y - self.rect.y
         dist = math.hypot(dx, dy)
 
         dx, dy = dx / (dist + 1), dy / (dist + 1)  # Normalize.
@@ -187,16 +179,16 @@ class Enemy3(pygame.sprite.Sprite):
             self.speed = 0
 
         # Move along this normalized vector towards the player at current speed.
-        self.enemy3_rect.x += dx * self.speed
-        self.enemy3_rect.y += dy * self.speed
+        self.rect.x += dx * self.speed
+        self.rect.y += dy * self.speed
 
     def move_towards_border(self):
-        dx, dy = self.game.screen_rect.center[0] - self.enemy3_rect.x, self.game.screen_rect.center[1] - self.enemy3_rect.y
+        dx, dy = self.game.screen_rect.center[0] - self.rect.x, self.game.screen_rect.center[1] - self.rect.y
         dist = math.hypot(dx, dy)
 
         dx, dy = dx / (dist + 1), dy / (dist + 1)
-        self.enemy3_rect.x += dx * self.attractspeed
-        self.enemy3_rect.y += dy * self.attractspeed
+        self.rect.x += dx * self.attractspeed
+        self.rect.y += dy * self.attractspeed
 
     # def minions_movement(self, player_x, player_y):
     #     dx, dy = player_x - self.minions.rect.x, player_y - self.minions.rect.y
