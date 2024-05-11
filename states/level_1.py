@@ -23,7 +23,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.characters()
         self.load_health_bar()
         self.load_moxie_bar()
-        self.load_enemy_health(self.enemy1, self.enemy1.rect.x, self.enemy1.rect.y)
+        self.load_enemy_health(self.enemy1, self.enemy1.rect.x, self.enemy1.rect.y, None, False)
         self.attack_group = pygame.sprite.Group()
         self.body_group = pygame.sprite.Group()
         self.attack_group.add(self.tongue, self.tongue2)
@@ -67,7 +67,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                                       self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2, True)
                 self.health_update()
                 self.moxie_update(player_action)
-                self.enemy_health_update(self.enemy1, self.enemy1.rect.x, self.enemy1.rect.y)
+                self.enemy_health_update(self.enemy1, self.enemy1.rect.x, self.enemy1.rect.y, None, False)
 
 
 
