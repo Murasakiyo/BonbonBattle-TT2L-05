@@ -30,7 +30,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
     def update(self, deltatime, player_action):
         
-        print(self.enemy_defeat)
         if self.game.reset_game:
             for flies in self.fly_swarm.flylist.sprites():
                 flies.kill()

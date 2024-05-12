@@ -123,27 +123,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
 
-    # def reset_game(self):
-    #     if self.game.reset_game:
-    #         self.game_reset(250, 150, 700, 200)
-    #         self.game.reset_game = False
-
-
-# class First_Stage_test(State):
-#     def __init__(self, game):
-#         super().__init__(game)
-#         self.game = game
-#         self.play = First_Stage(self.game)
-
-#     def update(self, deltatime, player_action):
-#         self.play.update(deltatime, player_action)
-
-#     def render(self, display):
-#         self.play.render(display)
-
-#     def gameloop(self):
-#         self.update()
-#         self.render()
 
 
 
