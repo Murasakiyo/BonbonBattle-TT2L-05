@@ -49,7 +49,6 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.moxie_update(player_action)
                 self.cooldown_for_attacked(deltatime)
                 
-                print(self.enemy3.HP)
                 self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect.x)
                 self.snake_attacked(deltatime, player_action, self.enemy_group, self.enemy3, self.enemy3.body_damage)
                 self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
