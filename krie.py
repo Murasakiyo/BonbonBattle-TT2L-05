@@ -43,7 +43,7 @@ class Krie(pygame.sprite.Sprite, Support):
 
         # Updating frames
         if self.last_frame_update > self.fps:
-            if self.current_anim_list == self.attack_right or self.current_anim_list == self.attack_left:
+            if self.attack:
                 if self.current_frame != 4:
                     self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
                     self.image = self.current_anim_list[self.current_frame]

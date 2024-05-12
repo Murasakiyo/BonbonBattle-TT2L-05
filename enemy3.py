@@ -30,7 +30,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.fps = 0.07
         self.current_frame, self.last_frame_update = 0,0
         self.HP = 300
-        self.body_damage = 50
+        self.body_damage = 20
         self.attack = False
         self.ult_timer = 0
         self.ult = False
@@ -63,7 +63,7 @@ class Enemy3(pygame.sprite.Sprite):
                 self.current_time = 0
 
         if self.avoid == True:
-            self.attractspeed = 10
+            self.attractspeed = 8
             self.speed = 0
         elif self.avoid == False:
             self.speed = -4 # -4
@@ -167,11 +167,14 @@ class Enemy3(pygame.sprite.Sprite):
             return
         
         if self.attack:
+            self.fps = 0.1
             if direction > 0:
                 self.current_anim_list = self.attack_right
             elif direction < 0:
                 self.current_anim_list = self.attack_left
 
+        if not self.attack:
+            self.fps = 0.07
 
         if direction > 0 and self.dist < 500 and not(self.attack):
             self.current_anim_list = self.right_sprites

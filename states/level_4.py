@@ -79,11 +79,11 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
 
     def render(self, display):
-        display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
+        display.blit(pygame.transform.scale(self.game.mountain, (1100,600)), (0,0))
         self.confection_display(display)
         self.camera.custom_draw(display)
         self.enemy3.render(display)
-        display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
+        display.blit(pygame.transform.scale(self.game.mount_asset, (1200,600)), (-60,0))
         
         self.health_render(display)
         self.moxie_render(display)

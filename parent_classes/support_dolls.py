@@ -80,16 +80,18 @@ class Support():
                     self.current_anim_list =self.left_sprites
 
         # Walk animation after attacking
-        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]): 
+        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]) and not(self.attack): 
             self.current_anim_list = self.right_sprites
-        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]): 
+        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]) and not(self.attack): 
             self.current_anim_list = self.left_sprites
 
         # Support doll attacking animation
         if self.attack == True and (self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right):
             self.fps = fps
+            self.current_frame = 0
             self.current_anim_list = self.attack_right
 
         if self.attack == True and (self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left):
             self.fps = fps
+            self.current_frame = 0
             self.current_anim_list = self.attack_left

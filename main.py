@@ -159,7 +159,9 @@ class Game():
         self.forest = pygame.image.load("sprites/backgrounds/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
+        self.mount_asset = pygame.image.load("sprites/asset_lvl4.png").convert_alpha()
         self.forest2 = pygame.image.load("sprites/backgrounds/bg_lvl2.bmp").convert()
+        self.mountain = pygame.image.load("sprites/backgrounds/bg_lvl4.bmp").convert()
 
 
 if __name__ == "__main__":
