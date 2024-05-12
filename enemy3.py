@@ -72,41 +72,12 @@ class Enemy3(pygame.sprite.Sprite):
             self.attractspeed = 0
 
 
-        if self.moxie_activate == True:
-            self.moxie_activate = False
 
-####################
-        self.ult_timer += deltatime
-
-        if self.ult_timer >= 5:
-            self.ult = True
-
-        if self.ult_timer < 5:
-            self.ult = False
-            self.leech = False
-
-        if self.ult == True:
-            self.leech = True
-            self.ult_timer = 0
-################################
         self.minion_spawn(deltatime)   
         self.minionlist.update(deltatime, player_action, player_x, player_y)
-        # self.update_minions(player_lines)
+        self.enemy3_moxie_function(deltatime)
 
     
-
-
-        # if self.collide == True:
-        #     self.collide_time += deltatime
-        #     if self.collide_time > 0.1:
-        #         p_move_x += 200 * deltatime * direction_x 
-        #         p_move_y += 225 * deltatime * direction_y
-
-        #     if self.collide_time > 3:
-        #         self.collide_time = 0
-        #         self.collide = False 
-
-
 
         ################## Print zone #############################
 
@@ -114,7 +85,7 @@ class Enemy3(pygame.sprite.Sprite):
         # print(self.minionlist)
         # print(p_move_x)
         # print(self.collide)
-        print(self.leech)
+        # print(self.leech)
 
 
 
@@ -136,25 +107,19 @@ class Enemy3(pygame.sprite.Sprite):
         for self.minions in self.minionlist.copy():
             if any(self.minions.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions)
-                self.moxie_activate = True
-
-        # if any(self.minions.rect.clipline(*line) for line in player_lines):
-        #     self.collide = True
 
         for self.minions2 in self.minionlist.copy():
             if any(self.minions2.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions2)
-                self.moxie_activate = True
-
+     
         for self.minions3 in self.minionlist.copy():
             if any(self.minions3.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions3)
-                self.moxie_activate = True
 
         for self.minions4 in self.minionlist.copy():
             if any(self.minions4.rect.clipline(*line) for line in player_lines):
                 self.minionlist.remove(self.minions4)
-                self.moxie_activate = True
+    
 
 
     def minion_spawn(self, deltatime):
@@ -180,9 +145,19 @@ class Enemy3(pygame.sprite.Sprite):
 
 ##############################################
 
-    def enemy3_moxie_function(self):
-        if self.moxie_activate == True:
-            pass
+    def enemy3_moxie_function(self, deltatime):
+        self.ult_timer += deltatime
+
+        if self.ult_timer >= 5:
+            self.ult = True
+
+        if self.ult_timer < 5:
+            self.ult = False
+            self.leech = False
+
+        if self.ult == True:
+            self.leech = True
+            self.ult_timer = 0
 
 
     def enemy3_movement(self, player_x, player_y):

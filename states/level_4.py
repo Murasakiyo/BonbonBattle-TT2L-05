@@ -64,14 +64,15 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.minion_collisions(self.player.lines)
 
                 if self.enemy3.leech == True:
+                    self.old_health = self.player.healthpoints
                     self.player.healthpoints -= (self.player.healthpoints * 20/100)
-                    self.enemy3_heal = self.player.healthpoints
+                    self.enemy3_heal = (self.old_health * 20/100)
                     self.enemy3.HP += self.enemy3_heal
 
                 if self.enemy3.HP > 300:
                     self.enemy3.HP = 300
 
-
+                print(self.enemy3_heal)
 
             self.add_ultimate(deltatime, player_action)
         else:
