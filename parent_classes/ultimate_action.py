@@ -100,9 +100,7 @@ class Ults():
         for support in self.support_dolls.sprites():
             support.rect.x, support.rect.y = 0,200
 
-        self.confection_ult.add(self.vanilla)
-        self.confection_ult.add(self.float)
-        self.confection_ult.add(self.strawb)
+        self.confection_ult.add(self.vanilla, self.float, self.strawb)
 
         self.stan.kill()
         self.louie.kill()
@@ -134,3 +132,4 @@ class Ults():
             self.support_dolls.add(self.louie)
         if self.init_krie:
             self.support_dolls.add(self.krie)
+

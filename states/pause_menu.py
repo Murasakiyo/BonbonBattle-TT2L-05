@@ -51,6 +51,7 @@ class Pause(State):
             self.exit_state(-2)
             self.exit_game = False
             player_action["transition"] = True
+            self.game.reset_game = True
 
         if self.game.alpha == 255:
             self.exit_state(-1)

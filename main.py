@@ -3,6 +3,7 @@ import sys
 from states.level_1 import First_Stage
 from states.menu import MainMenu
 from states.pause_menu import Pause
+# from parent_classes.ultimate_action import *
 
 class Game():
     def __init__(self):
@@ -17,7 +18,7 @@ class Game():
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
         self.start = False
-        # self.ct_display = 1
+        self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 4
         self.backgrounds()
 
@@ -29,8 +30,6 @@ class Game():
         self.load_states()
         self.ultimates()
         
-
-
     # Game loop
     def game_loop(self):
         while self.play:
@@ -39,7 +38,6 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
-            # print(self.player_action["go"])
 
 
     # All key events are here. Receive input from player, display output for player
@@ -97,8 +95,6 @@ class Game():
         self.state_stack[-1].update(self.deltatime, self.player_action)
         self.ct_display = str(int(self.countdown -self.current_time))
 
-
-
     # Rendering images on screen
     def render(self):
         self.state_stack[-1].render(self.game_canvas)
@@ -138,6 +134,7 @@ class Game():
     def ultimates(self):
         self.ult = False
         self.ult_finish = False
+        
     
     # Transition screen between states
     def transition(self):
@@ -163,7 +160,6 @@ class Game():
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
         self.forest2 = pygame.image.load("sprites/backgrounds/bg_lvl2.bmp").convert()
-
 
 
 if __name__ == "__main__":

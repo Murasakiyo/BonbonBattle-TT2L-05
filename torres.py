@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         # self.moxie_points = 0
         self.moxie_bool = False
         self.healthpoints = 250
-        self.attackpoints = 5
+        self.attackpoints = 20
         self.defensepoints = 10
         self.moxiepoints = 0
         self.speed = 400
@@ -120,6 +120,18 @@ class Player(pygame.sprite.Sprite):
         self.healthpoints = 100
         self.attackpoints = 10
         self.defense = 10 # defense formula
+
+    def reset_player(self, position_x, position_y):
+        self.healthpoints = 250
+        self.moxiepoints = 0
+        self.rect.x, self.rect.y = position_x, position_y
+        self.image = self.right_sprites[0]
+        self.current_anim_list = self.right_sprites
+        self.defend = False
+        self.attack = False
+        self.current_frame, self.last_frame_update = 0,0
+        self.current_time = 0
+        self.cooldown_variable()
 
     def enemy3_collisions(self, deltatime, direction_x, direction_y, collide_bool):       
        if collide_bool == True:

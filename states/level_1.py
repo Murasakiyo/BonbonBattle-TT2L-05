@@ -15,7 +15,6 @@ from parent_classes.enemyhealthbar import *
 class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
     def __init__(self, game):
         super().__init__(game)
-
         # Sprite groups
         self.camera = CameraGroup(self.game)
         self.confection_ult = pygame.sprite.Group()
@@ -26,7 +25,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.tongue = Tongue(self.game)
         self.tongue2 = Tongue2(self.game)
         self.pause = Pause(self.game)
-
         self.ultimates()
         self.characters()
         self.load_health_bar()
@@ -36,11 +34,24 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.attack_group.add(self.tongue, self.tongue2)
         self.body_group.add(self.enemy1)
         self.moxie_points = 0
+        self.enemy_defeat = False
 
 
     def update(self, deltatime, player_action):
         # print(int(self.player.rect.x - self.enemy1.rect.x))
 
+        if self.game.reset_game:
+            self.enemy1.enemy_reset()
+            self.player.reset_player(200,200)
+            self.ultimate_reset()
+            self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+            self.load_health_bar()
+            self.load_moxie_bar()
+            if self.enemy_defeat:
+                self.attack_group.add(self.tongue, self.tongue2)
+                self.body_group.add(self.enemy1)
+            self.game.reset_game = False
+            
         if self.game.start == True:
             if self.game.ult == False:
                 
@@ -68,6 +79,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     self.enemy1.kill()
                     self.tongue.kill()
                     self.tongue2.kill()
+                    self.enemy_defeat = True
 
                 if player_action["pause"]:
                     new_state = self.pause
@@ -111,11 +123,27 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
 
-        
+    # def reset_game(self):
+    #     if self.game.reset_game:
+    #         self.game_reset(250, 150, 700, 200)
+    #         self.game.reset_game = False
 
 
-    
+# class First_Stage_test(State):
+#     def __init__(self, game):
+#         super().__init__(game)
+#         self.game = game
+#         self.play = First_Stage(self.game)
 
+#     def update(self, deltatime, player_action):
+#         self.play.update(deltatime, player_action)
+
+#     def render(self, display):
+#         self.play.render(display)
+
+#     def gameloop(self):
+#         self.update()
+#         self.render()
 
 
 

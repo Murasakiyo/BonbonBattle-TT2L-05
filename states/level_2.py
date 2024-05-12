@@ -26,9 +26,24 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.load_health_bar()
         self.load_moxie_bar()
         self.moxie_points = 0
+        self.enemy_defeat = False
 
     def update(self, deltatime, player_action):
         
+        print(self.enemy_defeat)
+        if self.game.reset_game:
+            for flies in self.fly_swarm.flylist.sprites():
+                flies.kill()
+                self.enemy_health_update(flies.rect.x,flies.rect.y, flies.HP)
+            self.player.reset_player(200,200)
+            self.ultimate_reset()
+            self.load_health_bar()
+            self.load_moxie_bar()
+            if self.enemy_defeat:
+                self.fly_swarm.flies_spawn()
+            self.swarming = True
+            self.game.reset_game = False
+
         if self.game.start == True:
             if self.game.ult == False:
 
@@ -54,6 +69,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                         flies.kill()
                     if not self.fly_swarm.flylist.sprites():
                         self.swarming = False 
+                        self.enemy_defeat = True
 
                 if player_action["pause"]:
                     new_state = self.pause
