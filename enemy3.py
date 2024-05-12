@@ -18,7 +18,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.color = "white"
         self.speed, self.attractspeed = 0,0
         self.dist = 0
-        self.minionspeed, self.current_time, self.minion_time, self.collide_time = 0,0,0,0
+        self.minionspeed, self.current_time, self.minion_time, self.collide_time, self.attack_time = 0,0,0,0,0
         self.start_time = time.time()
         self.avoid = False
         self.collide = False
@@ -26,7 +26,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.minions = Minions(self.game, self.rect.centerx, self.rect.centery, speed=0)
         self.minionlist = pygame.sprite.Group()
         self.fps = 0.07
-        self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
+        self.current_frame, self.last_frame_update = 0,0
         self.HP = 5
         self.damage = 0
         self.body_damage = 50
@@ -74,15 +74,6 @@ class Enemy3(pygame.sprite.Sprite):
         self.enemy3_moxie_function(deltatime)
         self.animate(deltatime, self.direction)
 
-    
-
-        ################## Print zone #############################
-
-        print(self.attack)
-        # print(self.minionlist)
-        # print(p_move_x)
-        # print(self.collide)
-        # print(self.leech)
 
 
     def render(self, display):
@@ -118,13 +109,16 @@ class Enemy3(pygame.sprite.Sprite):
                 self.minion_time = 0
 
         # To stop the attacking animation
-        if len(self.minionlist) == 3:
-            self.attack = False
-            if self.direction > 0:
-                self.current_anim_list = self.right_sprites
-            elif self.direction < 0:
-                self.current_anim_list = self.left_sprites
-                
+        if self.attack:
+            self.attack_time += deltatime
+            if self.attack_time > 1:
+                self.attack = False
+                if self.direction > 0:
+                    self.current_anim_list = self.right_sprites
+                elif self.direction < 0:
+                    self.current_anim_list = self.left_sprites
+                self.attack_time = 0
+                    
 
 
     def enemy3_moxie_function(self, deltatime):
@@ -162,16 +156,6 @@ class Enemy3(pygame.sprite.Sprite):
         dx, dy = dx / (dist + 1), dy / (dist + 1)
         self.rect.x += dx * self.attractspeed
         self.rect.y += dy * self.attractspeed
-        
-
-
-    # def minions_movement(self, player_x, player_y):
-    #     dx, dy = player_x - self.minions.rect.x, player_y - self.minions.rect.y
-    #     dist = math.hypot(dx, dy)
-
-    #     dx, dy = dx / (dist + 1), dy / (dist + 1)
-    #     self.minions.rect.x += dx * self.minionspeed
-    #     self.minions.rect.y += dy * self.minionspeed
         
 
     def animate(self, deltatime, direction):
