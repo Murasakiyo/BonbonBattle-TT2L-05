@@ -1,7 +1,7 @@
 import pygame
 import sys
-from states.level_1 import First_Stage
 from states.menu import MainMenu
+from states.level_4 import Quad_Stage
 from states.pause_menu import Pause
 # from parent_classes.ultimate_action import *
 

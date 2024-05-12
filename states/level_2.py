@@ -48,7 +48,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
                 # Update player
                 self.player.update(deltatime, player_action)
-                
                 self.update_ultimate(deltatime, player_action)
                 self.health_update()
                 self.moxie_update(player_action)
@@ -63,7 +62,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 for flies in self.fly_swarm.flylist.sprites():
                     if not(flies.HP <= 0):
                         self.flies_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
-                                            flies.damage, flies.body_damage)
+                                            flies.damage)
                     if flies.HP <= 0:
                         flies.kill()
                     if not self.fly_swarm.flylist.sprites():
@@ -83,6 +82,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.forest2, (1100,600)), (0,0))
+        self.confection_display(display)
         self.camera.custom_draw(display)
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
         
