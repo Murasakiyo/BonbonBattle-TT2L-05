@@ -24,7 +24,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
-        self.enemy3 = Enemy3(self.game)
+        self.enemy3 = Enemy3(self.game, self.camera)
         self.body_group = pygame.sprite.Group()
         self.attack_group = pygame.sprite.Group()
 
@@ -38,21 +38,12 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.body_group.add(self.enemy3)
 
     def update(self, deltatime, player_action):
-        # print(int(self.enemy2.flies.rect.x-self.player.rect.x))
-
         if self.game.start == True:
             if self.game.ult == False:
-                # Cooldown for player receiving damage
-                if self.game.damaged == True:
-                    self.immunity = True
-                    self.c_time += deltatime
-                    if self.c_time > 2:
-                        self.game.damaged = False
-                        self.immunity = False
 
                 # Update player and enemies
                 self.player.update(deltatime, player_action)
-                self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1])
+                self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect.x)
 
                 self.health_update()
                 self.moxie_update(player_action)
@@ -72,7 +63,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 if self.enemy3.HP > 300:
                     self.enemy3.HP = 300
 
-                print(self.enemy3_heal)
+                # print(self.enemy3_heal)
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -81,10 +72,10 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
+        self.confection_display(display)
         self.camera.custom_draw(display)
         self.enemy3.render(display)
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
-        self.player.render(display)
         
         self.health_render(display)
         self.moxie_render(display)

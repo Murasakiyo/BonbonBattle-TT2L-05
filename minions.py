@@ -10,15 +10,10 @@ class Minions(pygame.sprite.Sprite):
         self.damage = 10
 
     def update(self, deltatime, player_action, player_x, player_y):
-        direction_x = player_action["right"] - player_action["left"]
-        direction_y = player_action["down"] - player_action["up"]
-
 
         self.rect.clamp_ip(self.game.screen_rect)
 
         self.move_towards_player(player_x, player_y)
-
-
 
     def render(self, display):
         pygame.draw.rect(display, (255, 0, 255), self.rect)
@@ -33,7 +28,6 @@ class Minions(pygame.sprite.Sprite):
         self.rect.x += dx * self.minion_speed
         self.rect.y += dy * self.minion_speed
 
-#############################################################################################
 
 
         

@@ -50,6 +50,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             if self.enemy_defeat:
                 self.attack_group.add(self.tongue, self.tongue2)
                 self.body_group.add(self.enemy1)
+                self.camera.add(self.enemy1)
             self.game.reset_game = False
             
         if self.game.start == True:
@@ -98,6 +99,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
         # self.player.render(display)
+        self.confection_display(display)
         self.camera.custom_draw(display)
 
         # If the enemy is not dead yet

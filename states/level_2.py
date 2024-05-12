@@ -83,6 +83,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.forest2, (1100,600)), (0,0))
+        self.confection_display(display)
         self.camera.custom_draw(display)
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
         

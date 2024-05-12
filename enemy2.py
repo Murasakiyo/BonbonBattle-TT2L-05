@@ -20,32 +20,13 @@ class FlyEnemy(pygame.sprite.Sprite):
             flies.update(deltatime, player_action, player_x, player_y, player_rect, player_rectx)
             flies.rect.clamp_ip(self.game.screen_rect)
 
-        # self.avoid_rect(deltatime)
+        
 
 
     def render(self, display):
         for self.flies in self.flylist.sprites():
             self.flies.render(display)
-            
-
-    # # To avoid overlap among flies
-    # def avoid_rect(self, deltatime):  
-    #     FACTOR = 20
-    #     for follower in self.flylist.sprites():
-    #         for target in self.flylist.sprites():
-    #             if follower == target:
-    #                 continue
-    #             if pygame.Rect.colliderect(follower.rect, target.rect):
-    #                 # print("Flies collide")
-    #                 if follower.rect.centerx <= target.rect.centerx:    
-    #                     follower.rect.right = target.rect.left - FACTOR   # Move left
-    #                 if follower.rect.centerx > target.rect.centerx:
-    #                     follower.rect.left = target.rect.right + FACTOR   # Move right
-    #                 if follower.rect.centery <= target.rect.centery:
-    #                     follower.rect.bottom = target.rect.top - FACTOR   # Move up
-    #                 if follower.rect.centery > target.rect.centery:
-    #                     follower.rect.top = target.rect.bottom + FACTOR   # Move down
-
+   
 
     def flies_spawn(self):
         if len(self.flylist) == 0:

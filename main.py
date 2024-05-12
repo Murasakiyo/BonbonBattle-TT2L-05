@@ -1,7 +1,7 @@
 import pygame
 import sys
-from states.level_1 import First_Stage
 from states.menu import MainMenu
+from states.level_4 import Quad_Stage
 from states.pause_menu import Pause
 # from parent_classes.ultimate_action import *
 
@@ -17,7 +17,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = False
+        self.start = True
         self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 4
         self.backgrounds()
@@ -122,7 +122,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = MainMenu(self)
+        self.title_screen = Quad_Stage(self)
         self.state_stack.append(self.title_screen)
 
     # Reset all player keys
