@@ -4,22 +4,38 @@ from torres import *
 from enemy3 import *
 from confection import *
 from parent_classes.ultimate_action import *
+from parent_classes.health import *
+from parent_classes.collisions import *
+from parent_classes.moxie import *
+from parent_classes.enemyhealthbar import *
 
 
-class Quad_Stage(State, Ults):
+class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
     def __init__(self, game):
         super().__init__(game)
         self.camera = CameraGroup(self.game)
-        self.confection_ult = pygame.sprite.Group()
-        self.support_dolls = pygame.sprite.Group()
-        self.ultimates()
-        self.characters()
-        self.enemy3 = Enemy3(self.game)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.ultimate = False
         self.countdown = 0
         self.immunity = False
+
+        self.enemy3_heal = 0
+
+        self.confection_ult = pygame.sprite.Group()
+        self.support_dolls = pygame.sprite.Group()
+        self.enemy3 = Enemy3(self.game)
+        self.body_group = pygame.sprite.Group()
+        self.attack_group = pygame.sprite.Group()
+
+        self.ultimates()
+        self.characters()
+        self.load_health_bar()
+        self.load_moxie_bar()
+        self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
+
+        self.attack_group.add(self.enemy3)
+        self.body_group.add(self.enemy3)
 
     def update(self, deltatime, player_action):
         # print(int(self.enemy2.flies.rect.x-self.player.rect.x))
@@ -35,16 +51,28 @@ class Quad_Stage(State, Ults):
                         self.immunity = False
 
                 # Update player and enemies
-                self.player.update(deltatime, player_action, self.enemy3.collide, self.enemy3.moxie_activate, self.enemy3.take_damage)
-                self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], 
-                               self.player.lines, self.player.rect.x, self.player.rect.y, self.player.collide)
+                self.player.update(deltatime, player_action)
+                self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1])
+
+                self.health_update()
+                self.moxie_update(player_action)
+                self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
                 
                 self.update_ultimate(deltatime, player_action)
 
-            if player_action["ultimate"]:
-                if self.player.moxie_points >= 250:
-                    self.game.ult = True
-                    self.player.moxie_points = 0
+                self.flies_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy3, self.enemy3.damage, self.enemy3.body_damage)
+                self.minion_collisions(self.player.lines)
+
+                if self.enemy3.leech == True:
+                    self.old_health = self.player.healthpoints
+                    self.player.healthpoints -= (self.player.healthpoints * 20/100)
+                    self.enemy3_heal = (self.old_health * 20/100)
+                    self.enemy3.HP += self.enemy3_heal
+
+                if self.enemy3.HP > 300:
+                    self.enemy3.HP = 300
+
+                print(self.enemy3_heal)
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -58,7 +86,10 @@ class Quad_Stage(State, Ults):
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
         self.player.render(display)
         
-
+        self.health_render(display)
+        self.moxie_render(display)
+        self.boss_health_render(display)
+        
         self.ultimate_display(display)
     
         if self.game.start == False:
