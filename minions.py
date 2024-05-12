@@ -8,9 +8,12 @@ class Minions(pygame.sprite.Sprite):
         self.load_sprites()
         self.rect = self.gummy.get_rect(width = 50, height= 44)
         self.rect.x, self.rect.y = enemy3_rectx -100, enemy3_recty 
+        self.gummy_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.gummy_mask.to_surface()
         self.minion_speed = speed # 2
-        self.damage = 10
+        self.damage = 8
         self.last_frame_update, self.current_frame = 0, 0
+        self.attack = True
 
     def update(self, deltatime, player_action, player_x, player_y):
         self.rect.clamp_ip(self.game.screen_rect)

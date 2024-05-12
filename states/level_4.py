@@ -25,8 +25,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
         self.enemy3 = Enemy3(self.game, self.camera)
-        self.body_group = pygame.sprite.Group()
-        self.attack_group = pygame.sprite.Group()
+        self.enemy_group = pygame.sprite.Group()
+        
 
         self.ultimates()
         self.characters()
@@ -34,8 +34,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
 
-        self.attack_group.add(self.enemy3)
-        self.body_group.add(self.enemy3)
+        self.enemy_group.add(self.enemy3)
 
     def update(self, deltatime, player_action):
         if self.game.start == True:
@@ -43,6 +42,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
                 # Update player and enemies
                 self.player.update(deltatime, player_action)
+                self.cooldown_for_attacked(deltatime)
+
                 self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect.x)
 
                 self.health_update()
@@ -51,14 +52,16 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 
                 self.update_ultimate(deltatime, player_action)
 
-                self.flies_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy3, self.enemy3.damage, self.enemy3.body_damage)
-                self.minion_collisions(self.player.lines)
+                self.player_attacking(self.enemy_group, self.enemy3)
+                for minions in self.enemy3.minionlist.sprites():
+                    self.minion_collisions(deltatime, player_action, self.enemy3.minionlist, self.enemy3.minionlist, minions, minions.damage)
 
-                if self.enemy3.leech == True:
-                    self.old_health = self.player.healthpoints
-                    self.player.healthpoints -= (self.player.healthpoints * 20/100)
-                    self.enemy3_heal = (self.old_health * 20/100)
-                    self.enemy3.HP += self.enemy3_heal
+                if self.enemy3.HP < 300:
+                    if self.enemy3.leech == True:
+                        self.old_health = self.player.healthpoints
+                        self.player.healthpoints -= (self.player.healthpoints * 20/100)
+                        self.enemy3_heal = (self.old_health * 20/100)
+                        self.enemy3.HP += self.enemy3_heal
 
                 if self.enemy3.HP > 300:
                     self.enemy3.HP = 300

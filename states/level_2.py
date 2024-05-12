@@ -63,7 +63,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 for flies in self.fly_swarm.flylist.sprites():
                     if not(flies.HP <= 0):
                         self.flies_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
-                                            flies.damage, flies.body_damage)
+                                            flies.damage)
                     if flies.HP <= 0:
                         flies.kill()
                     if not self.fly_swarm.flylist.sprites():

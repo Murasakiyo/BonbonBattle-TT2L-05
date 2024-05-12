@@ -11,6 +11,8 @@ class Enemy3(pygame.sprite.Sprite):
         self.load_sprites()
         self.rect = self.snake.get_rect(width= 163, height=170)
         self.rect.x, self.rect.y = 700,200
+        self.snake_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.snake_mask.to_surface()
         self.enemyborder1 = pygame.Rect(-895, 40, 900, 570) #left
         self.enemyborder2 = pygame.Rect(1095, 40, 900, 570) #right
         self.enemyborder3 = pygame.Rect(0, 560, 1100, 370) #bottom
@@ -27,8 +29,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.minionlist = pygame.sprite.Group()
         self.fps = 0.07
         self.current_frame, self.last_frame_update = 0,0
-        self.HP = 5
-        self.damage = 0
+        self.HP = 300
         self.body_damage = 50
         self.attack = False
         self.ult_timer = 0
