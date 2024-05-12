@@ -1,5 +1,6 @@
 import pygame
 from parent_classes.state import *
+from states.pause_menu import *
 from torres import *
 from enemy3 import *
 from confection import *
@@ -14,6 +15,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
     def __init__(self, game):
         super().__init__(game)
         self.camera = CameraGroup(self.game)
+        self.pause = Pause(self.game)
         self.c_time = 0
         self.newctime = pygame.time.get_ticks()
         self.ultimate = False
@@ -40,19 +42,19 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         if self.game.start == True:
             if self.game.ult == False:
 
-                # Update player and enemies
+                # Update player 
                 self.player.update(deltatime, player_action)
-                self.cooldown_for_attacked(deltatime)
-
-                self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect.x)
-
+                self.update_ultimate(deltatime, player_action)
                 self.health_update()
                 self.moxie_update(player_action)
+                self.cooldown_for_attacked(deltatime)
+                
+                print(self.enemy3.HP)
+                self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect.x)
+                self.snake_attacked(deltatime, player_action, self.enemy_group, self.enemy3, self.enemy3.body_damage)
                 self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
                 
-                self.update_ultimate(deltatime, player_action)
 
-                self.player_attacking(self.enemy_group, self.enemy3)
                 for minions in self.enemy3.minionlist.sprites():
                     self.minion_collisions(deltatime, player_action, self.enemy3.minionlist, self.enemy3.minionlist, minions, minions.damage)
 
@@ -66,7 +68,11 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 if self.enemy3.HP > 300:
                     self.enemy3.HP = 300
 
-                # print(self.enemy3_heal)
+                if player_action["pause"]:
+                    new_state = self.pause
+                    new_state.enter_state()
+                    self.game.start = False
+                    # self.game.reset_keys()  
 
             self.add_ultimate(deltatime, player_action)
         else:

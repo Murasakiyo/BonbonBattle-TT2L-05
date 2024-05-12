@@ -17,7 +17,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = True
+        self.start = False
         self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 4
         self.backgrounds()

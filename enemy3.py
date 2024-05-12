@@ -63,7 +63,7 @@ class Enemy3(pygame.sprite.Sprite):
                 self.current_time = 0
 
         if self.avoid == True:
-            self.attractspeed = 8
+            self.attractspeed = 10
             self.speed = 0
         elif self.avoid == False:
             self.speed = -4 # -4
