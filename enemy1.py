@@ -28,7 +28,8 @@ class FrogEnemy(pygame.sprite.Sprite):
 
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
-    
+        
+
         # Tongue's position
         self.rect_draw = pygame.Rect(self.rect.centerx, self.rect.centery, 150, 20)
 
@@ -150,6 +151,17 @@ class FrogEnemy(pygame.sprite.Sprite):
 
         self.image = self.left_sprites[0]
         self.current_anim_list = self.left_sprites
+
+    def enemy_reset(self):
+        self.attack = False
+        self.rect.x, self.rect.y = 700,200
+        self.image = self.left_sprites[0]
+        self.current_time = 0
+        self.HP = 150
+        self.stop = False
+        self.collision = False
+
+
 
 
 class Tongue(pygame.sprite.Sprite):

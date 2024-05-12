@@ -15,14 +15,10 @@ class FlyEnemy(pygame.sprite.Sprite):
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
 
-        
-
         self.flies_spawn()
         for flies in self.flylist.sprites():
             flies.update(deltatime, player_action, player_x, player_y, player_rect, player_rectx)
             flies.rect.clamp_ip(self.game.screen_rect)
-
-
 
         # self.avoid_rect(deltatime)
 
@@ -148,8 +144,8 @@ class Fly(pygame.sprite.Sprite):
 
     def render(self, display):
         display.blit(self.image, (self.rect.x, self.rect.y))
-        pygame.draw.rect(display, "green", self.rect,2)
-        pygame.draw.rect(display, "blue", self.bigger_rect,2)
+        # pygame.draw.rect(display, "green", self.rect,2)
+        # pygame.draw.rect(display, "blue", self.bigger_rect,2)
 
 
 
