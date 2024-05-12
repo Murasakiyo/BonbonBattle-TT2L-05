@@ -13,11 +13,10 @@ class Game():
         self.screen = pygame.display.set_mode((self.SCREENWIDTH, self.SCREENHEIGHT))
         self.screen_rect = self.screen.get_rect()
         self.run, self.play = True, True
-        self.damaged = False
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = False
+        self.start = True
         self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 4
         self.backgrounds()
@@ -38,6 +37,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
+            # print(self.defeat)
 
 
     # All key events are here. Receive input from player, display output for player
@@ -134,6 +134,7 @@ class Game():
     def ultimates(self):
         self.ult = False
         self.ult_finish = False
+        self.defeat = False
         
     
     # Transition screen between states

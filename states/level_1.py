@@ -55,7 +55,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             
         if self.game.start == True:
             if self.game.ult == False:
-                
                 # Update player
                 self.player.update(deltatime, player_action)
                 self.update_ultimate(deltatime, player_action)
@@ -71,7 +70,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 
                 # Check collision of enemies and players
                 self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
-                                      self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
+                                    self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
                 
                 self.health_update()
                 self.moxie_update(player_action)
@@ -88,7 +87,9 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     self.game.start = False
                     # self.game.reset_keys()
 
-
+                if self.player.healthpoints <= 0:
+                    self.game.defeat = True
+                    
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -126,6 +127,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
 
 
-
+    def defeat(self):
+        pass
 
 
