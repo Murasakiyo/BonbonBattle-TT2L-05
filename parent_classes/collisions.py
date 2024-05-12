@@ -71,12 +71,11 @@ class Collisions():
         self.cooldown_for_attacking(deltatime)
 
         if self.player.take_damage == False and not player_action["defend"]:
-            if enemy.attack:
-                if pygame.sprite.spritecollide(self.player, body_group, False): #first check: rectangular collision
-                    if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask): #second check: mask collision
-                        if any(enemy.rect.clipline(*line) for line in self.player.lines):
-                            self.player.healthpoints -= enemy_damage
-                            self.player.take_damage = True
+            if pygame.sprite.spritecollide(self.player, body_group, False): #first check: rectangular collision
+                if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask): #second check: mask collision
+                    if any(enemy.rect.clipline(*line) for line in self.player.lines):
+                        self.player.healthpoints -= enemy_damage
+                        self.player.take_damage = True
 
         if self.player.attack == True and not self.player.deal_damage:
             if pygame.sprite.spritecollide(self.player, body_group, False): #first check: rectangular collision
