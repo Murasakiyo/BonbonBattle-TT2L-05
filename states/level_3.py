@@ -28,6 +28,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.body_group.add(self.enemy1)
 
         self.swarming = True
+        self.swamping = False
         self.ultimates()
         self.characters()
         self.load_health_bar()
@@ -64,8 +65,10 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                         flies.kill()
                     if not self.fly_swarm.flylist.sprites():
                         self.swarming = False
+                        self.swamping = True
+                        self.alive = True
 
-                if not self.swarming:
+                if self.swamping:
                     if not(self.enemy1.HP <= 0):
                         self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
                                         self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
@@ -76,8 +79,10 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                         self.enemy1.kill()
                         self.tongue.kill()
                         self.tongue2.kill()
-                self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
-                                    self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
+                        self.swamping = False
+
+                    self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
+                                        self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
 
 
             self.add_ultimate(deltatime, player_action)
@@ -87,10 +92,9 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.forest2, (1100,600)), (0,0))
-        self.camera.custom_draw(display)
         self.player.render(display)
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
-        
+        # print(self.camera.custom_draw(display))
         # Player stats
         self.health_render(display)
         self.moxie_render(display)
@@ -100,8 +104,9 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.fly_swarm.render(display)
                 self.groupenemy_health_render(display,self.fly_swarm.flylist.sprites())
                 
-        if self.swarming == False:
+        if self.swamping == True:
             if not(self.enemy1.HP <= 0):
+                self.camera.custom_draw(display)
                 if self.enemy1.current_anim_list == self.enemy1.attack_left:
                     self.tongue.render(display)
                 elif self.enemy1.current_anim_list == self.enemy1.attack_right:
