@@ -62,29 +62,34 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.moxie_update(player_action)
                 self.cooldown_for_attacked(deltatime)
                 
-                self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect.x)
-                self.snake_attacked(deltatime, player_action, self.enemy_group, self.enemy3, self.enemy3.body_damage)
-                self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
-                
 
-                for minions in self.enemy3.minionlist.sprites():
-                    self.minion_collisions(deltatime, player_action, self.enemy3.minionlist, self.enemy3.minionlist, minions, minions.damage)
+                if not(self.game.defeat):
+                    self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect.x)
+                    self.snake_attacked(deltatime, player_action, self.enemy_group, self.enemy3, self.enemy3.body_damage)
+                    self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
+                    
+                    for minions in self.enemy3.minionlist.sprites():
+                        self.minion_collisions(deltatime, player_action, self.enemy3.minionlist, self.enemy3.minionlist, minions, minions.damage)
 
-                if self.enemy3.HP < 300:
-                    if self.enemy3.leech == True:
-                        self.old_health = self.player.healthpoints
-                        self.player.healthpoints -= (self.player.healthpoints * 20/100)
-                        self.enemy3_heal = (self.old_health * 20/100)
-                        self.enemy3.HP += self.enemy3_heal
+                    if self.enemy3.HP < 300:
+                        if self.enemy3.leech == True:
+                            self.old_health = self.player.healthpoints
+                            self.player.healthpoints -= (self.player.healthpoints * 20/100)
+                            self.enemy3_heal = (self.old_health * 20/100)
+                            self.enemy3.HP += self.enemy3_heal
 
-                if self.enemy3.HP > 300:
-                    self.enemy3.HP = 300
+                    if self.enemy3.HP > 300:
+                        self.enemy3.HP = 300
 
-                if player_action["pause"]:
-                    new_state = self.pause
-                    new_state.enter_state()
-                    self.game.start = False
-                    # self.game.reset_keys()  
+                    if player_action["pause"]:
+                        new_state = self.pause
+                        new_state.enter_state()
+                        self.game.start = False
+                        # self.game.reset_keys()  
+
+                if self.player.healthpoints <= 0:
+                    self.game.defeat = True
+                    player_action["ultimate"] = False
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -94,6 +99,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.mountain, (1100,600)), (0,0))
         self.confection_display(display)
+        if self.game.defeat:
+            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
         self.camera.custom_draw(display)
         self.enemy3.render(display)
         display.blit(pygame.transform.scale(self.game.mount_asset, (1200,600)), (-60,0))

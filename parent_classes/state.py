@@ -24,7 +24,7 @@ class State():
         if self.player.image == self.player.lose_sprites[3] and self.game.defeat:
             if self.game.defeat:
                 player_action["transition"] = True
-                if self.game.alpha >= 200:
+                if self.game.alpha >= 250:
                     self.game.reset_game = True
                     
         if self.game.alpha == 255:

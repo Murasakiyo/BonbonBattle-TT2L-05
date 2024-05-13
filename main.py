@@ -43,7 +43,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
-            print(self.start)
+            # print(self.start)
 
 
     # All key events are here. Receive input from player, display output for player
@@ -171,7 +171,6 @@ class Game():
         self.forest2 = pygame.image.load("sprites/backgrounds/bg_lvl2.bmp").convert()
         self.mountain = pygame.image.load("sprites/backgrounds/bg_lvl4.bmp").convert()
 
-    
 
     def save_data(self):
         self.saving_system.save_data_file(self.player)
