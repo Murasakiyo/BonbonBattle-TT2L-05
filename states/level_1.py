@@ -53,6 +53,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.camera.add(self.enemy1)
             self.game.reset_game = False
             
+        self.game_over(deltatime, player_action)
+
         if self.game.start == True:
             if self.game.ult == False:
                 # Update player
@@ -92,6 +94,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     self.game.defeat = True
                     player_action["ultimate"] = False
                     
+                
 
             self.add_ultimate(deltatime, player_action)
         else:

@@ -25,6 +25,7 @@ class Pause(State):
         self.exit_game, self.resume_game = False, False
 
     def update(self, deltatime, player_action):
+        
         self.mouse = pygame.mouse.get_pos()
 
         if self.resume_rect.collidepoint(self.mouse):
@@ -51,10 +52,10 @@ class Pause(State):
             self.exit_state(-2)
             self.exit_game = False
             player_action["transition"] = True
-            self.game.reset_game = True
             self.game.defeat = False
 
         if self.game.alpha == 255:
+            self.game.reset_game = True
             self.exit_state(-1)
             player_action["transition"] =  False
             

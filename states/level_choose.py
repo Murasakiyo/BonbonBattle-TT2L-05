@@ -66,6 +66,7 @@ class Level_Options(State):
 
         if self.game.alpha == 255:
             new_state.enter_state()
+            self.start = False
             self.game.reset_keys()
 
             
@@ -82,7 +83,7 @@ class Level_Options(State):
 
     def update_keys(self, player_action, deltatime):
         self.current_time += deltatime
-        if self.current_time > 0.15:
+        if self.current_time > 0.13:
             if player_action["right"]:
                 self.index = (self.index + 1) % len(self.menu_options)
             elif player_action["left"]:

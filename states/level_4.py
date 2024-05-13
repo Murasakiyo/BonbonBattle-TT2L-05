@@ -39,6 +39,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.enemy_group.add(self.enemy3)
 
     def update(self, deltatime, player_action):
+        
+        self.game_over(deltatime, player_action)
         if self.game.start == True:
             if self.game.ult == False:
 

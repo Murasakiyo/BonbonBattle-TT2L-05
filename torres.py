@@ -136,7 +136,7 @@ class Player(pygame.sprite.Sprite):
         self.current_anim_list = self.right_sprites
         self.defend = False
         self.attack = False
-        self.current_frame, self.last_frame_update = 0,0
+        self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
         self.current_time = 0
         self.cooldown_variable()
                 

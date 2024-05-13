@@ -16,7 +16,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = True
+        self.start = False
         self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 4
         self.backgrounds()
@@ -37,7 +37,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
-            # print(self.defeat)
+            print(self.start)
 
 
     # All key events are here. Receive input from player, display output for player
@@ -164,6 +164,7 @@ class Game():
         self.forest2 = pygame.image.load("sprites/backgrounds/bg_lvl2.bmp").convert()
         self.mountain = pygame.image.load("sprites/backgrounds/bg_lvl4.bmp").convert()
 
+    
 
 if __name__ == "__main__":
     game = Game()
