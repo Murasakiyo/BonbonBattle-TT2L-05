@@ -60,7 +60,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 for flies in self.fly_swarm.flylist.sprites():
                     if not(flies.HP <= 0):
                         self.flies_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
-                                            flies.damage, flies.body_damage)
+                                            flies.damage)
                     if flies.HP <= 0:
                         flies.kill()
                     if not self.fly_swarm.flylist.sprites():
@@ -98,6 +98,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         # Player stats
         self.health_render(display)
         self.moxie_render(display)
+        self.camera.custom_draw(display)
+
         
         for flies in self.fly_swarm.flylist.sprites():
             if not(flies.HP <= 0):
@@ -106,7 +108,6 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 
         if self.swamping == True:
             if not(self.enemy1.HP <= 0):
-                self.camera.custom_draw(display)
                 if self.enemy1.current_anim_list == self.enemy1.attack_left:
                     self.tongue.render(display)
                 elif self.enemy1.current_anim_list == self.enemy1.attack_right:

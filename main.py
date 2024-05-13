@@ -1,7 +1,11 @@
 import pygame
 import sys
-from states.level_1 import First_Stage
 from states.menu import MainMenu
+from torres import *
+from states.level_4 import Quad_Stage
+from states.pause_menu import Pause
+# from parent_classes.ultimate_action import *
+from savingsystem import *
 
 class Game():
     def __init__(self):
@@ -15,20 +19,22 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = True
-        # self.ct_display = 1
-        self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 5
+        self.start = False
+        self.reset_game = False
+        self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 4
         self.backgrounds()
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
-                              "ultimate": False, "transition": False} 
+                              "ultimate": False, "transition": False, "go": False, "pause": False} 
     
         self.state_stack = []
         self.load_states()
         self.ultimates()
-        
 
+        self.player = Player(self, pygame.sprite.Group(), 200, 200)
+        self.saving_system = SaveDataSystem('player_data.pickle', self.player)
+        self.load_data() # load saved data when start a game
 
     # Game loop
     def game_loop(self):
@@ -38,7 +44,6 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
-            # print(self.deltatime)
 
 
     # All key events are here. Receive input from player, display output for player
@@ -48,6 +53,7 @@ class Game():
             if event.type == pygame.QUIT:
                 self.run = False
                 self.play = False
+                self.save_data() # save data when quit the game
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
@@ -65,6 +71,10 @@ class Game():
                     self.player_action["defend"] = True
                 if event.key == pygame.K_q:
                     self.player_action["ultimate"] = True
+                if event.key == pygame.K_RETURN:
+                    self.player_action["go"] = True
+                if event.key == pygame.K_BACKSPACE:
+                    self.player_action["pause"] = True
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
@@ -79,6 +89,10 @@ class Game():
                     self.player_action["defend"] = False
                 if event.key == pygame.K_q:
                     self.player_action["ultimate"] = False
+                if event.key == pygame.K_RETURN:
+                    self.player_action["go"] = False
+                if event.key == pygame.K_BACKSPACE:
+                    self.player_action["pause"] = False
         
    
 
@@ -87,8 +101,6 @@ class Game():
     def update(self):
         self.state_stack[-1].update(self.deltatime, self.player_action)
         self.ct_display = str(int(self.countdown -self.current_time))
-
-
 
     # Rendering images on screen
     def render(self):
@@ -129,6 +141,7 @@ class Game():
     def ultimates(self):
         self.ult = False
         self.ult_finish = False
+        
     
     # Transition screen between states
     def transition(self):
@@ -150,28 +163,23 @@ class Game():
             self.current_time = 0
         
     def backgrounds(self):
-        self.forest = pygame.image.load("sprites/bg_earlylvl.bmp").convert()
+        self.forest = pygame.image.load("sprites/backgrounds/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
-        self.forest2 = pygame.image.load("sprites/bg_lvl2.bmp").convert()
+        self.forest2 = pygame.image.load("sprites/backgrounds/bg_lvl2.bmp").convert()
 
-    # def cooldown_for_attacking(self):
-    #     # For enemy and player damage response
-    #     if self.take_damage == True:
-    #         self.attack_time += self.deltatime
-    #         self.let_attack = False
-    #         if self.attack_time > 1:
-    #             self.let_attack = True
-    #             self.take_damage = False
-    #             self.attack_time = 0
 
-    #     # for dealing damage to the enemies (Player attacking)
-    #     if self.deal_damage == True:
-    #         self.attack_cooldown += self.deltatime
-    #         if self.attack_cooldown > 0.5:
-    #             self.deal_damage = False
-    #             self.attack_cooldown = 0
+    def save_data(self):
+        self.saving_system.save_data_file(self.player)
+        player_data = self.saving_system.get_save_data(self.player)
+        print(f"Saving data: {player_data}")
 
+    def load_data(self):
+        loaded_data = self.saving_system.load_data_file()
+        if loaded_data: 
+            print("Loaded data:", loaded_data)
+        else:
+            print("No saved data found.")
 
 if __name__ == "__main__":
     game = Game()

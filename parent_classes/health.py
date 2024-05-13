@@ -14,7 +14,7 @@ class Health():
             self.player.healthpoints += 250
         self.health_bar = pygame.Rect(10, 10, self.player.healthpoints, 40)
 
-
     def health_render(self, display):
         pygame.draw.rect(display, "black", self.health_rect)
         pygame.draw.rect(display, "green", self.health_bar)
+        

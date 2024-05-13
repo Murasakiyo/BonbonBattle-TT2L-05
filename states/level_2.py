@@ -1,5 +1,6 @@
 import pygame
 from parent_classes.state import *
+from states.pause_menu import *
 from torres import *
 from enemy2 import *
 from confection import *
@@ -17,23 +18,36 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
         self.fly_swarm = FlyEnemy(self.game)
+        self.pause = Pause(self.game)
+
         self.swarming = True
         self.ultimates()
         self.characters()
         self.load_health_bar()
         self.load_moxie_bar()
         self.moxie_points = 0
-       
-
+        self.enemy_defeat = False
 
     def update(self, deltatime, player_action):
         
+        if self.game.reset_game:
+            for flies in self.fly_swarm.flylist.sprites():
+                flies.kill()
+                self.enemy_health_update(flies.rect.x,flies.rect.y, flies.HP)
+            self.player.reset_player(200,200)
+            self.ultimate_reset()
+            self.load_health_bar()
+            self.load_moxie_bar()
+            if self.enemy_defeat:
+                self.fly_swarm.flies_spawn()
+            self.swarming = True
+            self.game.reset_game = False
+
         if self.game.start == True:
             if self.game.ult == False:
 
                 # Update player
                 self.player.update(deltatime, player_action)
-                
                 self.update_ultimate(deltatime, player_action)
                 self.health_update()
                 self.moxie_update(player_action)
@@ -48,11 +62,18 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 for flies in self.fly_swarm.flylist.sprites():
                     if not(flies.HP <= 0):
                         self.flies_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
-                                            flies.damage, flies.body_damage)
+                                            flies.damage)
                     if flies.HP <= 0:
                         flies.kill()
                     if not self.fly_swarm.flylist.sprites():
-                        self.swarming = False        
+                        self.swarming = False 
+                        self.enemy_defeat = True
+
+                if player_action["pause"]:
+                    new_state = self.pause
+                    new_state.enter_state()
+                    self.game.start = False
+                    # self.game.reset_keys()       
                   
             self.add_ultimate(deltatime, player_action)
         else:
@@ -61,8 +82,8 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.forest2, (1100,600)), (0,0))
+        self.confection_display(display)
         self.camera.custom_draw(display)
-        self.player.render(display)
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
         
         # Player stats
