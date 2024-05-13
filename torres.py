@@ -42,7 +42,6 @@ class Player(pygame.sprite.Sprite):
             player_action["left"] = False
             player_action["up"] = False
             player_action["down"] = False
-            player_action["ultimate"] = False
             player_action["attack"] = False
             player_action["defend"] = False
         else:
@@ -205,7 +204,7 @@ class Player(pygame.sprite.Sprite):
             self.fps = 0.1
 
         if self.lose:
-            self.fps = 0.5
+            self.fps = 1
             self.current_anim_list = self.lose_sprites
 
         if self.lose:
@@ -254,7 +253,7 @@ class Player(pygame.sprite.Sprite):
         for x in range(5):
             self.attack_left.append(SP.get_sprite(x, 595, 198, 200, (0,0,0)))
         for x in range(2,5):
-            self.lose_sprites.append(SP.get_sprite(x, 800, 200, 200, (0,0,0)))
+            self.lose_sprites.append(SP.get_sprite(x, 800, 205, 200, (0,0,0)))
             
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites

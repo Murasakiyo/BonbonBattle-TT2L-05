@@ -21,8 +21,6 @@ class FlyEnemy(pygame.sprite.Sprite):
             flies.rect.clamp_ip(self.game.screen_rect)
 
         
-
-
     def render(self, display):
         for self.flies in self.flylist.sprites():
             self.flies.render(display)

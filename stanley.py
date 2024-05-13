@@ -21,6 +21,7 @@ class Stanley(pygame.sprite.Sprite, Support):
  
 
     def update(self,deltatime, player_action, player_x, player_y):
+        
         self.update_movement(deltatime, player_action, player_x, player_y, self.animate)
         
     
