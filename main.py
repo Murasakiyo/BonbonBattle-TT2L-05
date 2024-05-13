@@ -1,9 +1,11 @@
 import pygame
 import sys
 from states.menu import MainMenu
+from torres import *
 from states.level_4 import Quad_Stage
 from states.pause_menu import Pause
 # from parent_classes.ultimate_action import *
+from savingsystem import *
 
 class Game():
     def __init__(self):
@@ -29,7 +31,11 @@ class Game():
         self.state_stack = []
         self.load_states()
         self.ultimates()
-        
+
+        self.player = Player(self, pygame.sprite.Group(), 200, 200)
+        self.saving_system = SaveDataSystem('player_data.pickle', self.player)
+        self.load_data() # load saved data when start a game
+
     # Game loop
     def game_loop(self):
         while self.play:
@@ -47,6 +53,7 @@ class Game():
             if event.type == pygame.QUIT:
                 self.run = False
                 self.play = False
+                self.save_data() # save data when quit the game
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
@@ -161,6 +168,18 @@ class Game():
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
         self.forest2 = pygame.image.load("sprites/backgrounds/bg_lvl2.bmp").convert()
 
+
+    def save_data(self):
+        self.saving_system.save_data_file(self.player)
+        player_data = self.saving_system.get_save_data(self.player)
+        print(f"Saving data: {player_data}")
+
+    def load_data(self):
+        loaded_data = self.saving_system.load_data_file()
+        if loaded_data: 
+            print("Loaded data:", loaded_data)
+        else:
+            print("No saved data found.")
 
 if __name__ == "__main__":
     game = Game()

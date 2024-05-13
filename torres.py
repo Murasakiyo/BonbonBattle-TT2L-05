@@ -249,7 +249,6 @@ class Player(pygame.sprite.Sprite):
         self.deal_damage = False
         self.attack_cooldown = 0
 
-    
 
 
 
