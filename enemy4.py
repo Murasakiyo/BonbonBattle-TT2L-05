@@ -63,7 +63,7 @@ class Enemy5(pygame.sprite.Sprite):
         if self.extend_vert == False:
             self.extend_count += deltatime
             self.rect_string1.x = player_x - 25
-            if self.extend_count > 3:
+            if self.extend_count > 2:
                 self.extend_vert = True
                 self.extend_count = 0
 
@@ -85,7 +85,7 @@ class Enemy5(pygame.sprite.Sprite):
         if self.extend_horiz == False:
             self.extend_count2 += deltatime
             self.rect_string2.y = player_y - 25
-            if self.extend_count2 > 3:
+            if self.extend_count2 > 2:
                 self.extend_horiz = True
                 self.extend_count2 = 0
     
@@ -104,7 +104,7 @@ class Enemy5(pygame.sprite.Sprite):
     def placement(self, deltatime):
         self.change_pos_timer += deltatime
         if self.change_pos_timer > 3:
-            self.positional = random.randrange(1, 6)
+            self.positional = random.randrange(1, 5)
             self.change_pos_timer = 0
 
         if self.positional == 1:

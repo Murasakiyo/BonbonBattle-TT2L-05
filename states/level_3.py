@@ -3,6 +3,7 @@ from parent_classes.state import *
 from torres import *
 from enemy2 import *
 from confection import *
+from states.pause_menu import *
 from parent_classes.ultimate_action import *
 from parent_classes.health import *
 from parent_classes.collisions import *
@@ -17,8 +18,9 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
         self.fly_swarm = FlyEnemy(self.game)
+        self.pause = Pause(self.game)
 
-        self.enemy1 = FrogEnemy(self.game, self.camera)
+        self.enemy1 = FrogEnemy(self.game)
         self.tongue = Tongue(self.game)
         self.tongue2 = Tongue2(self.game)
         self.attack_group = pygame.sprite.Group()
@@ -66,7 +68,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     if not self.fly_swarm.flylist.sprites():
                         self.swarming = False
                         self.swamping = True
-                        self.alive = True
+                        self.camera.add(self.enemy1)
 
                 if self.swamping:
                     if not(self.enemy1.HP <= 0):
@@ -74,7 +76,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                                         self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
                         self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
                         self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
-                        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)                            
+                        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+
                     if self.enemy1.HP <= 0:
                         self.enemy1.kill()
                         self.tongue.kill()
@@ -83,7 +86,12 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
                     self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
                                         self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
-
+                    
+                if player_action["pause"]:
+                    new_state = self.pause
+                    new_state.enter_state()
+                    self.game.start = False
+                    # self.game.reset_keys()
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -93,8 +101,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.forest2, (1100,600)), (0,0))
         self.player.render(display)
+        self.confection_display(display)
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
-        # print(self.camera.custom_draw(display))
         # Player stats
         self.health_render(display)
         self.moxie_render(display)
