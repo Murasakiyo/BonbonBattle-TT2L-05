@@ -103,7 +103,7 @@ class Enemy5(pygame.sprite.Sprite):
 
     def placement(self, deltatime):
         self.change_pos_timer += deltatime
-        if self.change_pos_timer > 2:
+        if self.change_pos_timer > 3:
             self.positional = random.randrange(1, 6)
             self.change_pos_timer = 0
 
