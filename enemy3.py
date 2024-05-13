@@ -207,5 +207,20 @@ class Enemy3(pygame.sprite.Sprite):
 
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites
-      
 
+    def reset_minions(self):
+        self.minionlist.empty()
+        self.minion_time = 0
+        self.attack = False
+        self.minions = None  # Reset the minions variable
+      
+    def enemy_reset(self):
+        self.attack = False
+        self.rect.x, self.rect.y = 700,200
+        self.image = self.right_sprites[0]
+        self.current_time = 0
+        self.HP = 300
+        self.ult_timer = 0
+        self.ult = False
+        self.leech = False
+        self.reset_minions()
