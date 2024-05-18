@@ -3,8 +3,8 @@ import spritesheet
 import math
 
 class FrogEnemy(pygame.sprite.Sprite):
-    def __init__(self, game, group):
-        super().__init__(group)
+    def __init__(self, game):
+        super().__init__()
         self.game = game
         self.load_sprites()
         self.rect = self.frog.get_rect(width= 150, height=165)   # Placeholder for enemy froggie 
