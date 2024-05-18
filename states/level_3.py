@@ -26,72 +26,105 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.attack_group = pygame.sprite.Group()
         self.body_group = pygame.sprite.Group()
 
-        self.attack_group.add(self.tongue, self.tongue2)
-        self.body_group.add(self.enemy1)
-
-        self.swarming = True
-        self.swamping = False
         self.ultimates()
         self.characters()
         self.load_health_bar()
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+
+        self.attack_group.add(self.tongue, self.tongue2)
+        self.body_group.add(self.enemy1)
         self.moxie_points = 0
+        self.swarming = True
+        self.swamping = False
+        self.enemy_defeat = False
+        self.enemyflies_defeat = False
+
        
 
 
     def update(self, deltatime, player_action):
-        
+
+        if self.game.reset_game:
+            self.swamping = False
+            self.swarming = True
+            self.enemy1.kill()
+            self.tongue.kill()
+            self.tongue2.kill()
+            self.enemy1.enemy_reset()
+            self.player.reset_player(200,200)
+            self.ultimate_reset()
+            self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+            self.load_health_bar()
+            self.load_moxie_bar()
+            for flies in self.fly_swarm.flylist.sprites():
+                flies.kill()
+                self.enemy_health_update(flies.rect.x,flies.rect.y, flies.HP)
+            if self.enemy_defeat or self.enemyflies_defeat:
+                self.attack_group.add(self.tongue, self.tongue2)
+                self.body_group.add(self.enemy1)
+                self.fly_swarm.flies_spawn()
+            self.game.reset_game = False
+
+        self.game_over(deltatime, player_action)
+
         if self.game.start == True:
             if self.game.ult == False:
 
                 # Update player
                 self.player.update(deltatime, player_action)
-                
                 self.update_ultimate(deltatime, player_action)
                 self.health_update()
                 self.moxie_update(player_action)
                 self.cooldown_for_attacked(deltatime)
 
 
-                # Check if flies are all still alive
-                if self.swarming:
-                    self.fly_swarm.update(deltatime, player_action, self.player.rect.center[0], 
-                                        self.player.rect.center[1], self.player.rect, self.player.rect.x)
-                
-                for flies in self.fly_swarm.flylist.sprites():
-                    if not(flies.HP <= 0):
-                        self.flies_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
-                                            flies.damage)
-                    if flies.HP <= 0:
-                        flies.kill()
-                    if not self.fly_swarm.flylist.sprites():
-                        self.swarming = False
-                        self.swamping = True
-                        self.camera.add(self.enemy1)
-
-                if self.swamping:
-                    if not(self.enemy1.HP <= 0):
-                        self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
-                                        self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
-                        self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
-                        self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
-                        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
-
-                    if self.enemy1.HP <= 0:
-                        self.enemy1.kill()
-                        self.tongue.kill()
-                        self.tongue2.kill()
-                        self.swamping = False
-
-                    self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
-                                        self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
+                if not(self.game.defeat):
+                    # Check if flies are all still alive
+                    if self.swarming:
+                        self.fly_swarm.update(deltatime, player_action, self.player.rect.center[0], 
+                                            self.player.rect.center[1], self.player.rect, self.player.rect.x)
                     
-                if player_action["pause"]:
-                    new_state = self.pause
-                    new_state.enter_state()
-                    self.game.start = False
-                    # self.game.reset_keys()
+                    for flies in self.fly_swarm.flylist.sprites():
+                        if not(flies.HP <= 0):
+                            self.flies_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
+                                                flies.damage)
+                        if flies.HP <= 0:
+                            flies.kill()
+                        if not self.fly_swarm.flylist.sprites():
+                            self.swarming = False
+                            self.swamping = True
+                            self.enemyflies_defeat = True
+                            self.camera.add(self.enemy1)
+
+                    if self.swamping:
+                        if not(self.enemy1.HP <= 0):
+                            self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
+                                            self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
+                            self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                            self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                            self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+
+                        if self.enemy1.HP <= 0:
+                            self.enemy1.kill()
+                            self.tongue.kill()
+                            self.tongue2.kill()
+                            self.swamping = False
+
+                        if not self.body_group.sprites():
+                            self.enemy_defeat = True
+
+                        self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
+                                            self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
+                    
+                    if player_action["pause"]:
+                        new_state = self.pause
+                        new_state.enter_state()
+                        self.game.start = False
+                
+                if self.player.healthpoints <= 0:
+                    self.game.defeat = True
+                    player_action["ultimate"] = False
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -99,14 +132,14 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         # print(self.attack_time)
 
     def render(self, display):
-        display.blit(pygame.transform.scale(self.game.forest2, (1100,600)), (0,0))
-        self.player.render(display)
+        display.blit(pygame.transform.scale(self.game.forest3, (1100,600)), (0,0))
         self.confection_display(display)
-        display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
+        if self.game.defeat:
+            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
+        self.camera.custom_draw(display)
         # Player stats
         self.health_render(display)
         self.moxie_render(display)
-        self.camera.custom_draw(display)
 
         
         for flies in self.fly_swarm.flylist.sprites():
