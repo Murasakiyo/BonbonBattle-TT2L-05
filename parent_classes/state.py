@@ -20,6 +20,20 @@ class State():
     def exit_state(self, x):
         self.game.state_stack.pop(x) 
 
+    def game_over(self, deltatime, player_action):
+        if self.player.image == self.player.lose_sprites[3] and self.game.defeat:
+            if self.game.defeat:
+                player_action["transition"] = True
+                if self.game.alpha >= 220:
+                    self.game.reset_game = True
+                    
+        if self.game.alpha == 255:
+            if self.game.reset_game == False:
+                self.exit_state(-1)
+                player_action["transition"] =  False
+                self.game.defeat = False
+                self.game.start = False
+
 class CameraGroup(pygame.sprite.Group):
     def __init__(self, game):
         super().__init__()

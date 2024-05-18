@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = position_x, position_y
         self.torres_mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.torres_mask.to_surface()
-        self.current_frame, self.last_frame_update = 0,0
+        self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         self.horiz_line = [((self.rect.midleft), (self.rect.midright))]
         self.fps = 0
@@ -28,13 +28,27 @@ class Player(pygame.sprite.Sprite):
         # self.moxie_points = 0
         self.moxie_bool = False
         self.healthpoints = 250
-        self.attackpoints = 500
+        self.attackpoints = 5
         self.defensepoints = 10
         self.moxiepoints = 0
         self.speed = 400
+        self.lose = False
         
 
     def update(self,deltatime,player_action):
+        print(self.attack)
+        if self.game.defeat:
+            self.lose = True
+            player_action["right"] = False
+            player_action["left"] = False
+            player_action["up"] = False
+            player_action["down"] = False
+            player_action["attack"] = False
+            player_action["defend"] = False
+        else:
+            self.lose = False
+
+
         # Get direction from input
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
@@ -73,7 +87,6 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.attack = False
 
-        
         # animation for sprite
         self.animate(deltatime, direction_x, direction_y)
 
@@ -85,10 +98,6 @@ class Player(pygame.sprite.Sprite):
 ##################################################################################
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
         # self.enemy1_collision = [((self.rect.midleft[0] - 100, self.rect.midleft[1]), (self.rect.midright[0] + 100, self.rect.midright[1]))]
-        # self.enemy3_collisions(deltatime, direction_x, direction_y, collide_bool)
-
-
-
 
         # print(self.collide_time)
         # print(self.collide)
@@ -129,20 +138,9 @@ class Player(pygame.sprite.Sprite):
         self.current_anim_list = self.right_sprites
         self.defend = False
         self.attack = False
-        self.current_frame, self.last_frame_update = 0,0
+        self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
         self.current_time = 0
         self.cooldown_variable()
-
-    def enemy3_collisions(self, deltatime, direction_x, direction_y, collide_bool):       
-       if collide_bool == True:
-            self.collide_time += deltatime
-            if self.collide_time > 0.1:
-                self.rect.x += 200 * deltatime * direction_x 
-                self.rect.y += 225 * deltatime * direction_y
-
-            if self.collide_time > 3:
-                self.collide = True
-                self.collide_time = 0
                 
         
 
@@ -152,7 +150,7 @@ class Player(pygame.sprite.Sprite):
         self.last_frame_update += deltatime
 
         #if no direction is pressed, set image to idle and return
-        if not(direction_x or direction_y) and self.attack == False and not(self.defend):
+        if not(direction_x or direction_y) and self.attack == False and not(self.defend) and not(self.game.defeat):
             if self.current_anim_list == self.defend_sprites and self.current_frame == 0:
                 self.current_anim_list = self.right_sprites
                 self.image = self.current_anim_list[0]
@@ -207,6 +205,21 @@ class Player(pygame.sprite.Sprite):
         else:
             self.fps = 0.1
 
+        if self.lose:
+            self.fps = 1
+            self.current_anim_list = self.lose_sprites
+
+        if self.lose:
+            if (self.last_frame_update > self.fps):
+                if self.current_frame_unique != 3:
+                    self.current_frame_unique = (self.current_frame_unique + 1) % len(self.current_anim_list)
+                    self.image = self.current_anim_list[self.current_frame_unique]
+                    self.last_frame_update = 0
+                else:
+                    self.image = self.current_anim_list[3]
+                    self.last_frame_update = 0
+    
+
         #Advance the animation if enough time has elapsed
         if self.last_frame_update > self.fps:
             if self.current_anim_list == self.defend_sprites:
@@ -224,6 +237,7 @@ class Player(pygame.sprite.Sprite):
         self.right_sprites, self.left_sprites = [], []
         self.attack_right, self.attack_left = [], []
         self.defend_sprites = []
+        self.lose_sprites, self.win_sprites = [], []
         torres = pygame.image.load("sprites/torres_sp1.png").convert()
         self.torres_walk = pygame.transform.scale(torres, (1038,1200)).convert_alpha()
         SP = spritesheet.Spritesheet(self.torres_walk)
@@ -231,6 +245,7 @@ class Player(pygame.sprite.Sprite):
         #load frames for each direction
         self.defend_sprites.append(SP.get_sprite(0, 800, 198, 200, (0,0,0)))
         self.defend_sprites.append(SP.get_sprite(1, 800, 198, 200, (0,0,0)))
+        self.lose_sprites.append(SP.get_sprite(0, 0, 193, 190, (0,0,0)))
         for x in range(5):
             self.right_sprites.append(SP.get_sprite(x, 0, 193,190, (0,0,0)))
         for x in range(5):
@@ -239,6 +254,8 @@ class Player(pygame.sprite.Sprite):
             self.attack_right.append(SP.get_sprite(x, 395, 190, 193, (0,0,0)))
         for x in range(5):
             self.attack_left.append(SP.get_sprite(x, 595, 198, 200, (0,0,0)))
+        for x in range(2,5):
+            self.lose_sprites.append(SP.get_sprite(x, 800, 205, 200, (0,0,0)))
             
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites

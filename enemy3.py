@@ -63,7 +63,7 @@ class Enemy3(pygame.sprite.Sprite):
                 self.current_time = 0
 
         if self.avoid == True:
-            self.attractspeed = 10
+            self.attractspeed = 8
             self.speed = 0
         elif self.avoid == False:
             self.speed = -4 # -4
@@ -167,17 +167,19 @@ class Enemy3(pygame.sprite.Sprite):
             return
         
         if self.attack:
+            self.fps = 0.1
             if direction > 0:
                 self.current_anim_list = self.attack_right
             elif direction < 0:
                 self.current_anim_list = self.attack_left
 
+        if not self.attack:
+            self.fps = 0.07
 
         if direction > 0 and self.dist < 500 and not(self.attack):
             self.current_anim_list = self.right_sprites
         elif direction < 0 and self.dist < 500 and not(self.attack):
             self.current_anim_list = self.left_sprites
-
 
         if self.last_frame_update > self.fps:
             self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
@@ -190,7 +192,7 @@ class Enemy3(pygame.sprite.Sprite):
         # Load frog sprite
         snake = pygame.image.load("sprites/snake_enemy.png").convert()
         self.snake = pygame.transform.scale(snake, (1250,875)).convert_alpha() 
-        SP = spritesheet.Spritesheet(self.snake)   
+        SP = spritesheet.Spritesheet(self.snake)
   
         # Walking sprites 
         for x in range(7):

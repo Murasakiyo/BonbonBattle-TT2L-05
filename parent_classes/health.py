@@ -11,7 +11,7 @@ class Health():
 
     def health_update(self):
         if self.player.healthpoints <= 0:
-            self.player.healthpoints += 250
+            self.player.healthpoints = 0
         self.health_bar = pygame.Rect(10, 10, self.player.healthpoints, 40)
 
     def health_render(self, display):
