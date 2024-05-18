@@ -89,7 +89,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                         new_state = self.pause
                         new_state.enter_state()
                         self.game.start = False
-                        # self.game.reset_keys()
 
                 if self.player.healthpoints <= 0:
                     self.game.defeat = True
