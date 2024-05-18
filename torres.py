@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         # self.moxie_points = 0
         self.moxie_bool = False
         self.healthpoints = 250
-        self.attackpoints = 20
+        self.attackpoints = 500
         self.defensepoints = 10
         self.moxiepoints = 0
         self.speed = 400
@@ -41,6 +41,7 @@ class Player(pygame.sprite.Sprite):
 
         # collision with the screen
         self.rect.clamp_ip(self.game.screen_rect)
+        
 
         # Check for defense button
         if player_action["defend"] == True:

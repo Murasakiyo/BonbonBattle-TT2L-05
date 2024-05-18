@@ -2,7 +2,9 @@ import pygame
 from parent_classes.state import *
 from states.level_1 import First_Stage
 from states.level_2 import Sec_Stage
+from states.level_3 import Trio_Stage
 from states.level_4 import Quad_Stage
+from states.level_5 import Penta_Stage
 
 class Level_Options(State):
     def __init__(self, game):
@@ -14,7 +16,9 @@ class Level_Options(State):
         self.current_time = 0
         self.first_level = First_Stage(self.game)
         self.second_level = Sec_Stage(self.game)
+        self.third_level = Trio_Stage(self.game)
         self.fourth_level= Quad_Stage(self.game)
+        self.fifth_level = Penta_Stage(self.game)
         self.current_level1 = self.lvl1
         self.current_level2 = self.lvl2
         self.current_level3 = self.lvl3
@@ -47,6 +51,7 @@ class Level_Options(State):
         if self.menu_options[self.index] == "lvl3": 
             self.current_level3 = self.lvl3_hover
             self.current_background = self.level3
+            new_state = self.third_level
         else:
             self.current_level3 = self.lvl3
         if self.menu_options[self.index] == "lvl4": 
@@ -58,6 +63,7 @@ class Level_Options(State):
         if self.menu_options[self.index] == "lvl5": 
             self.current_level5 = self.lvl5_hover
             self.current_background = self.level5
+            new_state = self.fifth_level
         else:
             self.current_level5 = self.lvl5
 

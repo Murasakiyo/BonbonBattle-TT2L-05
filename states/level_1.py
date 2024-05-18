@@ -21,7 +21,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.support_dolls = pygame.sprite.Group()
         self.attack_group = pygame.sprite.Group()
         self.body_group = pygame.sprite.Group()
-        self.enemy1 = FrogEnemy(self.game, self.camera)
+        self.enemy1 = FrogEnemy(self.game)
         self.tongue = Tongue(self.game)
         self.tongue2 = Tongue2(self.game)
         self.pause = Pause(self.game)
@@ -31,6 +31,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
 
+        self.camera.add(self.enemy1)
         self.attack_group.add(self.tongue, self.tongue2)
         self.body_group.add(self.enemy1)
         self.moxie_points = 0
