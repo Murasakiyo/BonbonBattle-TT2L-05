@@ -36,6 +36,7 @@ class Player(pygame.sprite.Sprite):
         
 
     def update(self,deltatime,player_action):
+        print(self.attack)
         if self.game.defeat:
             self.lose = True
             player_action["right"] = False

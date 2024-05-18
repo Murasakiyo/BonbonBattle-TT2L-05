@@ -8,6 +8,7 @@ class Level_Options(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.game = game
+        self.enter = pygame.image.load("sprites/buttons/enter.png").convert_alpha()
         self.backgrounds()
         self.buttons()
         self.make_button()
@@ -79,6 +80,9 @@ class Level_Options(State):
         display.blit(self.current_level3, (self.button1.x + 400, self.button1.y))
         display.blit(self.current_level4, (self.button1.x + 600, self.button1.y))
         display.blit(self.current_level5, (self.button1.x + 800, self.button1.y))
+        if not(self.game.player_action["transition"]):
+            display.blit(self.enter, (900, 500))
+        
 
 
     def update_keys(self, player_action, deltatime):

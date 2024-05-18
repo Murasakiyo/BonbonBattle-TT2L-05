@@ -55,7 +55,7 @@ class Fly(pygame.sprite.Sprite):
         self.teleport_x = None
         self.teleport_y = None
         self.HP = 150
-        self.damage = 15
+        self.damage = 200
 
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):

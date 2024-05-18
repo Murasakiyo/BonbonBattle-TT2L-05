@@ -24,14 +24,15 @@ class State():
         if self.player.image == self.player.lose_sprites[3] and self.game.defeat:
             if self.game.defeat:
                 player_action["transition"] = True
-                if self.game.alpha >= 250:
+                if self.game.alpha >= 220:
                     self.game.reset_game = True
                     
         if self.game.alpha == 255:
-            self.exit_state(-1)
-            player_action["transition"] =  False
-            self.game.defeat = False
-            self.game.start = False
+            if self.game.reset_game == False:
+                self.exit_state(-1)
+                player_action["transition"] =  False
+                self.game.defeat = False
+                self.game.start = False
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self, game):
