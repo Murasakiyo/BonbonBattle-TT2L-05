@@ -43,15 +43,15 @@ class Pause(State):
                 self.click = False
 
         if self.exit_game:
-            self.exit_state(-2)
-            self.exit_game = False
+            # self.exit_game = False
             player_action["transition"] = True
-            player_action["reset_game"] = True
-
+            self.game.defeat, self.game.win = False, False
+            
         if self.game.alpha == 255:
             self.exit_state(-1)
-            player_action["transition"] =  False
-    
+            self.game.init_reset = True
+            player_action["reset_game"] = True
+        
                 
         
         # if self.exit_game:

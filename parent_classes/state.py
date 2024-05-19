@@ -52,7 +52,6 @@ class State():
                 self.game.defeat = False
                 self.state = "none"
 
-
     def ending_state(self, display):
         if self.game.defeat:
             self.game.end_screen = self.game.lose_screen
@@ -74,6 +73,7 @@ class State():
                 self.exit_game = False
                 self.click = False
         
+
     def hover_button(self, display, button_rect, current_button, norm_but, hover_but):
         if button_rect.collidepoint(self.game.mouse):
             current_button = hover_but
@@ -98,6 +98,23 @@ class State():
             if not pygame.mouse.get_pressed()[0]:
                 self.restart_game = False
                 self.click = False
+
+    def ending_options(self, deltatime, player_action):
+        
+        if self.enemy_defeat:
+            self.current_time += deltatime
+            player_action["ultimate"] = False
+            if self.current_time > 2:
+                self.game.win = True
+                if self.current_time > 4:
+                    self.end = True
+                    self.current_time = 0
+
+        if self.player.healthpoints <= 0:
+            self.game.defeat = True
+            player_action["ultimate"] = False
+            if self.player.image == self.player.lose_sprites[3]:
+                self.end = True
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self, game):

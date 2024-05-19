@@ -67,29 +67,20 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 player_action["reset_game"] = False
                 self.end_time = 0
 
+        if self.game.init_reset:
+            if player_action["reset_game"] == False:
+                self.exit_state(-1)
+
         if self.end:
             self.button_go()
 
         self.game_over(player_action)
         self.game_restart(player_action)
-        
-        if self.enemy_defeat:
-            self.current_time += deltatime
-            player_action["ultimate"] = False
-            if self.current_time > 2:
-                self.game.win = True
-                if self.current_time > 4:
-                    self.end = True
-                    self.current_time = 0
-
-        if self.player.healthpoints <= 0:
-            self.game.defeat = True
-            player_action["ultimate"] = False
-            if self.player.image == self.player.lose_sprites[3]:
-                self.end = True
+        self.ending_options(deltatime, player_action)
 
         if self.game.start == True:
             if self.game.ult == False:
+
                 # Update player
                 self.player.update(deltatime, player_action)
                 self.update_ultimate(deltatime, player_action)
@@ -154,7 +145,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         if not(self.enemy1.HP <= 0):
             self.enemy_health_render(display, self.enemy1.rect.x, self.enemy1.rect.y)
-
 
         self.ultimate_display(display)
     
