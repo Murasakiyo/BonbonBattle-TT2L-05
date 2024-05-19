@@ -38,6 +38,7 @@ class Player(pygame.sprite.Sprite):
 
     def update(self,deltatime,player_action):
         
+        print(self.win)
         if self.game.defeat and not(self.game.win):
             self.lose = True
         else:
@@ -158,8 +159,9 @@ class Player(pygame.sprite.Sprite):
         #compute how much time has passed since the frame last update
         self.last_frame_update += deltatime
 
+        
         #if no direction is pressed, set image to idle and return
-        if not(direction_x or direction_y) and self.attack == False and not(self.defend) and not(self.game.defeat):
+        if not(direction_x or direction_y) and self.attack == False and not(self.defend) and not(self.game.defeat) and not(self.game.win):
             if self.current_anim_list == self.defend_sprites and self.current_frame == 0:
                 self.current_anim_list = self.right_sprites
                 self.image = self.current_anim_list[0]
@@ -185,12 +187,12 @@ class Player(pygame.sprite.Sprite):
 
 
         #Attack animation
-        if (self.image == self.right_sprites[self.current_frame]) and self.attack:
+        if (self.image == self.right_sprites[self.current_frame]) and self.attack and not(self.win):
             self.current_anim_list.clear
             self.current_frame = 0
             self.current_anim_list = self.attack_right[0]
             self.current_anim_list = self.attack_right
-        if (self.image == self.left_sprites[self.current_frame]) and self.attack:
+        if (self.image == self.left_sprites[self.current_frame]) and self.attack and not(self.win):
             self.current_anim_list.clear
             self.current_frame = 0
             self.current_anim_list = self.attack_left[0]
@@ -214,15 +216,16 @@ class Player(pygame.sprite.Sprite):
         else:
             self.fps = 0.1
 
+        # lose
         if self.lose:
             self.fps = 1
             self.current_anim_list = self.lose_sprites
 
+        # win
         if self.win:
-            self.fps = 0.15
+            self.fps = 0.2
             self.current_anim_list = self.win_sprites
             
-
         if self.lose:
             if (self.last_frame_update > self.fps):
                 if self.current_frame_unique != 3:
@@ -232,7 +235,6 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.image = self.current_anim_list[3]
                     self.last_frame_update = 0
-    
 
         #Advance the animation if enough time has elapsed
         if self.last_frame_update > self.fps:

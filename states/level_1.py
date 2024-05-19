@@ -61,6 +61,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.camera.add(self.enemy1)
                 self.enemy_defeat = False
             self.game.start = False
+            self.current_time = 0
             self.end_time += deltatime
             if self.end_time > 0.5:
                 player_action["reset_game"] = False
@@ -73,10 +74,10 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.game_restart(player_action)
         
         if self.enemy_defeat:
+            self.current_time += deltatime
             player_action["ultimate"] = False
             if self.current_time > 2:
                 self.game.win = True
-                self.player.current_anim_list = self.player.win_sprites
                 if self.current_time > 4:
                     self.end = True
                     self.current_time = 0
@@ -114,8 +115,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                         self.tongue.kill()
                         self.tongue2.kill()
                         self.enemy_defeat = True
-                        self.current_time += deltatime
-                       
+                        
                     if not(self.end):
                         if player_action["pause"]:
                             new_state = self.pause
