@@ -26,12 +26,13 @@ class Game():
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
-                              "ultimate": False, "transition": False, "go": False, "pause": False} 
+                              "ultimate": False, "transition": False, "start": False, "go": False, "pause": False} 
     
         self.state_stack = []
         self.load_states()
         self.ultimates()
 
+        self.skip_cutscenes = False
         self.player = Player(self, pygame.sprite.Group(), 200, 200)
         self.saving_system = SaveDataSystem('player_data.pickle', self.player)
         self.load_data() # load saved data when start a game
@@ -170,16 +171,21 @@ class Game():
 
 
     def save_data(self):
-        self.saving_system.save_data_file(self.player)
-        player_data = self.saving_system.get_save_data(self.player)
+        self.saving_system.save_data_file()
+        player_data = self.saving_system.get_save_data()
         print(f"Saving data: {player_data}")
 
     def load_data(self):
         loaded_data = self.saving_system.load_data_file()
         if loaded_data: 
-            print("Loaded data:", loaded_data)
-        else:
-            print("No saved data found.")
+            if 'healthpoints' in loaded_data:
+                self.player.healthpoints = loaded_data['healthpoints']
+            if 'attackpoints' in loaded_data:
+                self.player.attackpoints = loaded_data['attackpoints']
+            if 'speed' in loaded_data:
+                self.player.speed = loaded_data['speed']
+            if 'skip_cutscenes' in loaded_data:
+                self.skip_cutscenes = loaded_data['skip_cutscenes']
 
 if __name__ == "__main__":
     game = Game()
