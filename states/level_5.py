@@ -14,11 +14,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
     def __init__(self, game):
         super().__init__(game)
         self.camera = CameraGroup(self.game)
-        self.c_time = 0
-        self.newctime = pygame.time.get_ticks()
         self.ultimate = False
-        self.countdown = 0
-        self.immunity = False
 
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
@@ -41,13 +37,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         if self.game.start == True:
             if self.game.ult == False:
-                # Cooldown for player receiving damage
-                if self.game.damaged == True:
-                    self.immunity = True
-                    self.c_time += deltatime
-                    if self.c_time > 2:
-                        self.game.damaged = False
-                        self.immunity = False
+                
 
                 # Update player and enemies
                 self.player.update(deltatime, player_action)

@@ -33,21 +33,29 @@ class Player(pygame.sprite.Sprite):
         self.moxiepoints = 0
         self.speed = 400
         self.lose = False
+        self.win = False
         
 
     def update(self,deltatime,player_action):
-        print(self.attack)
-        if self.game.defeat:
+        
+        # print(self.win)
+        if self.game.defeat and not(self.game.win):
             self.lose = True
+        else:
+            self.lose = False
+        
+        if self.game.win and not(self.game.defeat):
+            self.win = True
+        else:
+            self.win = False
+
+        if self.win or self.lose:
             player_action["right"] = False
             player_action["left"] = False
             player_action["up"] = False
             player_action["down"] = False
             player_action["attack"] = False
             player_action["defend"] = False
-        else:
-            self.lose = False
-
 
         # Get direction from input
         direction_x = player_action["right"] - player_action["left"]
@@ -135,6 +143,8 @@ class Player(pygame.sprite.Sprite):
         self.moxiepoints = 0
         self.rect.x, self.rect.y = position_x, position_y
         self.image = self.right_sprites[0]
+        self.win = False
+        self.lose = False
         self.current_anim_list = self.right_sprites
         self.defend = False
         self.attack = False
@@ -209,6 +219,11 @@ class Player(pygame.sprite.Sprite):
             self.fps = 1
             self.current_anim_list = self.lose_sprites
 
+        if self.win:
+            self.fps = 0.15
+            self.current_anim_list = self.win_sprites
+            
+
         if self.lose:
             if (self.last_frame_update > self.fps):
                 if self.current_frame_unique != 3:
@@ -256,6 +271,8 @@ class Player(pygame.sprite.Sprite):
             self.attack_left.append(SP.get_sprite(x, 595, 198, 200, (0,0,0)))
         for x in range(2,5):
             self.lose_sprites.append(SP.get_sprite(x, 800, 205, 200, (0,0,0)))
+        for x in range(2):
+            self.win_sprites.append(SP.get_sprite(x, 1000, 180, 200, (0,0,0)))
             
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites

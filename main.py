@@ -18,7 +18,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = False
+        self.start = True
         self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 4
         self.backgrounds()
@@ -43,6 +43,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
+            print(self.win)
 
 
     # All key events are here. Receive input from player, display output for player
@@ -54,6 +55,8 @@ class Game():
                 self.play = False
                 self.save_data() # save data when quit the game
                 sys.exit()
+
+            self.mouse = pygame.mouse.get_pos()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
@@ -94,12 +97,11 @@ class Game():
                     self.player_action["pause"] = False
         
    
-
-
     # Updates the state stack
     def update(self):
         self.state_stack[-1].update(self.deltatime, self.player_action)
         self.ct_display = str(int(self.countdown -self.current_time))
+        
 
     # Rendering images on screen
     def render(self):
@@ -141,6 +143,7 @@ class Game():
         self.ult = False
         self.ult_finish = False
         self.defeat = False
+        self.win = False
         
     
     # Transition screen between states
@@ -170,6 +173,37 @@ class Game():
         self.forest2 = pygame.image.load("sprites/backgrounds/bg_lvl2.bmp").convert()
         self.forest3 = pygame.image.load("sprites/backgrounds/bg_lvl3.bmp").convert()
         self.mountain = pygame.image.load("sprites/backgrounds/bg_lvl4.bmp").convert()
+        self.lose_screen = pygame.image.load("sprites/lose_screen.png").convert_alpha()
+        self.win_screen = pygame.image.load("sprites/win_screen.png").convert_alpha()
+        self.end_screen = self.win_screen
+    
+    def buttons(self):
+        self.lvl1 = pygame.image.load("sprites/buttons/lvl1.png").convert_alpha()
+        self.lvl2 = pygame.image.load("sprites/buttons/lvl2.png").convert_alpha()
+        self.lvl3 = pygame.image.load("sprites/buttons/lvl3.png").convert_alpha()
+        self.lvl4 = pygame.image.load("sprites/buttons/lvl4.png").convert_alpha()
+        self.lvl5 = pygame.image.load("sprites/buttons/lvl5.png").convert_alpha()
+        self.exit = pygame.image.load("sprites/buttons/exit.png").convert_alpha()
+        self.resume = pygame.image.load("sprites/buttons/resume.png").convert_alpha()
+        self.restart = pygame.image.load("sprites/buttons/restart.png").convert_alpha()
+
+        self.lvl1_hover = pygame.image.load("sprites/buttons/lvl1_hover.png").convert_alpha()
+        self.lvl2_hover = pygame.image.load("sprites/buttons/lvl2_hover.png").convert_alpha()
+        self.lvl3_hover = pygame.image.load("sprites/buttons/lvl3_hover.png").convert_alpha()
+        self.lvl4_hover = pygame.image.load("sprites/buttons/lvl4_hover.png").convert_alpha()
+        self.lvl5_hover = pygame.image.load("sprites/buttons/lvl5_hover.png").convert_alpha()
+        self.exit_hover = pygame.image.load("sprites/buttons/exit_hover.png").convert_alpha()
+        self.resume_hover = pygame.image.load("sprites/buttons/resume_hover.png").convert_alpha()
+        self.restart_hover = pygame.image.load("sprites/buttons/restart_hover.png").convert_alpha()
+
+        self.button1 = self.lvl1.get_rect(width= 100, height=100)
+        self.button1.x, self.button1.y = 75,225
+        self.exit_rect = self.exit.get_rect(width= 126, height=126)
+        self.exit_rect.x, self.exit_rect.y = 300,400
+        self.restart_rect = self.restart.get_rect(width= 126, height=126)
+        self.restart_rect.x, self.restart_rect.y = 690,400
+        self.current_exit = self.exit
+        self.current_restart = self.restart
 
 
     def save_data(self):

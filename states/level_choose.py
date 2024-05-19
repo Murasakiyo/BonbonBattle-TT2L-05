@@ -12,19 +12,19 @@ class Level_Options(State):
         self.game = game
         self.enter = pygame.image.load("sprites/buttons/enter.png").convert_alpha()
         self.backgrounds()
-        self.buttons()
-        self.make_button()
+        # self.buttons()
+        self.game.buttons()
         self.current_time = 0
         self.first_level = First_Stage(self.game)
         self.second_level = Sec_Stage(self.game)
         self.third_level = Trio_Stage(self.game)
         self.fourth_level= Quad_Stage(self.game)
         self.fifth_level = Penta_Stage(self.game)
-        self.current_level1 = self.lvl1
-        self.current_level2 = self.lvl2
-        self.current_level3 = self.lvl3
-        self.current_level4 = self.lvl4
-        self.current_level5 = self.lvl5
+        self.current_level1 = self.game.lvl1
+        self.current_level2 = self.game.lvl2
+        self.current_level3 = self.game.lvl3
+        self.current_level4 = self.game.lvl4
+        self.current_level5 = self.game.lvl5
         self.current_background = self.level1
         self.show_bg = self.current_background
         self.alpha = 0
@@ -38,35 +38,35 @@ class Level_Options(State):
         self.bg_transition(player_action)
         self.update_keys(player_action, deltatime)
         if self.menu_options[self.index] == "lvl1": 
-            self.current_level1 = self.lvl1_hover
+            self.current_level1 = self.game.lvl1_hover
             self.current_background = self.level1
             new_state = self.first_level
         else:
-            self.current_level1 = self.lvl1
+            self.current_level1 = self.game.lvl1
         if self.menu_options[self.index] == "lvl2": 
-            self.current_level2 = self.lvl2_hover
+            self.current_level2 = self.game.lvl2_hover
             self.current_background = self.level2
             new_state = self.second_level
         else:
-            self.current_level2 = self.lvl2
+            self.current_level2 = self.game.lvl2
         if self.menu_options[self.index] == "lvl3": 
-            self.current_level3 = self.lvl3_hover
+            self.current_level3 = self.game.lvl3_hover
             self.current_background = self.level3
             new_state = self.third_level
         else:
-            self.current_level3 = self.lvl3
+            self.current_level3 = self.game.lvl3
         if self.menu_options[self.index] == "lvl4": 
-            self.current_level4 = self.lvl4_hover
+            self.current_level4 = self.game.lvl4_hover
             self.current_background = self.level4
             new_state = self.fourth_level
         else:
-            self.current_level4 = self.lvl4
+            self.current_level4 = self.game.lvl4
         if self.menu_options[self.index] == "lvl5": 
-            self.current_level5 = self.lvl5_hover
+            self.current_level5 = self.game.lvl5_hover
             self.current_background = self.level5
             new_state = self.fifth_level
         else:
-            self.current_level5 = self.lvl5
+            self.current_level5 = self.game.lvl5
 
         if player_action["go"]:
             player_action["transition"] = True
@@ -81,11 +81,11 @@ class Level_Options(State):
     def render(self, display):
         # display.fill((0,0,0))
         display.blit(self.show_bg, (0,0))
-        display.blit(self.current_level1, (self.button1.x, self.button1.y))
-        display.blit(self.current_level2, (self.button1.x + 200, self.button1.y))
-        display.blit(self.current_level3, (self.button1.x + 400, self.button1.y))
-        display.blit(self.current_level4, (self.button1.x + 600, self.button1.y))
-        display.blit(self.current_level5, (self.button1.x + 800, self.button1.y))
+        display.blit(self.current_level1, (self.game.button1.x, self.game.button1.y))
+        display.blit(self.current_level2, (self.game.button1.x + 200, self.game.button1.y))
+        display.blit(self.current_level3, (self.game.button1.x + 400, self.game.button1.y))
+        display.blit(self.current_level4, (self.game.button1.x + 600, self.game.button1.y))
+        display.blit(self.current_level5, (self.game.button1.x + 800, self.game.button1.y))
         if not(self.game.player_action["transition"]):
             display.blit(self.enter, (900, 500))
         
@@ -109,7 +109,6 @@ class Level_Options(State):
         pygame.display.flip()
 
 
-
     def backgrounds(self):
         self.level1 = pygame.image.load("sprites/backgrounds/level1_start.png").convert()
         self.level2 = pygame.image.load("sprites/backgrounds/level2_start.png").convert()
@@ -117,25 +116,4 @@ class Level_Options(State):
         self.level4 = pygame.image.load("sprites/backgrounds/level4_start.png").convert()
         self.level5 = pygame.image.load("sprites/backgrounds/level5_start.png").convert()
 
-        
-    def buttons(self):
-        self.lvl1 = pygame.image.load("sprites/buttons/lvl1.png").convert_alpha()
-        self.lvl2 = pygame.image.load("sprites/buttons/lvl2.png").convert_alpha()
-        self.lvl3 = pygame.image.load("sprites/buttons/lvl3.png").convert_alpha()
-        self.lvl4 = pygame.image.load("sprites/buttons/lvl4.png").convert_alpha()
-        self.lvl5 = pygame.image.load("sprites/buttons/lvl5.png").convert_alpha()
-
-        self.lvl1_hover = pygame.image.load("sprites/buttons/lvl1_hover.png").convert_alpha()
-        self.lvl2_hover = pygame.image.load("sprites/buttons/lvl2_hover.png").convert_alpha()
-        self.lvl3_hover = pygame.image.load("sprites/buttons/lvl3_hover.png").convert_alpha()
-        self.lvl4_hover = pygame.image.load("sprites/buttons/lvl4_hover.png").convert_alpha()
-        self.lvl5_hover = pygame.image.load("sprites/buttons/lvl5_hover.png").convert_alpha()
-
-    def make_button(self):
-        self.button1 = self.lvl1.get_rect(width= 100, height=100)
-        self.button2 = self.lvl2.get_rect(width= 300, height=300)
-        self.button3 = self.lvl3.get_rect(width= 300, height=300)
-        self.button4 = self.lvl4.get_rect(width= 300, height=300)
-        self.button5 = self.lvl5.get_rect(width= 300, height=300)
-
-        self.button1.x, self.button1.y = 75,225
+    

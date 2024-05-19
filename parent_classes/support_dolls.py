@@ -7,7 +7,7 @@ class Support():
     def update_movement(self, deltatime, player_action, player_x, player_y, animate):
         self.current_time += deltatime
 
-        if self.game.defeat:
+        if self.game.defeat or self.game.win:
             self.attack = False
             
         # Check player direction

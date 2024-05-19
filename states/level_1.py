@@ -34,13 +34,19 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.camera.add(self.enemy1)
         self.attack_group.add(self.tongue, self.tongue2)
         self.body_group.add(self.enemy1)
+
+        self.current_time, self.end_time = 0,0
         self.moxie_points = 0
         self.enemy_defeat = False
+        self.end = False
+        self.exit_game = False
+        self.click = False
 
 
     def update(self, deltatime, player_action):
         # print(int(self.player.rect.x - self.enemy1.rect.x))
-
+        # print(self.game.reset_game)
+        
         if self.game.reset_game:
             self.enemy1.enemy_reset()
             self.player.reset_player(200,200)
@@ -52,9 +58,20 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.attack_group.add(self.tongue, self.tongue2)
                 self.body_group.add(self.enemy1)
                 self.camera.add(self.enemy1)
+                self.enemy_defeat = False
             self.game.reset_game = False
-            
+
+        if self.end:
+            if self.game.exit_rect.collidepoint(self.game.mouse):
+                if pygame.mouse.get_pressed()[0] and not self.click:
+                    self.exit_game = True
+                    self.click = True
+                if not pygame.mouse.get_pressed()[0]:
+                    self.exit_game = False
+                    self.click = False
+
         self.game_over(deltatime, player_action)
+            
 
         if self.game.start == True:
             if self.game.ult == False:
@@ -62,9 +79,11 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.player.update(deltatime, player_action)
                 self.update_ultimate(deltatime, player_action)
                 self.cooldown_for_attacked(deltatime)
+                self.health_update()
+                self.moxie_update(player_action)
 
                 # Update enemies
-                if not(self.game.defeat):
+                if not(self.end):
                     if not(self.enemy1.HP <= 0):
                         self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
                                         self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
@@ -76,26 +95,32 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
                                         self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
                     
-                    self.health_update()
-                    self.moxie_update(player_action)
-
                     if self.enemy1.HP <= 0:
                         self.enemy1.kill()
                         self.tongue.kill()
                         self.tongue2.kill()
                         self.enemy_defeat = True
+                        self.current_time += deltatime
+                       
+                    if not(self.end):
+                        if player_action["pause"]:
+                            new_state = self.pause
+                            new_state.enter_state()
+                            self.game.start = False
 
-                    if player_action["pause"]:
-                        new_state = self.pause
-                        new_state.enter_state()
-                        self.game.start = False
+                if self.enemy_defeat:
+                    self.game.win = True
+                    player_action["ultimate"] = False
+                    if self.current_time > 2:
+                        self.end = True
+                        self.current_time = 0
 
                 if self.player.healthpoints <= 0:
                     self.game.defeat = True
                     player_action["ultimate"] = False
+                    if self.player.image == self.player.lose_sprites[3]:
+                        self.end = True
                     
-                
-
             self.add_ultimate(deltatime, player_action)
         else:
             self.game.start_timer()
@@ -137,8 +162,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
 
-
-    def defeat(self):
-        pass
+        if self.end:
+            self.ending_state(display)
 
 

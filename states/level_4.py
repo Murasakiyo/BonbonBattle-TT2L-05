@@ -39,7 +39,6 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.enemy_group.add(self.enemy3)
 
     def update(self, deltatime, player_action):
-        
         if self.game.reset_game:
             self.enemy3.enemy_reset()
             self.player.reset_player(200,200)
