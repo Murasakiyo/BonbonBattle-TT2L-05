@@ -25,7 +25,7 @@ class Game():
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
-                              "ultimate": False, "transition": False, "go": False, "pause": False} 
+                              "ultimate": False, "transition": False, "go": False, "pause": False, "reset_game":False} 
     
         self.state_stack = []
         self.load_states()
@@ -43,7 +43,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
-            print(self.win)
+            print(self.player_action["reset_game"])
 
 
     # All key events are here. Receive input from player, display output for player

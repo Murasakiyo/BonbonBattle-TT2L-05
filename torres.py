@@ -38,7 +38,6 @@ class Player(pygame.sprite.Sprite):
 
     def update(self,deltatime,player_action):
         
-        # print(self.win)
         if self.game.defeat and not(self.game.win):
             self.lose = True
         else:
@@ -179,9 +178,9 @@ class Player(pygame.sprite.Sprite):
                 self.current_anim_list = self.left_sprites
 
         #walk animation after attacking
-        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]) and not(self.defend): 
+        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]) and not(self.defend) and not(self.win) and not(self.lose): 
             self.current_anim_list = self.right_sprites
-        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]) and not(self.defend): 
+        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]) and not(self.defend) and not(self.win) and not(self.lose): 
             self.current_anim_list = self.left_sprites
 
 

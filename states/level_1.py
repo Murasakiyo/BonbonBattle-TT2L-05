@@ -40,14 +40,15 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.enemy_defeat = False
         self.end = False
         self.exit_game = False
+        self.restart_game = False
         self.click = False
+        self.state = "none"
 
 
     def update(self, deltatime, player_action):
         # print(int(self.player.rect.x - self.enemy1.rect.x))
-        # print(self.game.reset_game)
         
-        if self.game.reset_game:
+        if player_action["reset_game"]:
             self.enemy1.enemy_reset()
             self.player.reset_player(200,200)
             self.ultimate_reset()
@@ -59,19 +60,32 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.body_group.add(self.enemy1)
                 self.camera.add(self.enemy1)
                 self.enemy_defeat = False
-            self.game.reset_game = False
+            self.game.start = False
+            self.end_time += deltatime
+            if self.end_time > 0.5:
+                player_action["reset_game"] = False
+                self.end_time = 0
 
         if self.end:
-            if self.game.exit_rect.collidepoint(self.game.mouse):
-                if pygame.mouse.get_pressed()[0] and not self.click:
-                    self.exit_game = True
-                    self.click = True
-                if not pygame.mouse.get_pressed()[0]:
-                    self.exit_game = False
-                    self.click = False
+            self.button_go()
 
-        self.game_over(deltatime, player_action)
-            
+        self.game_over(player_action)
+        self.game_restart(player_action)
+        
+        if self.enemy_defeat:
+            player_action["ultimate"] = False
+            if self.current_time > 2:
+                self.game.win = True
+                self.player.current_anim_list = self.player.win_sprites
+                if self.current_time > 4:
+                    self.end = True
+                    self.current_time = 0
+
+        if self.player.healthpoints <= 0:
+            self.game.defeat = True
+            player_action["ultimate"] = False
+            if self.player.image == self.player.lose_sprites[3]:
+                self.end = True
 
         if self.game.start == True:
             if self.game.ult == False:
@@ -83,7 +97,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.moxie_update(player_action)
 
                 # Update enemies
-                if not(self.end):
+                if not(self.game.defeat):
                     if not(self.enemy1.HP <= 0):
                         self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
                                         self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
@@ -108,19 +122,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                             new_state.enter_state()
                             self.game.start = False
 
-                if self.enemy_defeat:
-                    self.game.win = True
-                    player_action["ultimate"] = False
-                    if self.current_time > 2:
-                        self.end = True
-                        self.current_time = 0
-
-                if self.player.healthpoints <= 0:
-                    self.game.defeat = True
-                    player_action["ultimate"] = False
-                    if self.player.image == self.player.lose_sprites[3]:
-                        self.end = True
-                    
             self.add_ultimate(deltatime, player_action)
         else:
             self.game.start_timer()
@@ -142,7 +143,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             elif self.enemy1.current_anim_list == self.enemy1.attack_right:
                 self.tongue2.render(display)
 
-        if self.game.defeat or self.game.reset_game:
+        if self.game.defeat or self.game.player_action["reset_game"]:
             self.tongue.image= self.tongue.idle[0]
             self.tongue2.image= self.tongue.idle[0]
 

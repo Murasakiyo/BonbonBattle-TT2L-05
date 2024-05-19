@@ -20,34 +20,38 @@ class State():
     def exit_state(self, x):
         self.game.state_stack.pop(x) 
 
-    def game_over(self, deltatime, player_action):
+    def game_over(self,player_action):
 
         if self.exit_game:
             player_action["transition"] = True
-            self.game.reset_game = True
+            self.state = "exiting"
+            player_action["reset_game"] = True
             
-        if self.game.alpha == 255:
-            if self.game.reset_game == False:
+        if self.game.alpha == 255 and self.state == "exiting":
+            if not(player_action["reset_game"]):
                 self.exit_state(-1)
                 player_action["transition"] =  False
                 self.end = False
                 self.game.win = False
                 self.game.defeat = False
-                self.game.start = False
-                
-                
-        # if self.player.image == self.player.lose_sprites[3] and self.game.defeat:
-        #     if self.game.defeat:
-        #         player_action["transition"] = True
-        #         if self.game.alpha >= 220:
-        #             self.game.reset_game = True
-                    
-        # if self.game.alpha == 255:
-        #     if self.game.reset_game == False:
-        #         self.exit_state(-1)
-        #         player_action["transition"] =  False
-        #         self.game.defeat = False
-        #         self.game.start = False
+                self.state = "none"
+                # self.game.start = False
+
+    def game_restart(self, player_action):
+
+        if self.restart_game:
+            player_action["transition"] = True
+            self.state = "restarting"
+            player_action["reset_game"] = True
+            
+        if self.game.alpha == 255 and self.state == "restarting":
+            if not(player_action["reset_game"]):
+                player_action["transition"] =  False
+                self.end = False
+                self.game.win = False
+                self.game.defeat = False
+                self.state = "none"
+
 
     def ending_state(self, display):
         if self.game.defeat:
@@ -77,6 +81,23 @@ class State():
             current_button = norm_but
 
         display.blit(current_button, (button_rect.x, button_rect.y))
+
+    def button_go(self):
+        if self.game.exit_rect.collidepoint(self.game.mouse):
+            if pygame.mouse.get_pressed()[0] and not self.click:
+                self.exit_game = True
+                self.click = True
+            if not pygame.mouse.get_pressed()[0]:
+                self.exit_game = False
+                self.click = False
+
+        if self.game.restart_rect.collidepoint(self.game.mouse):
+            if pygame.mouse.get_pressed()[0] and not self.click:
+                self.restart_game = True
+                self.click = True
+            if not pygame.mouse.get_pressed()[0]:
+                self.restart_game = False
+                self.click = False
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self, game):
