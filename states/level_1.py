@@ -10,7 +10,7 @@ from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
 from particleeffect import *
-from random import choice, randint, uniform, shuffle
+from random import choice, randint, uniform
 
 
 
@@ -30,6 +30,10 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.pause = Pause(self.game)
         self.effect_time = 0
         self.cause_effect = True
+        self.pos = ((550, 300))
+        self.confetti_time = 0
+        self.confetti = True
+        self.victory = False
         self.ultimates()
         self.characters()
         self.load_health_bar()
@@ -86,19 +90,20 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
                     self.particle_group.update(deltatime)
                     
-                    if pygame.mouse.get_pressed()[0]:
-                        self.spawn_particles(100)
-                    # if self.enemy_defeat and self.cause_effect == False:
-                    #     self.effect_time += deltatime
-                    #     if self.effect_time < 3:
-                    #         self.spawn_exploding_particles(100)
-                    #     if self.effect_time > 3:
-                    #         self.effect_time = 0
-                    #         self.cause_effect = True
 
                     if self.cause_effect and self.enemy_defeat:
                         self.spawn_exploding_particles(800)
                         self.cause_effect = False
+
+                    if not self.cause_effect and self.confetti:
+                        self.confetti_time += deltatime
+                        if self.confetti_time > 2:
+                            self.victory = True
+                    print(self.effect_time)
+
+                    if self.victory == True:
+                        self.spawn_particles(100, deltatime)
+
 
                     if self.enemy1.HP <= 0:
                         self.enemy1.kill()
@@ -172,14 +177,36 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             speed = randint(25, 200)
             ExplodingParticle(self.particle_group, pos, color, direction, speed)
 
-    def spawn_particles(self, n: int):
+    def spawn_particles(self, n: int, deltatime):
         for _ in range(n):
-            pos = pygame.mouse.get_pos()
-            color = choice(("red", "green", "blue"))
+            spot1 = ((100,100))
+            spot2 = ((1050, 500))
+            spot3 = ((550, 200))
+            spot4 = ((150, 500))
+            spot5 = ((550, 450))
+            spot6 = ((820, 180))
+            if self.victory:
+                self.effect_time += deltatime
+                if self.effect_time > 10:
+                    self.pos = spot1
+                if self.effect_time > 20:
+                    self.pos = spot2
+                if self.effect_time > 30:
+                    self.pos = spot3
+                if self.effect_time > 40:
+                    self.pos = spot4
+                if self.effect_time > 50:
+                    self.pos = spot5
+                if self.effect_time > 60:
+                    self.pos = spot6
+                    self.confetti = False
+                    self.victory = False
+                    self.effect_time = 0
+            color = choice(("purple", "blue", "green", "red", "yellow"))
             direction = pygame.math.Vector2(uniform(-1, 1), uniform(-1, 1))
             direction = direction.normalize()
             speed = randint(50, 400)
-            Particle(self.particle_group, pos, color, direction, speed)
+            Particle(self.particle_group, self.pos, color, direction, speed)
 
     def defeat(self):
         pass
