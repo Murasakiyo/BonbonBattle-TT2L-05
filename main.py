@@ -15,7 +15,6 @@ class Game():
         self.screen = pygame.display.set_mode((self.SCREENWIDTH, self.SCREENHEIGHT))
         self.screen_rect = self.screen.get_rect()
         self.run, self.play = True, True
-        self.damaged = False
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
@@ -142,6 +141,7 @@ class Game():
     def ultimates(self):
         self.ult = False
         self.ult_finish = False
+        self.defeat = False
         
     
     # Transition screen between states
@@ -167,7 +167,10 @@ class Game():
         self.forest = pygame.image.load("sprites/backgrounds/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
         self.trees = pygame.image.load("sprites/asset_earlylvl.png").convert_alpha()
+        self.mount_asset = pygame.image.load("sprites/asset_lvl4.png").convert_alpha()
         self.forest2 = pygame.image.load("sprites/backgrounds/bg_lvl2.bmp").convert()
+        self.forest3 = pygame.image.load("sprites/backgrounds/bg_lvl3.bmp").convert()
+        self.mountain = pygame.image.load("sprites/backgrounds/bg_lvl4.bmp").convert()
 
 
     def save_data(self):

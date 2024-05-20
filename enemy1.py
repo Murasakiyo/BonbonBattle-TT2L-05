@@ -3,8 +3,8 @@ import spritesheet
 import math
 
 class FrogEnemy(pygame.sprite.Sprite):
-    def __init__(self, game, group):
-        super().__init__(group)
+    def __init__(self, game):
+        super().__init__()
         self.game = game
         self.load_sprites()
         self.rect = self.frog.get_rect(width= 150, height=165)   # Placeholder for enemy froggie 
@@ -29,6 +29,9 @@ class FrogEnemy(pygame.sprite.Sprite):
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
         
+        if self.game.reset_game:
+            self.enemy_reset()
+            self.game.reset_game = False
 
         # Tongue's position
         self.rect_draw = pygame.Rect(self.rect.centerx, self.rect.centery, 150, 20)

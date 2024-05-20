@@ -7,18 +7,22 @@ class Support():
     def update_movement(self, deltatime, player_action, player_x, player_y, animate):
         self.current_time += deltatime
 
+        if self.game.defeat:
+            self.attack = False
+            
         # Check player direction
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
         # Cooldown for attack
-        if self.current_time > 3:
-            self.attack = True
-            self.attack_cooldown += deltatime
-            if self.attack_cooldown > 0.8:
-                self.attack = False
-                self.attack_cooldown = 0
-                self.current_time = 0
+        if not self.game.defeat:
+            if self.current_time > 3:
+                self.attack = True
+                self.attack_cooldown += deltatime
+                if self.attack_cooldown > 0.8:
+                    self.attack = False
+                    self.attack_cooldown = 0
+                    self.current_time = 0
         
         # Move towards player always
         if not self.attack:
@@ -80,16 +84,18 @@ class Support():
                     self.current_anim_list =self.left_sprites
 
         # Walk animation after attacking
-        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]): 
+        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]) and not(self.attack): 
             self.current_anim_list = self.right_sprites
-        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]): 
+        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]) and not(self.attack): 
             self.current_anim_list = self.left_sprites
 
         # Support doll attacking animation
         if self.attack == True and (self.current_anim_list == self.right_sprites or self.current_anim_list == self.walk_right):
             self.fps = fps
+            self.current_frame = 0
             self.current_anim_list = self.attack_right
 
         if self.attack == True and (self.current_anim_list == self.left_sprites or self.current_anim_list == self.walk_left):
             self.fps = fps
+            self.current_frame = 0
             self.current_anim_list = self.attack_left
