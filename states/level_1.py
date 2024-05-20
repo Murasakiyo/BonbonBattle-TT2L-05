@@ -174,9 +174,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
     def spawn_particles(self, n: int):
         for _ in range(n):
-            list = [(500, 500), (100, 500), (40, 60), (300, 100)]
-            shuffle(list)
-            pos = list[0]
+            pos = pygame.mouse.get_pos()
             color = choice(("red", "green", "blue"))
             direction = pygame.math.Vector2(uniform(-1, 1), uniform(-1, 1))
             direction = direction.normalize()
