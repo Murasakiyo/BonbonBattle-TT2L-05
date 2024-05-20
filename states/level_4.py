@@ -110,11 +110,11 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.camera.custom_draw(display)
         self.enemy3.render(display)
         display.blit(pygame.transform.scale(self.game.mount_asset, (1200,600)), (-60,0))
-        
+
+        self.particle_group.draw(display)
         self.health_render(display)
         self.moxie_render(display)
         self.boss_health_render(display)
-        self.particle_group.draw(display)
         
         self.ultimate_display(display)
     
