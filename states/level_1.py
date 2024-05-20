@@ -102,7 +102,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     print(self.effect_time)
 
                     if self.victory == True:
-                        self.spawn_particles(100, deltatime)
+                        self.spawn_particles(400, deltatime)
 
 
                     if self.enemy1.HP <= 0:
