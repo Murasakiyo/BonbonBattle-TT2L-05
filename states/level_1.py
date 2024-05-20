@@ -9,6 +9,8 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
+from particleeffect import *
+from random import choice, randint, uniform, shuffle
 
 
 
@@ -21,10 +23,13 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.support_dolls = pygame.sprite.Group()
         self.attack_group = pygame.sprite.Group()
         self.body_group = pygame.sprite.Group()
+        self.particle_group = pygame.sprite.Group()
         self.enemy1 = FrogEnemy(self.game)
         self.tongue = Tongue(self.game)
         self.tongue2 = Tongue2(self.game)
         self.pause = Pause(self.game)
+        self.effect_time = 0
+        self.cause_effect = True
         self.ultimates()
         self.characters()
         self.load_health_bar()
@@ -79,6 +84,22 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     self.health_update()
                     self.moxie_update(player_action)
 
+                    self.particle_group.update(deltatime)
+                    
+                    if pygame.mouse.get_pressed()[0]:
+                        self.spawn_particles(100)
+                    # if self.enemy_defeat and self.cause_effect == False:
+                    #     self.effect_time += deltatime
+                    #     if self.effect_time < 3:
+                    #         self.spawn_exploding_particles(100)
+                    #     if self.effect_time > 3:
+                    #         self.effect_time = 0
+                    #         self.cause_effect = True
+
+                    if self.cause_effect and self.enemy_defeat:
+                        self.spawn_exploding_particles(800)
+                        self.cause_effect = False
+
                     if self.enemy1.HP <= 0:
                         self.enemy1.kill()
                         self.tongue.kill()
@@ -99,6 +120,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             self.add_ultimate(deltatime, player_action)
         else:
             self.game.start_timer()
+
+
 
 
     def render(self, display):
@@ -125,18 +148,40 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         
         self.health_render(display)
         self.moxie_render(display)
+        self.particle_group.draw(display)
+
 
         if not(self.enemy1.HP <= 0):
             self.enemy_health_render(display, self.enemy1.rect.x, self.enemy1.rect.y)
 
 
         self.ultimate_display(display)
+
     
         if self.game.start == False:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
 
+    def spawn_exploding_particles(self, n: int):
+        for _ in range(n):
+            pos = (self.enemy1.rect.center[0], self.enemy1.rect.center[1] + 82.5)
+            color = choice(("purple", "blue", "green", "red", "yellow"))
+            direction = pygame.math.Vector2(uniform(-0.2, 0.2), uniform(-1, 0))
+            direction = direction.normalize()
+            speed = randint(25, 200)
+            ExplodingParticle(self.particle_group, pos, color, direction, speed)
+
+    def spawn_particles(self, n: int):
+        for _ in range(n):
+            list = [(500, 500), (100, 500), (40, 60), (300, 100)]
+            shuffle(list)
+            pos = list[0]
+            color = choice(("red", "green", "blue"))
+            direction = pygame.math.Vector2(uniform(-1, 1), uniform(-1, 1))
+            direction = direction.normalize()
+            speed = randint(50, 400)
+            Particle(self.particle_group, pos, color, direction, speed)
 
     def defeat(self):
         pass

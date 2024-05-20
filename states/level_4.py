@@ -9,6 +9,8 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
+from particleeffect import *
+from random import choice, randint, uniform
 
 
 class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
@@ -28,6 +30,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.support_dolls = pygame.sprite.Group()
         self.enemy3 = Enemy3(self.game, self.camera)
         self.enemy_group = pygame.sprite.Group()
+        self.particle_group = pygame.sprite.Group()
         
 
         self.ultimates()
@@ -67,6 +70,9 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect.x)
                     self.snake_attacked(deltatime, player_action, self.enemy_group, self.enemy3, self.enemy3.body_damage)
                     self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
+
+                    self.particle_group.update(deltatime)
+                    self.snow_particles(2)
                     
                     for minions in self.enemy3.minionlist.sprites():
                         self.minion_collisions(deltatime, player_action, self.enemy3.minionlist, self.enemy3.minionlist, minions, minions.damage)
@@ -108,6 +114,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.health_render(display)
         self.moxie_render(display)
         self.boss_health_render(display)
+        self.particle_group.draw(display)
         
         self.ultimate_display(display)
     
@@ -115,3 +122,14 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
+
+
+    def snow_particles(self, n: int):
+        for _ in range(n):
+            pos = ((randint(0, 1100)), 0)
+            color = "white"
+            direction = pygame.math.Vector2(0, 1)
+            direction = direction.normalize()
+            speed = randint(25, 200)
+            Snow(self.particle_group, pos, color, direction, speed)
+
