@@ -34,12 +34,19 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         self.attack_group.add(self.tongue, self.tongue2)
         self.body_group.add(self.enemy1)
+
+        self.current_time, self.end_time = 0,0
         self.moxie_points = 0
         self.swarming = True
         self.swamping = False
         self.enemy_defeat = False
         self.enemyflies_defeat = False
 
+        self.end = False
+        self.exit_game = False
+        self.restart_game = False
+        self.click = False
+        self.state = "none"
        
 
 
@@ -66,7 +73,12 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.fly_swarm.flies_spawn()
             self.game.reset_game = False
 
-        self.game_over(deltatime, player_action)
+        if self.end:
+            self.button_go()
+
+        self.game_over(player_action)
+        self.game_restart(player_action)
+        self.ending_options(deltatime, player_action)
 
         if self.game.start == True:
             if self.game.ult == False:

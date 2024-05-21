@@ -29,9 +29,6 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.enemy4 = Enemy5(self.game, self.player.rect.centerx, self.player.rect.centery)
 
 
-
-
-
     def update(self, deltatime, player_action):
         # print(int(self.enemy2.flies.rect.x-self.player.rect.x))
 
