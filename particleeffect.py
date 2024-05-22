@@ -65,7 +65,7 @@ class Particle(pygame.sprite.Sprite):
         self.direction = direction
         self.speed = speed 
         self.alpha = 255
-        self.fade_speed = 50
+        self.fade_speed = 400
         self.size = 4
         self.angle = 0
 

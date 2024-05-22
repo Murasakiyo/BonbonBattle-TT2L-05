@@ -102,7 +102,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     print(pygame.mouse.get_pos())
 
                     if self.victory == True:
-                        self.spawn_particles(100, deltatime)
+                        self.spawn_particles(200, deltatime)
 
 
                     if self.enemy1.HP <= 0:
@@ -178,35 +178,37 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             ExplodingParticle(self.particle_group, pos, color, direction, speed, self.game)
 
     def spawn_particles(self, n: int, deltatime):
-        for _ in range(n):
-            spot1 = ((100,100))
-            spot2 = ((1050, 500))
-            spot3 = ((550, 200))
-            spot4 = ((150, 500))
-            spot5 = ((550, 450))
-            spot6 = ((820, 180))
-            spot7 = ((900, 50))
-            if self.victory:
-                self.effect_time += deltatime
-                if self.effect_time > 10:
-                    self.pos = spot1
-                if self.effect_time > 20:
-                    self.pos = spot2
-                if self.effect_time > 30:
-                    self.pos = spot3
-                if self.effect_time > 40:
-                    self.pos = spot4
-                if self.effect_time > 50:
-                    self.pos = spot5
-                if self.effect_time > 60:
-                    self.pos = spot6
-                if self.effect_time > 70:
-                    self.pos = spot7
-                    self.confetti = False
-                    self.victory = False
-                    self.effect_time = 0
+        # for _ in range(n):
+            # spot1 = ((100,100))
+            # spot2 = ((1050, 500))
+            # spot3 = ((550, 200))
+            # spot4 = ((150, 500))
+            # spot5 = ((550, 450))
+            # spot6 = ((820, 180))
+            # spot7 = ((900, 50))
+            # if self.victory:
+            #     self.effect_time += deltatime
+            #     if self.effect_time > 10:
+            #         self.pos = spot1
+            #     if self.effect_time > 20:
+            #         self.pos = spot2
+            #     if self.effect_time > 30:
+            #         self.pos = spot3
+            #     if self.effect_time > 40:
+            #         self.pos = spot4
+            #     if self.effect_time > 50:
+            #         self.pos = spot5
+            #     if self.effect_time > 60:
+            #         self.pos = spot6
+            #     if self.effect_time > 70:
+            #         self.pos = spot7
+                    # self.confetti = False
+                    # self.victory = False
+                    # self.effect_time = 0
+            self.effect_time += deltatime
+            self.pos = ((randint(0, 1100)), 0)
             color = choice(("purple", "blue", "green", "red", "yellow"))
-            direction = pygame.math.Vector2(uniform(-1, 1), uniform(-1, 1))
+            direction = pygame.math.Vector2(0,1)
             direction = direction.normalize()
             speed = randint(50, 400)
             Particle(self.particle_group, self.pos, color, direction, speed, self.game)
