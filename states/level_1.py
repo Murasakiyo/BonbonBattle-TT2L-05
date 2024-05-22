@@ -99,7 +99,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                         self.confetti_time += deltatime
                         if self.confetti_time > 2:
                             self.victory = True
-                    print(self.effect_time)
+                    print(pygame.mouse.get_pos())
 
                     if self.victory == True:
                         self.spawn_particles(100, deltatime)
@@ -185,6 +185,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             spot4 = ((150, 500))
             spot5 = ((550, 450))
             spot6 = ((820, 180))
+            spot7 = ((900, 50))
             if self.victory:
                 self.effect_time += deltatime
                 if self.effect_time > 10:
@@ -199,6 +200,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     self.pos = spot5
                 if self.effect_time > 60:
                     self.pos = spot6
+                if self.effect_time > 70:
+                    self.pos = spot7
                     self.confetti = False
                     self.victory = False
                     self.effect_time = 0
