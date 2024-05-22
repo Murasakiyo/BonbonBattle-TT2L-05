@@ -92,7 +92,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     
 
                     if self.cause_effect and self.enemy_defeat:
-                        self.spawn_exploding_particles(800)
+                        self.spawn_exploding_particles(100)
                         self.cause_effect = False
 
                     if not self.cause_effect and self.confetti:
@@ -102,7 +102,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     print(self.effect_time)
 
                     if self.victory == True:
-                        self.spawn_particles(400, deltatime)
+                        self.spawn_particles(100, deltatime)
 
 
                     if self.enemy1.HP <= 0:
@@ -174,8 +174,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             color = choice(("purple", "blue", "green", "red", "yellow"))
             direction = pygame.math.Vector2(uniform(-0.2, 0.2), uniform(-1, 0))
             direction = direction.normalize()
-            speed = randint(25, 200)
-            ExplodingParticle(self.particle_group, pos, color, direction, speed)
+            speed = randint(75, 600)
+            ExplodingParticle(self.particle_group, pos, color, direction, speed, self.game)
 
     def spawn_particles(self, n: int, deltatime):
         for _ in range(n):
@@ -206,7 +206,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             direction = pygame.math.Vector2(uniform(-1, 1), uniform(-1, 1))
             direction = direction.normalize()
             speed = randint(50, 400)
-            Particle(self.particle_group, self.pos, color, direction, speed)
+            Particle(self.particle_group, self.pos, color, direction, speed, self.game)
 
     def defeat(self):
         pass

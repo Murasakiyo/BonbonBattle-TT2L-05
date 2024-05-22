@@ -1,5 +1,5 @@
 import pygame
-from random import randint
+from random import randint, choice
 
 class Particle(pygame.sprite.Sprite):
     def __init__(self, 
@@ -7,24 +7,42 @@ class Particle(pygame.sprite.Sprite):
                pos: list[int], 
                color: str, 
                direction: pygame.math.Vector2, 
-               speed: int):
+               speed: int,
+               display):
         super().__init__(groups)
         self.pos = pos
         self.color = color
         self.direction = direction
         self.speed = speed 
+        self.display = display
         self.alpha = 255
-        self.fade_speed = 200
+        self.fade_speed = 20
         self.size = 4
+        self.angle = 0
 
         self.create_surf()
 
 
     def create_surf(self):
-        self.image = pygame.Surface((self.size, self.size)).convert_alpha()
-        self.image.set_colorkey("black")
-        pygame.draw.circle(surface = self.image, color = self.color, center = (self.size/2, self.size/2), radius = self.size/2)
+        self.surface = pygame.Surface((self.size, self.size)).convert_alpha()
+        self.surface.set_alpha(0)
+        self.pic1 = pygame.image.load("sprites/red.png").convert_alpha()
+        self.pic2 = pygame.image.load("sprites/yellow.png").convert_alpha()
+        self.pic3 = pygame.image.load("sprites/pink.png").convert_alpha()
+        self.pic4 = pygame.image.load("sprites/blue.png").convert_alpha()
+        self.confetti = choice((self.pic1, self.pic2, self.pic3, self.pic4))
+        self.image_set = self.confetti
+        self.rotate()
+        # self.image = pygame.transform.rotate(self.confetti, self.spin)
+        pygame.Surface.blit(self.display, self.image, self.pos)
         self.rect = self.image.get_rect(center = self.pos)
+
+    def rotate(self):
+        self.angle += 1
+        if self.angle > 360:
+            self.angle = 0
+        self.image = pygame.transform.rotate(self.image_set, self.angle - 90)
+
 
     def move(self, dt):
         self.pos += self.direction * self.speed * dt
@@ -51,6 +69,7 @@ class Particle(pygame.sprite.Sprite):
         self.fade(dt)
         self.check_pos()
         self.check_alpha()
+        self.rotate()
 
 
 class ExplodingParticle(Particle):
@@ -93,11 +112,11 @@ class ExplodingParticle(Particle):
         self.check_size()
         self.check_alpha()
 
-class FloatingParticle(Particle):
-    def __init__(self, 
-               groups: pygame.sprite.Group, 
-               pos: list[int], 
-               color: str, 
-               direction: pygame.math.Vector2, 
-               speed: int):
-        super().__init__(groups, pos, color, direction, speed)
+# class FloatingParticle(Particle):
+#     def __init__(self, 
+#                groups: pygame.sprite.Group, 
+#                pos: list[int], 
+#                color: str, 
+#                direction: pygame.math.Vector2, 
+#                speed: int):
+#         super().__init__(groups, pos, color, direction, speed, )

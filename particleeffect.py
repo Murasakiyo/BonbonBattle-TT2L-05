@@ -1,5 +1,5 @@
 import pygame
-from random import randint
+from random import randint, choice
 
 class Snow(pygame.sprite.Sprite):
     def __init__(self, 
@@ -56,24 +56,41 @@ class Particle(pygame.sprite.Sprite):
                pos: list[int], 
                color: str, 
                direction: pygame.math.Vector2, 
-               speed: int):
+               speed: int,
+               game):
         super().__init__(groups)
+        self.game = game
         self.pos = pos
         self.color = color
         self.direction = direction
         self.speed = speed 
         self.alpha = 255
-        self.fade_speed = 200
+        self.fade_speed = 50
         self.size = 4
+        self.angle = 0
 
         self.create_surf()
 
 
     def create_surf(self):
-        self.image = pygame.Surface((self.size, self.size)).convert_alpha()
-        self.image.set_colorkey("black")
-        pygame.draw.circle(surface = self.image, color = self.color, center = (self.size/2, self.size/2), radius = self.size/2)
+        self.surface = pygame.Surface((self.size, self.size)).convert_alpha()
+        self.surface.set_alpha(0)
+        self.pic1 = pygame.image.load("sprites/red.png").convert_alpha()
+        self.pic2 = pygame.image.load("sprites/yellow.png").convert_alpha()
+        self.pic3 = pygame.image.load("sprites/pink.png").convert_alpha()
+        self.pic4 = pygame.image.load("sprites/blue.png").convert_alpha()
+        self.confetti = choice((self.pic1, self.pic2, self.pic3, self.pic4))
+        self.image_set = self.confetti
+        self.rotate()
+        # self.image = pygame.transform.rotate(self.confetti, self.spin)
+        pygame.Surface.blit(self.game.screen, self.image, self.pos)
         self.rect = self.image.get_rect(center = self.pos)
+
+    def rotate(self):
+        self.angle += 10
+        if self.angle > 360:
+            self.angle = 0
+        self.image = pygame.transform.rotate(self.image_set, self.angle - 90)
 
     def move(self, dt):
         self.pos += self.direction * self.speed * dt
@@ -100,6 +117,7 @@ class Particle(pygame.sprite.Sprite):
         self.fade(dt)
         self.check_pos()
         self.check_alpha()
+        self.rotate()
 
 class ExplodingParticle(Particle):
     def __init__(self, 
@@ -107,15 +125,17 @@ class ExplodingParticle(Particle):
                pos: list[int], 
                color: str, 
                direction: pygame.math.Vector2, 
-               speed: int):
-        super().__init__(groups, pos, color, direction, speed)
+               speed: int,
+               game):
+        self.game = game
+        super().__init__(groups, pos, color, direction, speed, self.game)
         self.t0 = pygame.time.get_ticks()
         self.lifetime = randint(1000, 1200)
         self.exploding = False
         self.size = 4
         self.max_size = 50
         self.inflate_speed = 500
-        self.fade_speed = 3000
+        self.fade_speed = 400
 
     def explosion_timer(self):
         t = pygame.time.get_ticks()
@@ -135,7 +155,7 @@ class ExplodingParticle(Particle):
         self.explosion_timer()
         if self.exploding:
             self.inflate(dt)
-            self.fade(dt)
+        self.fade(dt)
 
         self.check_pos()
         self.check_size()
