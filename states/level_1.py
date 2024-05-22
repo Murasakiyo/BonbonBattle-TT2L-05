@@ -95,11 +95,14 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                         self.spawn_exploding_particles(100)
                         self.cause_effect = False
 
+                    if pygame.mouse.get_pressed()[0]:
+                        self.spawn_exploding_particles(100)
+
                     if not self.cause_effect and self.confetti:
                         self.confetti_time += deltatime
                         if self.confetti_time > 2:
                             self.victory = True
-                    print(pygame.mouse.get_pos())
+                    # print(pygame.mouse.get_pos())
 
                     if self.victory == True:
                         self.spawn_particles(200, deltatime)

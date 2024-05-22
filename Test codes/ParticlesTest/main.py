@@ -28,7 +28,7 @@ def spawn_exploding_particles(n: int):
         direction = pygame.math.Vector2(uniform(-0.2, 0.2), uniform(-1, 0))
         direction = direction.normalize()
         speed = randint(50, 400)
-        ExplodingParticle(particle_group, pos, color, direction, speed)
+        ExplodingParticle(particle_group, pos, color, direction, speed, display_surface)
 
 # def spawn_floating_particles():
 #     init_pos = pygame.mouse.get_pos()
@@ -49,7 +49,7 @@ def main_loop():
                 if pygame.mouse.get_pressed()[0]:
                     spawn_particles(50)
                 elif pygame.mouse.get_pressed()[2]:
-                    spawn_exploding_particles(1000)
+                    spawn_exploding_particles(100)
             # if event.type == floating_particle_timer:
             #     spawn_floating_particles()
 

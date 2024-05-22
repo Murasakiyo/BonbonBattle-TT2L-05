@@ -16,7 +16,7 @@ class Particle(pygame.sprite.Sprite):
         self.speed = speed 
         self.display = display
         self.alpha = 255
-        self.fade_speed = 20
+        self.fade_speed = 200
         self.size = 4
         self.angle = 0
 
@@ -66,10 +66,11 @@ class Particle(pygame.sprite.Sprite):
 
     def update(self, dt):
         self.move(dt)
-        self.fade(dt)
         self.check_pos()
         self.check_alpha()
         self.rotate()
+        self.fade(dt)
+
 
 
 class ExplodingParticle(Particle):
@@ -78,8 +79,10 @@ class ExplodingParticle(Particle):
                pos: list[int], 
                color: str, 
                direction: pygame.math.Vector2, 
-               speed: int):
-        super().__init__(groups, pos, color, direction, speed)
+               speed: int,
+               display):
+        self.display = display
+        super().__init__(groups, pos, color, direction, speed, display)
         self.t0 = pygame.time.get_ticks()
         self.lifetime = randint(1000, 1200)
         self.exploding = False
@@ -103,14 +106,14 @@ class ExplodingParticle(Particle):
 
     def update(self, dt):
         self.move(dt)
-        self.explosion_timer()
-        if self.exploding:
-            self.inflate(dt)
-            self.fade(dt)
-
         self.check_pos()
         self.check_size()
         self.check_alpha()
+
+        self.explosion_timer()
+        # if self.exploding:
+        #     self.inflate(dt)
+        self.fade(dt)
 
 # class FloatingParticle(Particle):
 #     def __init__(self, 
