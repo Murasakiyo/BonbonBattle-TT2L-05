@@ -7,16 +7,16 @@ class FrogEnemy(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.load_sprites()
-        self.rect = self.frog.get_rect(width= 150, height=165)   # Placeholder for enemy froggie 
+        self.rect = self.frog.get_rect(width= 150, height=165)
         self.frog_mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.frog_mask.to_surface()
         self.rect.x, self.rect.y = 700,200
-        self.tongue = Tongue(self.game)  # Placeholder for tongue
+        self.tongue = Tongue(self.game)
         self.color = (255,255,255)
         self.current_time = 0
         self.attack = False
         self.attack_cooldown = 0 
-        self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0 #animation
+        self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
         self.fps = 0.05
         self.speed = 4
         self.stop = False
@@ -139,7 +139,7 @@ class FrogEnemy(pygame.sprite.Sprite):
 
         # Load frog sprite
         frog = pygame.image.load("sprites/frog_enemy.png").convert()
-        self.frog = pygame.transform.scale(frog, (1175, 525)).convert_alpha() #Note for Yaro: 1175,525 - 25% of the initial sprite png
+        self.frog = pygame.transform.scale(frog, (1175, 525)).convert_alpha()
         SP = spritesheet.Spritesheet(self.frog)   
   
         # Walking sprites 

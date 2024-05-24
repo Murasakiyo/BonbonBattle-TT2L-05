@@ -9,6 +9,7 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
+from currency import Sugarcube
 
 
 
@@ -36,6 +37,14 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.body_group.add(self.enemy1)
         self.moxie_points = 0
         self.enemy_defeat = False
+
+        # self.sugarcube = Sugarcube(self.game)
+        # self.camera.add(self.sugarcube)
+        self.sugarcube_list = pygame.sprite.Group()
+        for _ in range(5):
+            sugarcube = Sugarcube(self.game)
+            self.sugarcube_list.add(sugarcube)
+            self.camera.add(sugarcube)
 
 
     def update(self, deltatime, player_action):
@@ -94,11 +103,15 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     self.game.defeat = True
                     player_action["ultimate"] = False
                     
-                
-
             self.add_ultimate(deltatime, player_action)
         else:
             self.game.start_timer()
+
+        self.sugarcube_list.update()
+        for sugarcube in self.sugarcube_list:
+            if sugarcube.rect.colliderect(self.player.rect):
+                sugarcube.collect(self.player)
+
 
 
     def render(self, display):
@@ -137,6 +150,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
 
+        self.sugarcube_list.draw(display)
 
     def defeat(self):
         pass
