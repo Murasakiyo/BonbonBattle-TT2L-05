@@ -35,8 +35,6 @@ class Level_Options(State):
 
     def update(self, deltatime, player_action):
 
-        
-
         self.show_bg = self.current_background
         self.bg_transition(player_action)
         self.update_keys(player_action, deltatime)

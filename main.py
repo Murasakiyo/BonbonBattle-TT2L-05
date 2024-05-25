@@ -4,6 +4,7 @@ from states.menu import MainMenu
 from torres import *
 from states.level_4 import Quad_Stage
 from states.pause_menu import Pause
+from states.first_cutscene import Story
 # from parent_classes.ultimate_action import *
 from savingsystem import *
 
@@ -25,8 +26,9 @@ class Game():
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
-                              "ultimate": False, "transition": False, "go": False, "pause": False, "reset_game":False} 
+                              "ultimate": False, "transition": False, "go": False, "pause": False, "reset_game":False, "next": False} 
     
+        self.cutscene = {"Intro": False}
         self.state_stack = []
         self.load_states()
         self.ultimates()
@@ -76,6 +78,8 @@ class Game():
                     self.player_action["go"] = True
                 if event.key == pygame.K_BACKSPACE:
                     self.player_action["pause"] = True
+                if event.key == pygame.K_SPACE:
+                    self.player_action["next"] = True
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
@@ -94,6 +98,8 @@ class Game():
                     self.player_action["go"] = False
                 if event.key == pygame.K_BACKSPACE:
                     self.player_action["pause"] = False
+                if event.key == pygame.K_SPACE:
+                    self.player_action["next"] = False
         
    
     # Updates the state stack
@@ -129,7 +135,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = MainMenu(self)
+        self.title_screen = Story(self)
         self.state_stack.append(self.title_screen)
 
     # Reset all player keys
@@ -164,7 +170,7 @@ class Game():
         if int(self.countdown - self.current_time) == 0:
             self.start = True
             self.current_time = 0
-        
+          
     def backgrounds(self):
         self.forest = pygame.image.load("sprites/backgrounds/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
@@ -205,6 +211,8 @@ class Game():
         self.current_exit = self.exit
         self.current_restart = self.restart
 
+    
+    
 
     def save_data(self):
         self.saving_system.save_data_file(self.player)

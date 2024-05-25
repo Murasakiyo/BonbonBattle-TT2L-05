@@ -6,16 +6,13 @@ class Support():
 
     def update_movement(self, deltatime, player_action, player_x, player_y, animate):
         self.current_time += deltatime
-
-        if self.game.defeat or self.game.win:
-            self.attack = False
-            
+        
         # Check player direction
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
         # Cooldown for attack
-        if not self.game.defeat:
+        if not self.game.defeat and not self.game.win:
             if self.current_time > 3:
                 self.attack = True
                 self.attack_cooldown += deltatime
