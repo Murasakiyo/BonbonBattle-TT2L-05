@@ -29,8 +29,11 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.characters()
         self.load_health_bar()
         self.load_moxie_bar()
+        self.enemy4 = Enemy4(self.game, self.player.rect.centerx, self.player.rect.centery)
 
-        self.enemy4 = Enemy5(self.game, self.player.rect.centerx, self.player.rect.centery)
+
+        self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
+
 
 
 
@@ -48,9 +51,12 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
                 self.health_update()
                 self.moxie_update(player_action)
+                self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
 
                 self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery)
                 self.update_ultimate(deltatime, player_action)
+
+               
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -67,7 +73,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         self.health_render(display)
         self.moxie_render(display)
-
+        self.boss_health_render(display)
         
         self.ultimate_display(display)
     
@@ -75,3 +81,4 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
+
