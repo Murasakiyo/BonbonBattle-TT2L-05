@@ -33,7 +33,7 @@ class Game():
         self.load_states()
         self.ultimates()
 
-        self.player = Player(self, pygame.sprite.Group(), 200, 200)
+        self.player = Player(self, 200, 200)
         self.saving_system = SaveDataSystem('player_data.pickle', self.player)
         self.load_data() # load saved data when start a game
 

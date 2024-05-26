@@ -27,7 +27,10 @@ class Dialogue():
 
 
     def dialogue_update(self, player_action):
-        self.message2 = self.text[self.activetext + 1]
+        if not(self.activetext >= len(self.text) - 1):
+            self.message2 = self.text[self.activetext + 1]
+        else:
+            self.message2 = self.text[self.activetext]
         print(f"activetext:{self.activetext}")
         print(f"requirements:{len(self.text) - 1}")
         
@@ -46,8 +49,11 @@ class Dialogue():
         if self.done:
             self.next = True
 
-        if player_action["next"] and self.doneall and self.activetext < len(self.text) - 2:
-            self.activetext += 2
+        if player_action["next"] and self.doneall and self.activetext < len(self.text) - 1:
+            if not(self.activetext >= len(self.text) - 2):
+                self.activetext += 2
+            else:
+                self.activetext += 1
             self.done = False
             self.next = False
             self.doneall = False
@@ -57,13 +63,12 @@ class Dialogue():
             player_action["next"] = False
         
 
-
-
     def draw_text(self,display):
         # print(list(self.message2))
         display.blit(self.box, (self.box_rect.x, self.box_rect.y))
     
         self.snip = self.font.render(self.message[0:self.counter//self.speed], True, self.color)
+        self.space = self.font.render("[SPACE]", True, "Blue")
 
         if self.activetext != len(self.text) - 1:
             display.blit(self.snip, (self.pos[0]+30, self.pos[1]+30))
@@ -71,20 +76,21 @@ class Dialogue():
                 self.snip2 = self.font.render(self.message2[0:self.counter2//self.speed], True, self.color)
                 display.blit(self.snip2, (self.pos[0]+30, self.pos[1] + 60))
 
+        if self.doneall and self.activetext < len(self.text) - 1:
+            display.blit(self.space, (self.pos[0]+580, self.pos[1] + 150))
+
         if self.activetext >= len(self.text) - 1:
-            self.pos[1] += 30
+            self.pos[1] += 10 * 1.2
 
     
     def dialogue(self, filename):
-        self.open_file = open(filename)
+        self.open_file = open(f"texts/{filename}")
         self.intro = self.open_file.readlines()
         print(self.intro)
 
         for x in range(len(self.intro)):
             self.intro[x] = self.intro[x].strip()
         self.intro.append(" ")
-        # self.intro.append(" ")
-        # self.intro.append(" ")
         self.open_file.close()
 
             

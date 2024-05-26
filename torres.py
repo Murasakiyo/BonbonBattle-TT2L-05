@@ -4,8 +4,8 @@ import copy
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game, group, position_x, position_y):
-        super().__init__(group)
+    def __init__(self, game, position_x, position_y):
+        super().__init__()
         self.game = game
         self.current_time = 0
         self.attack = False
@@ -38,7 +38,6 @@ class Player(pygame.sprite.Sprite):
 
     def update(self,deltatime,player_action):
         
-        print(self.win)
         if self.game.defeat and not(self.game.win):
             self.lose = True
         else:
@@ -103,9 +102,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.speed * deltatime * direction_x 
         self.rect.y += (self.speed + 50) * deltatime * direction_y
 
-##################################################################################
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
-        # self.enemy1_collision = [((self.rect.midleft[0] - 100, self.rect.midleft[1]), (self.rect.midright[0] + 100, self.rect.midright[1]))]
 
         # print(self.collide_time)
         # print(self.collide)

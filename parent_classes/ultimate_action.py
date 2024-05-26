@@ -56,11 +56,12 @@ class Ults():
 
 
     def characters(self):
-        self.player = Player(self.game, self.camera, 200,200) 
+        self.player = Player(self.game, 200,200) 
         self.louie = Louie(self.game) 
         self.stan = Stanley(self.game) 
         self.krie = Krie(self.game)
 
+        self.camera.add(self.player)
         # Initiation of a specific support doll
         self.init_stan = False
         self.init_louie = False
