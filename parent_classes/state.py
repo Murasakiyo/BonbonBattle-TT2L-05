@@ -21,7 +21,6 @@ class State():
         self.game.state_stack.pop(x) 
 
     def game_over(self,player_action):
-
         if self.exit_game:
             player_action["transition"] = True
             self.state = "exiting"
@@ -123,5 +122,7 @@ class CameraGroup(pygame.sprite.Group):
 
     def custom_draw(self, display):
         for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
+            sprite.rect.clamp_ip(self.game.screen_rect)
             display.blit(sprite.image, sprite.rect)
+
             

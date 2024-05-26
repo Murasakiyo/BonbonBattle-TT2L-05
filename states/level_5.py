@@ -56,7 +56,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.camera.custom_draw(display)
 
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
-        self.player.render(display)
+        # self.player.render(display)
         self.enemy4.render(display)
 
         self.health_render(display)

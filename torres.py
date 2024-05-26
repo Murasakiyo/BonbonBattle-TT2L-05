@@ -61,7 +61,7 @@ class Player(pygame.sprite.Sprite):
         direction_y = player_action["down"] - player_action["up"]
 
         # collision with the screen
-        self.rect.clamp_ip(self.game.screen_rect)
+        # self.rect.clamp_ip(self.game.screen_rect)
         
 
         # Check for defense button
@@ -128,7 +128,10 @@ class Player(pygame.sprite.Sprite):
         for line in self.horiz_line:
             pygame.draw.line(display, "white", *line)
             
-        # pygame.draw.rect(display, self.color, self.rect_draw)
+
+    def render_camera(self, display, camera):
+        display.blit(self.image, (self.rect.x - camera.offset.x, self.rect.y - camera.offset.y))
+
 
     def player_stats(self):
         self.healthpoints = 100
