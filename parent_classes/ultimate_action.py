@@ -60,7 +60,6 @@ class Ults():
         self.louie = Louie(self.game) 
         self.stan = Stanley(self.game) 
         self.krie = Krie(self.game)
-
         self.camera.add(self.player)
         # Initiation of a specific support doll
         self.init_stan = False

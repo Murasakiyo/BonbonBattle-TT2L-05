@@ -5,6 +5,7 @@ from torres import *
 from states.level_4 import Quad_Stage
 from states.pause_menu import Pause
 from states.first_cutscene import Story
+from states.lounge import Lounge
 # from parent_classes.ultimate_action import *
 from savingsystem import *
 
@@ -135,7 +136,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = Story(self)
+        self.title_screen = Lounge(self)
         self.state_stack.append(self.title_screen)
 
     # Reset all player keys

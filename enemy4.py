@@ -23,9 +23,7 @@ class Enemy5(pygame.sprite.Sprite):
 
 
     def update(self, deltatime, player_action, player_x, player_y):
-        direction_x = player_action["right"] - player_action["left"]
-        direction_y = player_action["down"] - player_action["up"]
-
+       
         self.string_extension(deltatime, player_x, player_y)
         self.placement(deltatime)
         self.move_towards_player(self.pos_x, self.pos_y)
