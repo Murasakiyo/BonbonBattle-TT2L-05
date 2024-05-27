@@ -10,11 +10,10 @@ from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
 from particleeffect import *
-from random import choice, randint, uniform
 
 
 
-class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
+class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions):
     def __init__(self, game):
         super().__init__(game)
         # Sprite groups
@@ -92,11 +91,11 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     
 
                     if self.cause_effect and self.enemy_defeat:
-                        self.spawn_exploding_particles(100)
+                        self.spawn_exploding_particles(100, self.enemy1)
                         self.cause_effect = False
 
                     if pygame.mouse.get_pressed()[0]:
-                        self.spawn_exploding_particles(100)
+                        self.spawn_exploding_particles(100, self.enemy1)
 
                     if not self.cause_effect and self.confetti:
                         self.confetti_time += deltatime
@@ -170,24 +169,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
-
-    def spawn_exploding_particles(self, n: int):
-        for _ in range(n):
-            pos = (self.enemy1.rect.center[0], self.enemy1.rect.center[1] + 82.5)
-            color = choice(("purple", "blue", "green", "red", "yellow"))
-            direction = pygame.math.Vector2(uniform(-0.2, 0.2), uniform(-1, 0))
-            direction = direction.normalize()
-            speed = randint(75, 600)
-            ExplodingParticle(self.particle_group, pos, color, direction, speed, self.game)
-
-    def spawn_particles(self, n: int, deltatime):
-            self.effect_time += deltatime
-            self.pos = ((randint(0, 1100)), 0)
-            color = choice(("purple", "blue", "green", "red", "yellow"))
-            direction = pygame.math.Vector2(0,1)
-            direction = direction.normalize()
-            speed = randint(50, 400)
-            Particle(self.particle_group, self.pos, color, direction, speed, self.game)
 
     def defeat(self):
         pass

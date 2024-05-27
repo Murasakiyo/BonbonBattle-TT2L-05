@@ -33,6 +33,7 @@ class Particle(pygame.sprite.Sprite):
         self.confetti = choice((self.pic1, self.pic2, self.pic3, self.pic4))
         self.image_set = self.confetti
         self.rotate()
+        self.image = pygame.transform.scale(self.image_set, (self.size, self.size))
         # self.image = pygame.transform.rotate(self.confetti, self.spin)
         pygame.Surface.blit(self.display, self.image, self.pos)
         self.rect = self.image.get_rect(center = self.pos)
@@ -89,7 +90,7 @@ class ExplodingParticle(Particle):
         self.size = 4
         self.max_size = 50
         self.inflate_speed = 500
-        self.fade_speed = 3000
+        self.fade_speed = 300
 
     def explosion_timer(self):
         t = pygame.time.get_ticks()
@@ -111,9 +112,9 @@ class ExplodingParticle(Particle):
         self.check_alpha()
 
         self.explosion_timer()
-        # if self.exploding:
-        #     self.inflate(dt)
-        self.fade(dt)
+        if self.exploding:
+            self.inflate(dt)
+            self.fade(dt)
 
 # class FloatingParticle(Particle):
 #     def __init__(self, 

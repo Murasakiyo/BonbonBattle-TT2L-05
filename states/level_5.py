@@ -35,7 +35,8 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
 
 
-
+        self.deal_damage = True
+        self.attack_cooldown = 0
 
 
 
@@ -56,7 +57,9 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery)
                 self.update_ultimate(deltatime, player_action)
 
-               
+                self.get_hit(deltatime, player_action)
+                
+                        
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -82,3 +85,40 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
 
+    def get_hit(self, deltatime, player_action):
+        if self.player.take_damage == False:
+            if any(self.enemy4.rect.clipline(*line) for line in self.player.lines):
+                self.player.healthpoints -= 20
+                self.enemy4.moxie += 0
+                self.enemy4.super_points += 1
+                self.player.take_damage = True
+
+        if self.player.take_damage == False:
+            if any(self.enemy4.rect_string1.clipline(*line) for line in self.player.lines):
+                self.player.healthpoints -= 10
+                self.enemy4.moxie += 5
+                self.enemy4.super_points += 1
+                self.player.take_damage = True
+
+        if self.player.take_damage == False:
+            if any(self.enemy4.rect_string2.clipline(*line) for line in self.player.lines):
+                self.player.healthpoints -= 10
+                self.enemy4.moxie += 5
+                self.enemy4.super_points += 1
+                self.player.take_damage = True
+
+        if self.player.take_damage:
+            self.countdown += deltatime
+            if self.countdown > 2:
+                self.player.take_damage = False
+                self.countdown = 0
+
+        if self.deal_damage:
+            if player_action["attack"]:
+                self.enemy4.HP -= 50
+                self.deal_damage = False
+        if not self.deal_damage:
+            self.attack_cooldown += deltatime
+            if self.attack_cooldown > 2:
+                self.deal_damage = True
+                self.attack_cooldown = 0

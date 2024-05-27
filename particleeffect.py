@@ -1,5 +1,5 @@
 import pygame
-from random import randint, choice
+from random import randint, choice, uniform
 
 class Snow(pygame.sprite.Sprite):
     def __init__(self, 
@@ -164,3 +164,27 @@ class ExplodingParticle(Particle):
         # self.explosion_timer()
         # if self.exploding:
         #     self.inflate(dt)
+
+class ParticleFunctions():
+    def __init__(self, game):
+        self.game = game
+        self.particle_group = pygame.sprite.Group
+
+
+    def spawn_particles(self, n: int, deltatime):
+            self.pos = ((randint(0, 1100)), 0)
+            color = choice(("purple", "blue", "green", "red", "yellow"))
+            direction = pygame.math.Vector2(0,1)
+            direction = direction.normalize()
+            speed = randint(50, 400)
+            Particle(self.particle_group, self.pos, color, direction, speed, self.game)
+
+    def spawn_exploding_particles(self, n: int, enemy):
+        for _ in range(n):
+            pos = (enemy.rect.center[0], enemy.rect.center[1] + 82.5)
+            color = choice(("purple", "blue", "green", "red", "yellow"))
+            direction = pygame.math.Vector2(uniform(-0.2, 0.2), uniform(-1, 0))
+            direction = direction.normalize()
+            speed = randint(75, 600)
+            ExplodingParticle(self.particle_group, pos, color, direction, speed, self.game)
+            
