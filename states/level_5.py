@@ -86,7 +86,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
 
     def get_hit(self, deltatime, player_action):
-        if self.player.take_damage == False:
+        if self.player.take_damage == False and self.enemy4.ultimate:
             if any(self.enemy4.rect.clipline(*line) for line in self.player.lines):
                 self.player.healthpoints -= 20
                 self.enemy4.moxie += 0
