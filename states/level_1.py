@@ -38,13 +38,20 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.moxie_points = 0
         self.enemy_defeat = False
 
-        # self.sugarcube = Sugarcube(self.game)
-        # self.camera.add(self.sugarcube)
+        self.current_sugarcube_value = 50
         self.sugarcube_list = pygame.sprite.Group()
-        for _ in range(5):
-            sugarcube = Sugarcube(self.game)
+        self.spawn_sugarcubes(2)
+
+
+    def spawn_sugarcubes(self, num_sugarcubes):
+        for _ in range(num_sugarcubes):
+            sugarcube = Sugarcube(self.game, self.current_sugarcube_value)
             self.sugarcube_list.add(sugarcube)
-            self.camera.add(sugarcube)
+
+    def reset_sugarcubes(self):
+        self.current_sugarcube_value = 10  
+        self.sugarcube_list.empty()  # clear the current sugarcubes
+        self.spawn_sugarcubes(2)  # Spawn new sugarcubes based on the level
 
 
     def update(self, deltatime, player_action):
@@ -57,6 +64,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
             self.load_health_bar()
             self.load_moxie_bar()
+            self.reset_sugarcubes()
             if self.enemy_defeat:
                 self.attack_group.add(self.tongue, self.tongue2)
                 self.body_group.add(self.enemy1)
@@ -107,10 +115,14 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         else:
             self.game.start_timer()
 
-        self.sugarcube_list.update()
+        # self.sugarcube_list.update()
         for sugarcube in self.sugarcube_list:
             if sugarcube.rect.colliderect(self.player.rect):
+                print("collide")
                 sugarcube.collect(self.player)
+                print(f"Remaining sugarcubes: {len(self.sugarcube_list)}")
+
+       
 
 
 

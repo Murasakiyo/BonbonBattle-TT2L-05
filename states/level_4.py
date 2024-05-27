@@ -9,6 +9,7 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
+from currency import Sugarcube
 
 
 class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
@@ -38,6 +39,22 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         self.enemy_group.add(self.enemy3)
 
+        self.current_sugarcube_value = 50
+        self.sugarcube_list = pygame.sprite.Group()
+        self.spawn_sugarcubes(5)
+
+
+    def spawn_sugarcubes(self, num_sugarcubes):
+        for _ in range(num_sugarcubes):
+            sugarcube = Sugarcube(self.game, self.current_sugarcube_value)
+            self.sugarcube_list.add(sugarcube)
+
+    def reset_sugarcubes(self):
+        self.current_sugarcube_value = 10  
+        self.sugarcube_list.empty()  
+        self.spawn_sugarcubes(5) 
+
+
     def update(self, deltatime, player_action):
         
         if self.game.reset_game:
@@ -47,6 +64,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
             self.load_health_bar()
             self.load_moxie_bar()
+            self.reset_sugarcubes()
             self.game.reset_game = False
 
         self.game_over(deltatime, player_action)
@@ -95,6 +113,13 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         else:
             self.game.start_timer()
 
+        self.sugarcube_list.update()
+        for sugarcube in self.sugarcube_list:
+            if sugarcube.rect.colliderect(self.player.rect):
+                print("collide")
+                sugarcube.collect(self.player)
+                print(f"Remaining sugarcubes: {len(self.sugarcube_list)}")
+
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.mountain, (1100,600)), (0,0))
@@ -115,3 +140,5 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
+
+        self.sugarcube_list.draw(display)

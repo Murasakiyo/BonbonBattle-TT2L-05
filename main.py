@@ -4,6 +4,7 @@ from states.menu import MainMenu
 from torres import *
 from states.level_4 import Quad_Stage
 from states.pause_menu import Pause
+from states.level_choose import Level_Options
 # from parent_classes.ultimate_action import *
 from savingsystem import *
 
@@ -32,9 +33,13 @@ class Game():
         self.ultimates()
 
         self.skip_cutscenes = False
+        self.current_currency = 0
+        # self.current_sugarcube_value = 10
+
         self.player = Player(self, pygame.sprite.Group(), 200, 200)
         self.saving_system = SaveDataSystem('player_data.pickle', self.player)
         self.load_data() # load saved data when start a game
+        
 
     # Game loop
     def game_loop(self):
@@ -189,7 +194,11 @@ class Game():
                 self.player.speed = loaded_data['speed']
             if 'skip_cutscenes' in loaded_data:
                 self.skip_cutscenes = loaded_data['skip_cutscenes']
-
+            if 'current_currency' in loaded_data:
+                self.current_currency = loaded_data['current_currency']
+            if 'current_sugarcube_value' in loaded_data:
+                self.current_sugarcube_value = loaded_data['current_sugarcube_value']
+        
 if __name__ == "__main__":
     game = Game()
     while game.run:

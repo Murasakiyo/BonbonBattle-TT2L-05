@@ -9,6 +9,7 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
+from currency import Sugarcube
 
 
 class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
@@ -40,7 +41,20 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.enemy_defeat = False
         self.enemyflies_defeat = False
 
-       
+        self.current_sugarcube_value = 50
+        self.sugarcube_list = pygame.sprite.Group()
+        self.spawn_sugarcubes(4)
+
+
+    def spawn_sugarcubes(self, num_sugarcubes):
+        for _ in range(num_sugarcubes):
+            sugarcube = Sugarcube(self.game, self.current_sugarcube_value)
+            self.sugarcube_list.add(sugarcube)
+
+    def reset_sugarcubes(self):
+        self.current_sugarcube_value = 10  
+        self.sugarcube_list.empty()  
+        self.spawn_sugarcubes(4) 
 
 
     def update(self, deltatime, player_action):
@@ -57,6 +71,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
             self.load_health_bar()
             self.load_moxie_bar()
+            self.reset_sugarcubes()
             for flies in self.fly_swarm.flylist.sprites():
                 flies.kill()
                 self.enemy_health_update(flies.rect.x,flies.rect.y, flies.HP)
@@ -131,6 +146,14 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             self.game.start_timer()
         # print(self.attack_time)
 
+        self.sugarcube_list.update()
+        for sugarcube in self.sugarcube_list:
+            if sugarcube.rect.colliderect(self.player.rect):
+                print("collide")
+                sugarcube.collect(self.player)
+                print(f"Remaining sugarcubes: {len(self.sugarcube_list)}")
+
+
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.forest3, (1100,600)), (0,0))
         self.confection_display(display)
@@ -162,3 +185,5 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
+
+        self.sugarcube_list.draw(display)
