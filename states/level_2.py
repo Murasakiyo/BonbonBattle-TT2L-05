@@ -9,7 +9,7 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
-from particleeffect import *
+from parent_classes.particleeffect import *
 
 class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions):
     def __init__(self, game):

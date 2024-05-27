@@ -188,3 +188,11 @@ class ParticleFunctions():
             speed = randint(75, 600)
             ExplodingParticle(self.particle_group, pos, color, direction, speed, self.game)
             
+    def snow_particles(self, n: int):
+        for _ in range(n):
+            pos = ((randint(0, 1100)), 0)
+            color = "white"
+            direction = pygame.math.Vector2(0, 1)
+            direction = direction.normalize()
+            speed = randint(25, 200)
+            Snow(self.particle_group, pos, color, direction, speed)
