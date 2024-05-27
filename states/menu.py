@@ -42,7 +42,7 @@ class MainMenu(State):
             player_action["transition"] = True
 
         if self.game.alpha == 255:
-            new_state = Quad_Stage(self.game)
+            new_state = Penta_Stage(self.game)
             new_state.enter_state()
             player_action["transition"] =  False
             

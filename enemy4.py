@@ -47,13 +47,17 @@ class Enemy4(pygame.sprite.Sprite):
         self.placement(deltatime)
 
         if self.HP <= 150:
-            if self.super_points >= 10 and self.ult_check == False:
+            if self.super_points >= 5 and self.ult_check == False:
                 self.super_timer += deltatime
                 self.super_check = True
                 if self.super_timer > 5:
                     self.super_attack = True
-                    self.string_extension2(deltatime)
-            
+                    self.super_points = 0
+                    self.super_timer = 0
+                    
+        if self.super_attack:
+            self.string_extension2(deltatime)
+
         if self.move_bool:
             self.move_towards_player(self.pos_x, self.pos_y)        
     
@@ -85,12 +89,14 @@ class Enemy4(pygame.sprite.Sprite):
         # print(self.super_points)
         # print(self.ult_timer)
         # print(self.HP)
-        print(self.super_points)
+        # print(self.super_points)
+        print(self.extend_count)
 
 
     def render(self, display):
-        pygame.draw.rect(display, "violet", self.rect_string1)
-        pygame.draw.rect(display, "violet", self.rect_string2)
+        if not self.super_check and not self.ult_check:
+            pygame.draw.rect(display, "violet", self.rect_string1)
+            pygame.draw.rect(display, "violet", self.rect_string2)
         pygame.draw.rect(display, "violet", self.rect)
 
         if self.super_attack:
@@ -148,9 +154,8 @@ class Enemy4(pygame.sprite.Sprite):
 
     def string_extension2(self, deltatime):
         self.super_count += deltatime
-        if self.super_count > 8:
+        if self.super_count > 8 and self.ult_check == False:
             self.super_count = 0
-            self.super_points = 0
             self.super_check = False
             self.super_attack = False
                 # self.string_check1 = True

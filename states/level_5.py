@@ -57,7 +57,8 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery)
                 self.update_ultimate(deltatime, player_action)
 
-                self.get_hit(deltatime, player_action)
+                if not self.enemy4.super_check and not self.enemy4.ult_check:
+                    self.get_hit(deltatime, player_action)  
                 
                         
 
@@ -96,14 +97,14 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         if self.player.take_damage == False:
             if any(self.enemy4.rect_string1.clipline(*line) for line in self.player.lines):
                 self.player.healthpoints -= 10
-                self.enemy4.moxie += 5
+                self.enemy4.moxie += 20
                 self.enemy4.super_points += 1
                 self.player.take_damage = True
 
         if self.player.take_damage == False:
             if any(self.enemy4.rect_string2.clipline(*line) for line in self.player.lines):
                 self.player.healthpoints -= 10
-                self.enemy4.moxie += 5
+                self.enemy4.moxie += 20
                 self.enemy4.super_points += 1
                 self.player.take_damage = True
 
@@ -115,7 +116,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         if self.deal_damage:
             if player_action["attack"]:
-                self.enemy4.HP -= 50
+                self.enemy4.HP -= 150
                 self.deal_damage = False
         if not self.deal_damage:
             self.attack_cooldown += deltatime
