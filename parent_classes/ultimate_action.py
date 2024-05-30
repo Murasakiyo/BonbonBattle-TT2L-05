@@ -14,7 +14,7 @@ class Ults():
     def update_ultimate(self, deltatime, player_action):
             # Sprite group update
             for support in self.support_dolls.sprites():
-                support.update(deltatime, player_action, self.player.rect.x, self.player.rect.y)
+                support.update(deltatime, self.player, player_action, self.player.rect.x, self.player.rect.y)
 
             if self.game.ult_finish == False:
                 # Check for collision rect and the mask collision
@@ -56,11 +56,11 @@ class Ults():
 
 
     def characters(self):
-        self.player = Player(self.game, self.camera, 200,200) 
+        self.player = Player(self.game, 200,200) 
         self.louie = Louie(self.game) 
         self.stan = Stanley(self.game) 
         self.krie = Krie(self.game)
-
+        self.camera.add(self.player)
         # Initiation of a specific support doll
         self.init_stan = False
         self.init_louie = False

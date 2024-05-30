@@ -22,9 +22,9 @@ class Louie(pygame.sprite.Sprite, Support):
  
 
  
-    def update(self,deltatime, player_action, player_x, player_y):
+    def update(self,deltatime, player, player_action, player_x, player_y):
         
-        self.update_movement(deltatime, player_action, player_x, player_y, self.animate)
+        self.update_movement(deltatime, player, player_action, player_x, player_y, self.animate)
 
     
     def render(self, display):
@@ -32,11 +32,11 @@ class Louie(pygame.sprite.Sprite, Support):
         # pygame.draw.rect(display, (255,255,255), self.rect,2)
 
 
-    def animate(self, deltatime, direction_x, direction_y, distance):
+    def animate(self, deltatime, player, direction_x, direction_y, distance):
         self.last_frame_update += deltatime
 
         # Code for all support doll's walking and idle animation
-        self.idle_walking(direction_x, direction_y, distance, 0.15)
+        self.idle_walking(player, direction_x, direction_y, distance, 0.15)
 
         # Fps for each animation
         if self.current_anim_list == self.right_sprites or self.current_anim_list == self.left_sprites:

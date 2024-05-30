@@ -4,18 +4,15 @@ class Support():
     def __init__(self, game):
         self.game = game
 
-    def update_movement(self, deltatime, player_action, player_x, player_y, animate):
+    def update_movement(self, deltatime, player, player_action, player_x, player_y, animate):
         self.current_time += deltatime
-
-        if self.game.defeat:
-            self.attack = False
-            
+        
         # Check player direction
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
         # Cooldown for attack
-        if not self.game.defeat:
+        if not self.game.defeat and not self.game.win:
             if self.current_time > 3:
                 self.attack = True
                 self.attack_cooldown += deltatime
@@ -28,7 +25,7 @@ class Support():
         if not self.attack:
             self.move(player_x, player_y)
 
-        animate(deltatime, direction_x, direction_y, self.step_distance)
+        animate(deltatime, player, direction_x, direction_y, self.step_distance)
 
 
     # This code is to make sure Support doll is always in range of Player
@@ -55,7 +52,7 @@ class Support():
             self.doll_vector += self.direction_vector * self.step_distance * 0.1
             self.rect.x, self.rect.y = self.doll_vector.x, self.doll_vector.y
 
-    def idle_walking(self, direction_x, direction_y, distance, fps):
+    def idle_walking(self, player, direction_x, direction_y, distance, fps):
 
         # Support doll idle
         if not(direction_x or direction_y) and (self.attack == False):
@@ -72,7 +69,7 @@ class Support():
         
         # Support doll walking
         if direction_x and self.attack == False:
-            if direction_x > 0:
+            if (player.rect.x - self.rect.x) > 0:
                 if distance > 0.4:
                     self.current_anim_list = self.walk_right
                 else:
