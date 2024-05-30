@@ -1,7 +1,12 @@
 import pygame
 from parent_classes.state import State
+from states.testcutscenes import CutscenesTest
 from states.level_choose import Level_Options
-
+from states.level_1 import First_Stage
+from states.level_2 import Sec_Stage
+from states.level_3 import Trio_Stage
+from states.level_4 import Quad_Stage
+from states.level_5 import Penta_Stage
 
 
 class MainMenu(State):
@@ -28,18 +33,30 @@ class MainMenu(State):
             if pygame.mouse.get_pressed()[0] and not self.click:
                 self.next = True
                 self.click = True
+                player_action["start"] = True
             if not pygame.mouse.get_pressed()[0]:
-                self.next = False
+                self.click = False
+
+        if self.rect_SET.collidepoint(self.mouse):
+            if pygame.mouse.get_pressed()[0] and not self.click:
+                self.click = True
+                self.game.current_currency = 0
+                new_state = CutscenesTest(self.game)
+                new_state.enter_state()
+            if not pygame.mouse.get_pressed()[0]:
                 self.click = False
         
-
         if self.next:
             player_action["transition"] = True
 
         if self.game.alpha == 255:
-            new_state = Level_Options(self.game)
+            if self.game.skip_cutscenes:
+                new_state = Level_Options(self.game)
+            else:
+                new_state = CutscenesTest(self.game)
             new_state.enter_state()
             player_action["transition"] =  False
+            self.next = False
             
 
     def render(self, display):

@@ -9,9 +9,11 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
+from currency import Sugarcube
+from parent_classes.particleeffect import *
 
 
-class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
+class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions):
     def __init__(self, game):
         super().__init__(game)
         self.camera = CameraGroup(self.game)
@@ -25,6 +27,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.tongue2 = Tongue2(self.game)
         self.attack_group = pygame.sprite.Group()
         self.body_group = pygame.sprite.Group()
+        self.particle_group = pygame.sprite.Group()
 
         self.ultimates()
         self.characters()
@@ -37,6 +40,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         self.current_time, self.end_time = 0,0
         self.moxie_points = 0
+        self.confetti_time = 0
+        self.victory = False
         self.swarming = True
         self.swamping = False
         self.enemy_defeat = False
@@ -48,6 +53,22 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.restart_game = False
         self.click = False
         self.state = "none"
+
+        self.current_sugarcube_value = 50
+        self.sugarcube_list = pygame.sprite.Group()
+        self.spawn_sugarcubes(4)
+
+
+    def spawn_sugarcubes(self, num_sugarcubes):
+        for _ in range(num_sugarcubes):
+            sugarcube = Sugarcube(self.game, self.current_sugarcube_value)
+            self.sugarcube_list.add(sugarcube)
+
+    def reset_sugarcubes(self):
+        self.current_sugarcube_value = 10  
+        self.sugarcube_list.empty()  
+        self.spawn_sugarcubes(4) 
+
 
     def update(self, deltatime, player_action):
 
@@ -61,6 +82,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
             self.load_health_bar()
             self.load_moxie_bar()
+            self.reset_sugarcubes()
             for flies in self.fly_swarm.flylist.sprites():
                 flies.kill()
                 self.enemy_health_update(flies.rect.x,flies.rect.y, flies.HP)
@@ -97,6 +119,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.update_ultimate(deltatime, player_action)
                 self.health_update()
                 self.moxie_update(player_action)
+                self.particle_group.update(deltatime)
                 self.cooldown_for_attacked(deltatime)
 
                 if not(self.game.defeat):
@@ -112,6 +135,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                                                 flies.damage)
                         if flies.HP <= 0:
                             flies.kill()
+                            self.spawn_exploding_particles(100, flies)
 
                         if not self.fly_swarm.flylist.sprites():
                             self.swarming = False
@@ -131,6 +155,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                             self.enemy1.kill()
                             self.tongue.kill()
                             self.tongue2.kill()
+                            self.spawn_exploding_particles(100, self.enemy1)
                             self.swamping = False
 
                         if not(self.body_group.sprites()) and not(self.attack_group.sprites()):
@@ -138,6 +163,14 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
                         self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
                                             self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
+                        
+                    if not self.swarming and not self.swamping:
+                        self.confetti_time += deltatime
+                        if self.confetti_time > 2:
+                            self.victory = True
+                    
+                    if self.victory == True:
+                        self.spawn_particles(200, deltatime)
                     
                     if not(self.end):
                         if player_action["pause"]:
@@ -153,6 +186,14 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             self.game.start_timer()
         # print(self.attack_time)
 
+        self.sugarcube_list.update()
+        for sugarcube in self.sugarcube_list:
+            if sugarcube.rect.colliderect(self.player.rect):
+                print("collide")
+                sugarcube.collect(self.player)
+                print(f"Remaining sugarcubes: {len(self.sugarcube_list)}")
+
+
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.forest3, (1100,600)), (0,0))
         self.confection_display(display)
@@ -162,6 +203,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         # Player stats
         self.health_render(display)
         self.moxie_render(display)
+        self.particle_group.draw(display)
 
         
         for flies in self.fly_swarm.flylist.sprites():
@@ -177,7 +219,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     self.tongue2.render(display)
             if not(self.enemy1.HP <= 0):
                 self.enemy_health_render(display, self.enemy1.rect.x, self.enemy1.rect.y)
-
+                
+        self.sugarcube_list.draw(display)
         self.ultimate_display(display)
     
         if self.game.start == False:

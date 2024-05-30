@@ -6,6 +6,7 @@ from states.level_4 import Quad_Stage
 from states.pause_menu import Pause
 from states.first_cutscene import Story
 from states.lounge import Lounge
+from states.level_choose import Level_Options
 # from parent_classes.ultimate_action import *
 from savingsystem import *
 
@@ -35,8 +36,12 @@ class Game():
         self.ultimates()
 
         self.player = Player(self, 200, 200)
+        self.skip_cutscenes = False
+        self.current_currency = 0
+        # self.current_sugarcube_value = 10
         self.saving_system = SaveDataSystem('player_data.pickle', self.player)
         self.load_data() # load saved data when start a game
+        
 
     # Game loop
     def game_loop(self):
@@ -213,20 +218,27 @@ class Game():
         self.current_restart = self.restart
 
     
-    
-
     def save_data(self):
-        self.saving_system.save_data_file(self.player)
-        player_data = self.saving_system.get_save_data(self.player)
+        self.saving_system.save_data_file()
+        player_data = self.saving_system.get_save_data()
         print(f"Saving data: {player_data}")
 
     def load_data(self):
         loaded_data = self.saving_system.load_data_file()
         if loaded_data: 
-            print("Loaded data:", loaded_data)
-        else:
-            print("No saved data found.")
-
+            if 'healthpoints' in loaded_data:
+                self.player.healthpoints = loaded_data['healthpoints']
+            if 'attackpoints' in loaded_data:
+                self.player.attackpoints = loaded_data['attackpoints']
+            if 'speed' in loaded_data:
+                self.player.speed = loaded_data['speed']
+            if 'skip_cutscenes' in loaded_data:
+                self.skip_cutscenes = loaded_data['skip_cutscenes']
+            if 'current_currency' in loaded_data:
+                self.current_currency = loaded_data['current_currency']
+            # if 'current_sugarcube_value' in loaded_data:
+            #     self.current_sugarcube_value = loaded_data['current_sugarcube_value']
+        
 if __name__ == "__main__":
     game = Game()
     while game.run:
