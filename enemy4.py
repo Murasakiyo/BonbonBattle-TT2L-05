@@ -18,8 +18,8 @@ class Enemy4(pygame.sprite.Sprite):
         self.super_timer = 0
         self.change_pos_timer = 0
         self.ult_timer = 0
-        self.test_bool = False
-        self.test_bool2 = False
+        self.attack_bool = False
+        self.attack_bool2 = False
         self.extend_vert = False
         self.extend_horiz = False
         self.super_attack = False
@@ -55,7 +55,7 @@ class Enemy4(pygame.sprite.Sprite):
                     self.super_points = 0
                     self.super_timer = 0
                     
-        if self.super_attack:
+        if self.super_attack and self.positional == 3:
             self.string_extension2(deltatime)
 
         if self.move_bool:
@@ -65,7 +65,7 @@ class Enemy4(pygame.sprite.Sprite):
         if self.moxie >= 100:
             self.ultimate = True
 
-        if self.ultimate:
+        if self.ultimate and self.positional == 5:
             self.ult_timer += deltatime
             self.ult_check = True
             if self.ult_timer > 5:
@@ -90,7 +90,7 @@ class Enemy4(pygame.sprite.Sprite):
         # print(self.ult_timer)
         # print(self.HP)
         # print(self.super_points)
-        print(self.extend_count)
+        # print(self.extend_count)
 
 
     def render(self, display):
@@ -107,17 +107,17 @@ class Enemy4(pygame.sprite.Sprite):
 
     def string_extension(self, deltatime, player_x, player_y):
         if self.extend_vert == True:
-            if self.test_bool == False:
+            if self.attack_bool == False:
                 if self.rect_string1.y <= 0:
                     self.rect_string1.y += 1 * self.speed
                 if self.rect_string1.y >= 0:
-                    self.test_bool = True
+                    self.attack_bool = True
                     self.string_check1 = True
 
-            if self.test_bool == True:
+            if self.attack_bool == True:
                 self.rect_string1.y -= 1 * self.speed
                 if self.rect_string1.y <= -600:
-                    self.test_bool = False
+                    self.attack_bool = False
                     self.extend_vert = False
                     self.string_check2 = False
             
@@ -131,17 +131,17 @@ class Enemy4(pygame.sprite.Sprite):
 #####
 
         if self.extend_horiz == True:
-            if self.test_bool2 == False:
+            if self.attack_bool2 == False:
                 if self.rect_string2.x <= 0:
                     self.rect_string2.x += 1 * self.speed
                 if self.rect_string2.x >= 0:
-                    self.test_bool2 = True
+                    self.attack_bool2 = True
                     self.string_check2 = True
 
-            if self.test_bool2 == True:
+            if self.attack_bool2 == True:
                 self.rect_string2.x -= 1 * self.speed
                 if self.rect_string2.x <= -1100:
-                    self.test_bool2 = False
+                    self.attack_bool2 = False
                     self.extend_horiz = False
                     self.string_check1 = False
             
@@ -190,22 +190,22 @@ class Enemy4(pygame.sprite.Sprite):
             # self.change_pos_timer = 0
 
         if self.ultimate:
-            self.positional = 5
+            self.positional = 3
 
         if self.super_check:
-            self.positional = 4
+            self.positional = 2
 
         if self.positional == 1: # 10, 50
             self.pos_x, self.pos_y = 1050, 300 # top left
 
-        if self.positional == 2:
+        if self.positional == 5:
             self.pos_x, self.pos_y = 10, 550 # bottom left
 
-        if self.positional == 3:
+        if self.positional == 4:
             self.pos_x, self.pos_y = 1050, 10 # top right
 
-        if self.positional == 4:
+        if self.positional == 2:
             self.pos_x, self.pos_y = 1050, 550 # bottom right
 
-        if self.positional == 5:
+        if self.positional == 3:
             self.pos_x, self.pos_y = self.game.screen_rect.centerx, self.game.screen_rect.centery

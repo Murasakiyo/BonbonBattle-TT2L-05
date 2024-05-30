@@ -83,6 +83,7 @@ class Particle(pygame.sprite.Sprite):
         self.confetti = choice((self.pic1, self.pic2, self.pic3, self.pic4))
         self.image_set = self.confetti
         self.rotate()
+        self.image = pygame.transform.scale(self.image_set, (8, 8))
         # self.image = pygame.transform.rotate(self.confetti, self.spin)
         pygame.Surface.blit(self.game.screen, self.image, self.pos)
         self.rect = self.image.get_rect(center = self.pos)
