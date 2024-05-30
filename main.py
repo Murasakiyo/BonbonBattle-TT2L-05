@@ -196,8 +196,8 @@ class Game():
                 self.skip_cutscenes = loaded_data['skip_cutscenes']
             if 'current_currency' in loaded_data:
                 self.current_currency = loaded_data['current_currency']
-            if 'current_sugarcube_value' in loaded_data:
-                self.current_sugarcube_value = loaded_data['current_sugarcube_value']
+            # if 'current_sugarcube_value' in loaded_data:
+            #     self.current_sugarcube_value = loaded_data['current_sugarcube_value']
         
 if __name__ == "__main__":
     game = Game()
