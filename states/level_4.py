@@ -10,9 +10,11 @@ from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
 from currency import Sugarcube
+from parent_classes.particleeffect import *
 
 
-class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
+
+class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions):
     def __init__(self, game):
         super().__init__(game)
         self.camera = CameraGroup(self.game)
@@ -22,6 +24,12 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.ultimate = False
         self.countdown = 0
         self.immunity = False
+        self.confetti = False
+        self.victory = False
+        self.enemy_defeat = False
+        self.cause_effect = True
+        self.confetti_time = 0
+        self.snow_value = 2
 
         self.enemy3_heal = 0
 
@@ -29,6 +37,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.support_dolls = pygame.sprite.Group()
         self.enemy3 = Enemy3(self.game, self.camera)
         self.enemy_group = pygame.sprite.Group()
+        self.particle_group = pygame.sprite.Group()
         
 
         self.ultimates()
@@ -81,14 +90,13 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.cooldown_for_attacked(deltatime)
                 
 
-                if not(self.game.defeat):
+                if not(self.game.defeat) and not(self.enemy3.HP <= 0):
                     self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect.x)
                     self.snake_attacked(deltatime, player_action, self.enemy_group, self.enemy3, self.enemy3.body_damage)
                     self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
-                    
-                    for minions in self.enemy3.minionlist.sprites():
-                        self.minion_collisions(deltatime, player_action, self.enemy3.minionlist, self.enemy3.minionlist, minions, minions.damage)
 
+                    # self.snow_particles(2)
+                    
                     if self.enemy3.HP < 300:
                         if self.enemy3.leech == True:
                             self.old_health = self.player.healthpoints
@@ -98,6 +106,34 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
                     if self.enemy3.HP > 300:
                         self.enemy3.HP = 300
+                
+                if not(self.game.defeat):
+                    for minions in self.enemy3.minionlist.sprites():
+                        self.minion_collisions(deltatime, player_action, self.enemy3.minionlist, self.enemy3.minionlist, minions, minions.damage)
+
+                self.particle_group.update(deltatime)
+
+                if self.enemy3.HP <= 0:
+                    self.enemy3.kill()
+                    self.enemy3.minionlist.remove(self.enemy3.minions)
+                    self.enemy_defeat = True
+                    self.confetti = True
+
+                if self.cause_effect and self.enemy_defeat:
+                    self.spawn_exploding_particles(300, self.enemy3)
+                    self.cause_effect = False
+
+                self.snow_particles(self.snow_value)
+
+
+                if self.confetti:
+                    self.snow_value = 0
+                    self.confetti_time += deltatime
+                    if self.confetti_time > 2:
+                        self.victory = True
+                print(self.cause_effect)
+                if self.victory == True:
+                    self.spawn_particles(200, deltatime)
 
                     if player_action["pause"]:
                         new_state = self.pause
@@ -129,10 +165,11 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.camera.custom_draw(display)
         self.enemy3.render(display)
         display.blit(pygame.transform.scale(self.game.mount_asset, (1200,600)), (-60,0))
-        
+
         self.health_render(display)
         self.moxie_render(display)
         self.boss_health_render(display)
+        self.particle_group.draw(display)
         
         self.ultimate_display(display)
     
@@ -142,3 +179,6 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
 
         self.sugarcube_list.draw(display)
+
+
+

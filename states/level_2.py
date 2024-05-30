@@ -10,14 +10,15 @@ from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
 from currency import Sugarcube
+from parent_classes.particleeffect import *
 
-
-class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
+class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions):
     def __init__(self, game):
         super().__init__(game)
         self.camera = CameraGroup(self.game)
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
+        self.particle_group = pygame.sprite.Group()
         self.fly_swarm = FlyEnemy(self.game)
         self.pause = Pause(self.game)
 
@@ -28,6 +29,8 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.load_moxie_bar()
         self.moxie_points = 0
         self.enemy_defeat = False
+        self.victory = False
+        self.confetti_time = 0
 
         self.current_sugarcube_value = 50
         self.sugarcube_list = pygame.sprite.Group()
@@ -71,6 +74,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.update_ultimate(deltatime, player_action)
                 self.health_update()
                 self.moxie_update(player_action)
+                self.particle_group.update(deltatime)
                 self.cooldown_for_attacked(deltatime)
 
                 if not(self.game.defeat):
@@ -85,9 +89,19 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                                                 flies.damage)
                         if flies.HP <= 0:
                             flies.kill()
+                            self.spawn_exploding_particles(100, flies)
                         if not self.fly_swarm.flylist.sprites():
                             self.swarming = False 
                             self.enemy_defeat = True
+
+                    if self.enemy_defeat:
+                        self.confetti_time += deltatime
+                        if self.confetti_time > 2:
+                            self.victory = True
+                    
+                    if self.victory == True:
+                        self.spawn_particles(200, deltatime)
+
 
                     if player_action["pause"]:
                         new_state = self.pause
@@ -124,6 +138,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         # Player stats
         self.health_render(display)
         self.moxie_render(display)
+        self.particle_group.draw(display)
         
         for flies in self.fly_swarm.flylist.sprites():
             if not(flies.HP <= 0):

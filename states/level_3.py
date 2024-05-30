@@ -10,9 +10,10 @@ from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
 from currency import Sugarcube
+from parent_classes.particleeffect import *
 
 
-class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
+class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions):
     def __init__(self, game):
         super().__init__(game)
         self.camera = CameraGroup(self.game)
@@ -26,6 +27,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.tongue2 = Tongue2(self.game)
         self.attack_group = pygame.sprite.Group()
         self.body_group = pygame.sprite.Group()
+        self.particle_group = pygame.sprite.Group()
 
         self.ultimates()
         self.characters()
@@ -36,6 +38,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.attack_group.add(self.tongue, self.tongue2)
         self.body_group.add(self.enemy1)
         self.moxie_points = 0
+        self.confetti_time = 0
+        self.victory = False
         self.swarming = True
         self.swamping = False
         self.enemy_defeat = False
@@ -91,6 +95,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.update_ultimate(deltatime, player_action)
                 self.health_update()
                 self.moxie_update(player_action)
+                self.particle_group.update(deltatime)
                 self.cooldown_for_attacked(deltatime)
 
 
@@ -106,6 +111,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                                                 flies.damage)
                         if flies.HP <= 0:
                             flies.kill()
+                            self.spawn_exploding_particles(100, flies)
                         if not self.fly_swarm.flylist.sprites():
                             self.swarming = False
                             self.swamping = True
@@ -124,6 +130,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                             self.enemy1.kill()
                             self.tongue.kill()
                             self.tongue2.kill()
+                            self.spawn_exploding_particles(100, self.enemy1)
                             self.swamping = False
 
                         if not self.body_group.sprites():
@@ -131,6 +138,14 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
                         self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
                                             self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
+                        
+                    if not self.swarming and not self.swamping:
+                        self.confetti_time += deltatime
+                        if self.confetti_time > 2:
+                            self.victory = True
+                    
+                    if self.victory == True:
+                        self.spawn_particles(200, deltatime)
                     
                     if player_action["pause"]:
                         new_state = self.pause
@@ -163,6 +178,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         # Player stats
         self.health_render(display)
         self.moxie_render(display)
+        self.particle_group.draw(display)
 
         
         for flies in self.fly_swarm.flylist.sprites():

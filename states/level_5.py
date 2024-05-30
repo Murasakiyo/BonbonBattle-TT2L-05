@@ -29,10 +29,14 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.characters()
         self.load_health_bar()
         self.load_moxie_bar()
+        self.enemy4 = Enemy4(self.game, self.player.rect.centerx, self.player.rect.centery)
 
-        self.enemy4 = Enemy5(self.game, self.player.rect.centerx, self.player.rect.centery)
+
+        self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
 
 
+        self.deal_damage = True
+        self.attack_cooldown = 0
 
 
 
@@ -41,13 +45,6 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         if self.game.start == True:
             if self.game.ult == False:
-                # Cooldown for player receiving damage
-                if self.game.damaged == True:
-                    self.immunity = True
-                    self.c_time += deltatime
-                    if self.c_time > 2:
-                        self.game.damaged = False
-                        self.immunity = False
 
                 # Update player and enemies
                 self.player.update(deltatime, player_action)
@@ -55,9 +52,15 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
                 self.health_update()
                 self.moxie_update(player_action)
+                self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
 
                 self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery)
                 self.update_ultimate(deltatime, player_action)
+
+                if not self.enemy4.super_check and not self.enemy4.ult_check:
+                    self.get_hit(deltatime, player_action)  
+                
+                        
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -74,7 +77,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         self.health_render(display)
         self.moxie_render(display)
-
+        self.boss_health_render(display)
         
         self.ultimate_display(display)
     
@@ -82,3 +85,41 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
+
+    def get_hit(self, deltatime, player_action):
+        if self.player.take_damage == False and self.enemy4.ultimate:
+            if any(self.enemy4.rect.clipline(*line) for line in self.player.lines):
+                self.player.healthpoints -= 20
+                self.enemy4.moxie += 0
+                self.enemy4.super_points += 1
+                self.player.take_damage = True
+
+        if self.player.take_damage == False:
+            if any(self.enemy4.rect_string1.clipline(*line) for line in self.player.lines):
+                self.player.healthpoints -= 10
+                self.enemy4.moxie += 20
+                self.enemy4.super_points += 1
+                self.player.take_damage = True
+
+        if self.player.take_damage == False:
+            if any(self.enemy4.rect_string2.clipline(*line) for line in self.player.lines):
+                self.player.healthpoints -= 10
+                self.enemy4.moxie += 20
+                self.enemy4.super_points += 1
+                self.player.take_damage = True
+
+        if self.player.take_damage:
+            self.countdown += deltatime
+            if self.countdown > 2:
+                self.player.take_damage = False
+                self.countdown = 0
+
+        if self.deal_damage:
+            if player_action["attack"]:
+                self.enemy4.HP -= 150
+                self.deal_damage = False
+        if not self.deal_damage:
+            self.attack_cooldown += deltatime
+            if self.attack_cooldown > 2:
+                self.deal_damage = True
+                self.attack_cooldown = 0
