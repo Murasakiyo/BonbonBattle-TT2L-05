@@ -19,10 +19,10 @@ class LoungeCamera(pygame.sprite.Group):
         self.bg_rect = self.bg.get_rect(topleft=(0,-330))
         self.grass = self.background["grass"]
         self.grass_rect = self.bg.get_rect(topleft=(0,410))
+        self.level_rect = pygame.Rect(680,260,100,200)
 
 
     def center_target(self, target):
-        print(f"offset:{self.offset}, player_rect:{target.rect.x}")
         self.offset.x = target.rect.centerx - self.h_width
         self.offset.y = target.rect.centery - self.h_height
         target.rect.clamp_ip(self.bg_rect)
@@ -37,11 +37,16 @@ class LoungeCamera(pygame.sprite.Group):
     def custom_draw(self, display, player):
         self.center_target(player)
         sky_offset = self.bg_rect.topleft - self.offset
-        grass_offset = self.grass_rect.topleft - self.offset
+        grass_offset = self.grass_rect.topleft - self.offset 
+        self.level_rect.x = grass_offset.x + 700
         display.blit(self.bg, sky_offset)
         display.blit(self.grass, grass_offset)
+        pygame.draw.rect(display, (255,255,255), self.level_rect, 2)
 
 
         for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
             offset_pos = sprite.rect.midleft - self.offset
             display.blit(sprite.image, offset_pos)
+
+        # print(f"offset:{}, rect: x={}, y={}")
+        
