@@ -19,11 +19,13 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         super().__init__(game)
         self.camera = CameraGroup(self.game)
         self.pause = Pause(self.game)
-        self.c_time = 0
-        self.newctime = pygame.time.get_ticks()
-        self.ultimate = False
-        self.countdown = 0
-        self.immunity = False
+        self.confection_ult = pygame.sprite.Group()
+        self.support_dolls = pygame.sprite.Group()
+        self.enemy3 = Enemy3(self.game, self.camera)
+        self.enemy_group = pygame.sprite.Group()
+        self.particle_group = pygame.sprite.Group()
+        
+        self.current_time, self.end_time = 0,0
         self.confetti = False
         self.victory = False
         self.enemy_defeat = False
@@ -33,20 +35,20 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
         self.enemy3_heal = 0
 
-        self.confection_ult = pygame.sprite.Group()
-        self.support_dolls = pygame.sprite.Group()
-        self.enemy3 = Enemy3(self.game, self.camera)
-        self.enemy_group = pygame.sprite.Group()
-        self.particle_group = pygame.sprite.Group()
-        
+        self.end = False
+        self.exit_game = False
+        self.restart_game = False
+        self.click = False
+        self.state = "none"
+
 
         self.ultimates()
         self.characters()
         self.load_health_bar()
         self.load_moxie_bar()
+        self.enemy_group.add(self.enemy3)
         self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
 
-        self.enemy_group.add(self.enemy3)
 
         self.current_sugarcube_value = 50
         self.sugarcube_list = pygame.sprite.Group()
@@ -66,7 +68,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
     def update(self, deltatime, player_action):
         
-        if self.game.reset_game:
+        if player_action["reset_game"]:
             self.enemy3.enemy_reset()
             self.player.reset_player(200,200)
             self.ultimate_reset()
@@ -74,9 +76,23 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             self.load_health_bar()
             self.load_moxie_bar()
             self.reset_sugarcubes()
-            self.game.reset_game = False
+            self.end_time += deltatime
+            if self.end_time > 0.5:
+                self.swarming = True
+                player_action["reset_game"] = False
+                self.end_time = 0
 
-        self.game_over(deltatime, player_action)
+        if self.end:
+            self.button_go()
+
+        if self.game.init_reset:
+            if player_action["reset_game"] == False:
+                self.exit_state(-1)
+
+        self.game_over(player_action)
+        self.game_restart(player_action)
+        self.ending_options(deltatime, player_action)
+
         
 
         if self.game.start == True:
@@ -125,25 +141,20 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
                 self.snow_particles(self.snow_value)
 
-
                 if self.confetti:
                     self.snow_value = 0
                     self.confetti_time += deltatime
                     if self.confetti_time > 2:
                         self.victory = True
-                print(self.cause_effect)
+
                 if self.victory == True:
                     self.spawn_particles(200, deltatime)
 
+                if not(self.end):
                     if player_action["pause"]:
                         new_state = self.pause
                         new_state.enter_state()
-                        self.game.start = False
-                        # self.game.reset_keys()  
-
-                if self.player.healthpoints <= 0:
-                    self.game.defeat = True
-                    player_action["ultimate"] = False
+                        self.game.start = False 
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -179,6 +190,9 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
 
         self.sugarcube_list.draw(display)
+
+        if self.end:
+            self.ending_state(display)
 
 
 

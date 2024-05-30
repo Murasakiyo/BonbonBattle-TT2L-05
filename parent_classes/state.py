@@ -98,14 +98,16 @@ class State():
                 self.restart_game = False
                 self.click = False
 
-    def ending_options(self, deltatime, player_action):
-        
+    def ending_options(self, deltatime, player_action, x):
         if self.enemy_defeat:
             self.current_time += deltatime
+            if self.sugarcube_received < x:
+                self.spawn_sugarcubes(x)
+                self.sugarcube_collision()
             player_action["ultimate"] = False
-            if self.current_time > 2:
+            if self.current_time > 3:
                 self.game.win = True
-                if self.current_time > 4:
+                if self.current_time > 5:
                     self.end = True
                     self.current_time = 0
 

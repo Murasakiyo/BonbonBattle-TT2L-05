@@ -37,7 +37,7 @@ class MainMenu(State):
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
 
-        if self.rect_SET.collidepoint(self.mouse):
+        if self.rect_SET.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click:
                 self.click = True
                 self.game.current_currency = 0
@@ -61,8 +61,5 @@ class MainMenu(State):
 
     def render(self, display):
         display.blit(pygame.image.load("sprites/main_screen.bmp").convert(), (0,0))
-
         self.hover_button(display, self.rect_START, self.current_start, self.start_button, self.start_button_hover)
         self.hover_button(display, self.rect_SET, self.current_set, self.set_button, self.set_button_hover)
-
-        # pygame.draw.rect(display, "red", self.rectest)
