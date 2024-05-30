@@ -5,16 +5,17 @@ class SaveDataSystem:
         self.file_name = file_name
         self.player = player
 
-    def get_save_data(self, player):
+    def get_save_data(self):
         return {
-            'current_healthpoints': player.healthpoints,
-            'current_attackpoints': player.attackpoints,
-            'current_speed': player.speed
+            'healthpoints': self.player.healthpoints,
+            'attackpoints': self.player.attackpoints,
+            'speed': self.player.speed,
+            'skip_cutscenes': self.player.game.skip_cutscenes
         }
     
     # serialize player_data and save to a file
-    def save_data_file(self, player):
-        player_data = self.get_save_data(player)
+    def save_data_file(self):
+        player_data = self.get_save_data()
         with open(self.file_name, 'wb') as file:
             pickle.dump(player_data, file)
 
