@@ -9,10 +9,11 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
+from parent_classes.particleeffect import *
 
 
 
-class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
+class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions):
     def __init__(self, game):
         super().__init__(game)
         # Sprite groups
@@ -21,10 +22,17 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.support_dolls = pygame.sprite.Group()
         self.attack_group = pygame.sprite.Group()
         self.body_group = pygame.sprite.Group()
+        self.particle_group = pygame.sprite.Group()
         self.enemy1 = FrogEnemy(self.game)
         self.tongue = Tongue(self.game)
         self.tongue2 = Tongue2(self.game)
         self.pause = Pause(self.game)
+        self.effect_time = 0
+        self.cause_effect = True
+        self.pos = ((550, 300))
+        self.confetti_time = 0
+        self.confetti = True
+        self.victory = False
         self.ultimates()
         self.characters()
         self.load_health_bar()
@@ -79,6 +87,26 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                     self.health_update()
                     self.moxie_update(player_action)
 
+                    self.particle_group.update(deltatime)
+                    
+
+                    if self.cause_effect and self.enemy_defeat:
+                        self.spawn_exploding_particles(100, self.enemy1)
+                        self.cause_effect = False
+
+                    if pygame.mouse.get_pressed()[0]:
+                        self.spawn_exploding_particles(100, self.enemy1)
+
+                    if not self.cause_effect and self.confetti:
+                        self.confetti_time += deltatime
+                        if self.confetti_time > 2:
+                            self.victory = True
+                    # print(pygame.mouse.get_pos())
+
+                    if self.victory == True:
+                        self.spawn_particles(200, deltatime)
+
+
                     if self.enemy1.HP <= 0:
                         self.enemy1.kill()
                         self.tongue.kill()
@@ -99,6 +127,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             self.add_ultimate(deltatime, player_action)
         else:
             self.game.start_timer()
+
+
 
 
     def render(self, display):
@@ -125,18 +155,20 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         
         self.health_render(display)
         self.moxie_render(display)
+        self.particle_group.draw(display)
+
 
         if not(self.enemy1.HP <= 0):
             self.enemy_health_render(display, self.enemy1.rect.x, self.enemy1.rect.y)
 
 
         self.ultimate_display(display)
+
     
         if self.game.start == False:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
-
 
     def defeat(self):
         pass
