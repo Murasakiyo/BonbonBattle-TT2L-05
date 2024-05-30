@@ -21,7 +21,9 @@ class LoungeCamera(pygame.sprite.Group):
         self.grass_rect = self.bg.get_rect(topleft=(0,410))
         self.level_rect = pygame.Rect(680,260,100,200)
 
-
+    def update(self, deltatime, player_action, target):
+        if target.rect.colliderect(self.level_rect):
+            pass
     def center_target(self, target):
         self.offset.x = target.rect.centerx - self.h_width
         self.offset.y = target.rect.centery - self.h_height

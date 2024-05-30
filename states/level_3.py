@@ -40,6 +40,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.swarming = True
         self.swamping = False
         self.enemy_defeat = False
+        self.enemyfrog_defeat = False
         self.enemyflies_defeat = False
 
         self.end = False
@@ -47,17 +48,13 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.restart_game = False
         self.click = False
         self.state = "none"
-       
-
 
     def update(self, deltatime, player_action):
 
-        if self.game.reset_game:
-            self.swamping = False
-            self.swarming = True
-            self.enemy1.kill()
-            self.tongue.kill()
-            self.tongue2.kill()
+        if player_action["reset_game"]:
+            self.enemy1.remove(self.camera)
+            self.tongue.remove(self.camera)
+            self.tongue2.remove(self.camera)
             self.enemy1.enemy_reset()
             self.player.reset_player(200,200)
             self.ultimate_reset()
@@ -67,14 +64,27 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             for flies in self.fly_swarm.flylist.sprites():
                 flies.kill()
                 self.enemy_health_update(flies.rect.x,flies.rect.y, flies.HP)
-            if self.enemy_defeat or self.enemyflies_defeat:
+            if self.enemyflies_defeat:
+                # self.fly_swarm.flies_spawn()
+                self.enemyflies_defeat = False
+            if self.enemy_defeat:
                 self.attack_group.add(self.tongue, self.tongue2)
                 self.body_group.add(self.enemy1)
-                self.fly_swarm.flies_spawn()
-            self.game.reset_game = False
+                self.enemyfrog_defeat = False
+                self.enemy_defeat = False
+            self.swamping = False
+            self.end_time += deltatime
+            if self.end_time > 0.5:
+                self.swarming = True
+                player_action["reset_game"] = False
+                self.end_time = 0
 
         if self.end:
             self.button_go()
+
+        if self.game.init_reset:
+            if player_action["reset_game"] == False:
+                self.exit_state(-1)
 
         self.game_over(player_action)
         self.game_restart(player_action)
@@ -82,7 +92,6 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         if self.game.start == True:
             if self.game.ult == False:
-
                 # Update player
                 self.player.update(deltatime, player_action)
                 self.update_ultimate(deltatime, player_action)
@@ -90,8 +99,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 self.moxie_update(player_action)
                 self.cooldown_for_attacked(deltatime)
 
-
                 if not(self.game.defeat):
+                    print(self.game.win)
                     # Check if flies are all still alive
                     if self.swarming:
                         self.fly_swarm.update(deltatime, player_action, self.player.rect.center[0], 
@@ -103,6 +112,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                                                 flies.damage)
                         if flies.HP <= 0:
                             flies.kill()
+
                         if not self.fly_swarm.flylist.sprites():
                             self.swarming = False
                             self.swamping = True
@@ -123,20 +133,20 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                             self.tongue2.kill()
                             self.swamping = False
 
-                        if not self.body_group.sprites():
-                            self.enemy_defeat = True
+                        if not(self.body_group.sprites()) and not(self.attack_group.sprites()):
+                            self.enemyfrog_defeat = True
 
                         self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
                                             self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
                     
-                    if player_action["pause"]:
-                        new_state = self.pause
-                        new_state.enter_state()
-                        self.game.start = False
-                
-                if self.player.healthpoints <= 0:
-                    self.game.defeat = True
-                    player_action["ultimate"] = False
+                    if not(self.end):
+                        if player_action["pause"]:
+                            new_state = self.pause
+                            new_state.enter_state()
+                            self.game.start = False
+
+                    if self.enemyfrog_defeat and self.enemyflies_defeat:
+                        self.enemy_defeat = True
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -174,3 +184,6 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
+
+        if self.end:
+            self.ending_state(display)

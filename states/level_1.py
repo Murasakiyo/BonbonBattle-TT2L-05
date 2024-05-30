@@ -38,6 +38,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.current_time, self.end_time = 0,0
         self.moxie_points = 0
         self.enemy_defeat = False
+        
         self.end = False
         self.exit_game = False
         self.restart_game = False
