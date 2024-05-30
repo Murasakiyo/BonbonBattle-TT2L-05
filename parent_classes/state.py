@@ -1,5 +1,5 @@
 import pygame
-
+import time
 class State():
     def __init__(self, game):
         self.game = game
@@ -98,18 +98,18 @@ class State():
                 self.restart_game = False
                 self.click = False
 
-    def ending_options(self, deltatime, player_action, x):
+    def ending_options(self, deltatime, player_action, x, y):
         if self.enemy_defeat:
             self.current_time += deltatime
-            if self.sugarcube_received < x:
-                self.spawn_sugarcubes(x)
+            self.spawn_sugarcubes(x, y)
+            if not(self.sugarcube_received > x):
                 self.sugarcube_collision()
             player_action["ultimate"] = False
-            if self.current_time > 3:
+            if self.current_time > 4:
                 self.game.win = True
-                if self.current_time > 5:
-                    self.end = True
+                if self.current_time > 5.5:
                     self.current_time = 0
+                    self.end = True
 
         if self.player.healthpoints <= 0:
             self.game.defeat = True

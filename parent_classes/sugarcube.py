@@ -5,11 +5,12 @@ class SugarcubeSpawn():
     def __init__(self, game):
         self.game = game
 
-    def spawn_sugarcubes(self, num_sugarcubes):
-        if len(self.sugarcube_list) < num_sugarcubes - 1:
-            for _ in range(num_sugarcubes):
-                sugarcube = Sugarcube(self.game, self.current_sugarcube_value)
-                self.sugarcube_list.add(sugarcube)
+    def spawn_sugarcubes(self, num_sugarcubes, x):
+        if len(self.sugarcube_list) < num_sugarcubes - x:
+            if self.sugarcube_received < num_sugarcubes:
+                for x in range(num_sugarcubes):
+                    sugarcube = Sugarcube(self.game, self.current_sugarcube_value)
+                    self.sugarcube_list.add(sugarcube)
 
     def reset_sugarcubes(self, x, y):
         self.current_sugarcube_value = x 

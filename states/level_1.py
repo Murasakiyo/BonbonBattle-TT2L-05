@@ -70,12 +70,12 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.body_group.add(self.enemy1)
                 self.camera.add(self.enemy1)
                 self.enemy_defeat = False
+            self.sugarcube_list.empty()
             self.game.start = False
             self.current_time = 0
             self.sugarcube_received = 0
             self.end_time += deltatime
             if self.end_time > 0.5:
-                # self.reset_sugarcubes(10, 2)
                 player_action["reset_game"] = False
                 self.end_time = 0
 
@@ -88,7 +88,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         self.game_over(player_action)
         self.game_restart(player_action)
-        self.ending_options(deltatime, player_action, 2)
+        self.ending_options(deltatime, player_action, 2, 1)
 
         if self.game.start == True:
             if self.game.ult == False:
