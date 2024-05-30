@@ -4,13 +4,16 @@ class SaveDataSystem:
     def __init__(self, file_name, player):
         self.file_name = file_name
         self.player = player
+        # self.game = game
 
     def get_save_data(self):
         return {
             'healthpoints': self.player.healthpoints,
             'attackpoints': self.player.attackpoints,
             'speed': self.player.speed,
-            'skip_cutscenes': self.player.game.skip_cutscenes
+            'skip_cutscenes': self.player.game.skip_cutscenes,
+            'current_currency': self.player.game.current_currency
+            # 'current_sugarcube_value': self.player.game.current_sugarcube_value
         }
     
     # serialize player_data and save to a file

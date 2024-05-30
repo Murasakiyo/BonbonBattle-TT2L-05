@@ -41,6 +41,7 @@ class MainMenu(State):
         if self.rect_SET.collidepoint(self.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click:
                 self.click = True
+                self.game.current_currency = 0
                 new_state = CutscenesTest(self.game)
                 new_state.enter_state()
             if not pygame.mouse.get_pressed()[0]:
