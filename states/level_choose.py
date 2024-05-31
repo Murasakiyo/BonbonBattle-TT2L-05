@@ -12,8 +12,6 @@ class Level_Options(State):
         self.game = game
         self.enter = pygame.image.load("sprites/buttons/enter.png").convert_alpha()
         self.backgrounds()
-        # self.buttons()
-        self.game.buttons()
         self.current_time = 0
         self.first_level = First_Stage(self.game)
         self.second_level = Sec_Stage(self.game)
@@ -34,7 +32,7 @@ class Level_Options(State):
 
         self.text_color = (30, 30, 30)
         self.font = pygame.font.SysFont(None, 40)
-        sugarcube_image = pygame.image.load("sprites/sugarcube.png").convert()
+        sugarcube_image = pygame.image.load("sprites/sugarcube.png").convert_alpha()
         self.sugarcube_image = pygame.transform.scale(sugarcube_image, (25,25)).convert_alpha()
 
 

@@ -7,6 +7,7 @@ from states.pause_menu import Pause
 from states.first_cutscene import Story
 from states.lounge import Lounge
 from states.level_choose import Level_Options
+from states.circus import Circus
 # from parent_classes.ultimate_action import *
 from savingsystem import *
 
@@ -25,10 +26,12 @@ class Game():
         self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 4
         self.backgrounds()
+        self.buttons()
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
-                              "ultimate": False, "transition": False, "go": False, "pause": False, "reset_game":False, "next": False} 
+                              "ultimate": False, "transition": False, "go": False, "pause": False, "reset_game":False, "next": False,
+                              "E": False} 
     
         self.cutscene = {"Intro": False}
         self.state_stack = []
@@ -86,6 +89,8 @@ class Game():
                     self.player_action["pause"] = True
                 if event.key == pygame.K_SPACE:
                     self.player_action["next"] = True
+                if event.key == pygame.K_e:
+                    self.player_action["E"] = True
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
@@ -106,6 +111,8 @@ class Game():
                     self.player_action["pause"] = False
                 if event.key == pygame.K_SPACE:
                     self.player_action["next"] = False
+                if event.key == pygame.K_e:
+                    self.player_action["E"] = False
         
    
     # Updates the state stack
@@ -141,7 +148,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = MainMenu(self)
+        self.title_screen = Lounge(self)
         self.state_stack.append(self.title_screen)
 
     # Reset all player keys
@@ -187,6 +194,8 @@ class Game():
         self.mountain = pygame.image.load("sprites/backgrounds/bg_lvl4.bmp").convert()
         self.lose_screen = pygame.image.load("sprites/lose_screen.png").convert_alpha()
         self.win_screen = pygame.image.load("sprites/win_screen.png").convert_alpha()
+        self.circus = pygame.image.load("sprites/circus.png").convert()
+        self.shop = pygame.image.load("sprites/shop.png").convert_alpha()
         self.end_screen = self.win_screen
     
     def buttons(self):
@@ -198,6 +207,10 @@ class Game():
         self.exit = pygame.image.load("sprites/buttons/exit.png").convert_alpha()
         self.resume = pygame.image.load("sprites/buttons/resume.png").convert_alpha()
         self.restart = pygame.image.load("sprites/buttons/restart.png").convert_alpha()
+        self.E_button = pygame.image.load("sprites/buttons/E.png").convert_alpha()
+        self.up = pygame.image.load("sprites/buttons/up.png").convert_alpha()
+        self.down = pygame.image.load("sprites/buttons/down.png").convert_alpha()
+        self.buy = pygame.image.load("sprites/buttons/buy.png").convert_alpha()
 
         self.lvl1_hover = pygame.image.load("sprites/buttons/lvl1_hover.png").convert_alpha()
         self.lvl2_hover = pygame.image.load("sprites/buttons/lvl2_hover.png").convert_alpha()
@@ -207,6 +220,7 @@ class Game():
         self.exit_hover = pygame.image.load("sprites/buttons/exit_hover.png").convert_alpha()
         self.resume_hover = pygame.image.load("sprites/buttons/resume_hover.png").convert_alpha()
         self.restart_hover = pygame.image.load("sprites/buttons/restart_hover.png").convert_alpha()
+        self.buy_hover = pygame.image.load("sprites/buttons/buy_hover.png").convert_alpha()
 
         self.button1 = self.lvl1.get_rect(width= 100, height=100)
         self.button1.x, self.button1.y = 75,225
