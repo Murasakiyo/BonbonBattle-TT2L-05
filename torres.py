@@ -4,8 +4,8 @@ import copy
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game, group, position_x, position_y):
-        super().__init__(group)
+    def __init__(self, game, position_x, position_y):
+        super().__init__()
         self.game = game
         self.current_time = 0
         self.attack = False
@@ -33,28 +33,35 @@ class Player(pygame.sprite.Sprite):
         self.moxiepoints = 0
         self.speed = 400
         self.lose = False
+        self.win = False
         
 
     def update(self,deltatime,player_action):
-        # print(self.attack)
-        if self.game.defeat:
+        
+        if self.game.defeat and not(self.game.win):
             self.lose = True
+        else:
+            self.lose = False
+        
+        if self.game.win and not(self.game.defeat):
+            self.win = True
+        else:
+            self.win = False
+
+        if self.win or self.lose:
             player_action["right"] = False
             player_action["left"] = False
             player_action["up"] = False
             player_action["down"] = False
             player_action["attack"] = False
             player_action["defend"] = False
-        else:
-            self.lose = False
-
 
         # Get direction from input
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
         # collision with the screen
-        self.rect.clamp_ip(self.game.screen_rect)
+        # self.rect.clamp_ip(self.game.screen_rect)
         
 
         # Check for defense button
@@ -95,9 +102,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.speed * deltatime * direction_x 
         self.rect.y += (self.speed + 50) * deltatime * direction_y
 
-##################################################################################
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
-        # self.enemy1_collision = [((self.rect.midleft[0] - 100, self.rect.midleft[1]), (self.rect.midright[0] + 100, self.rect.midright[1]))]
 
         # print(self.collide_time)
         # print(self.collide)
@@ -123,7 +128,10 @@ class Player(pygame.sprite.Sprite):
         for line in self.horiz_line:
             pygame.draw.line(display, "white", *line)
             
-        # pygame.draw.rect(display, self.color, self.rect_draw)
+
+    def render_camera(self, display, camera):
+        display.blit(self.image, (self.rect.x - camera.offset.x, self.rect.y - camera.offset.y))
+
 
     def player_stats(self):
         self.healthpoints = 100
@@ -135,6 +143,8 @@ class Player(pygame.sprite.Sprite):
         self.moxiepoints = 0
         self.rect.x, self.rect.y = position_x, position_y
         self.image = self.right_sprites[0]
+        self.win = False
+        self.lose = False
         self.current_anim_list = self.right_sprites
         self.defend = False
         self.attack = False
@@ -149,8 +159,9 @@ class Player(pygame.sprite.Sprite):
         #compute how much time has passed since the frame last update
         self.last_frame_update += deltatime
 
+        
         #if no direction is pressed, set image to idle and return
-        if not(direction_x or direction_y) and self.attack == False and not(self.defend) and not(self.game.defeat):
+        if not(direction_x or direction_y) and self.attack == False and not(self.defend) and not(self.game.defeat) and not(self.game.win):
             if self.current_anim_list == self.defend_sprites and self.current_frame == 0:
                 self.current_anim_list = self.right_sprites
                 self.image = self.current_anim_list[0]
@@ -169,19 +180,19 @@ class Player(pygame.sprite.Sprite):
                 self.current_anim_list = self.left_sprites
 
         #walk animation after attacking
-        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]) and not(self.defend): 
+        if direction_y != 0 and (self.image == self.attack_right[self.current_frame]) and not(self.defend) and not(self.win) and not(self.lose): 
             self.current_anim_list = self.right_sprites
-        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]) and not(self.defend): 
+        elif direction_y != 0 and (self.image == self.attack_left[self.current_frame]) and not(self.defend) and not(self.win) and not(self.lose): 
             self.current_anim_list = self.left_sprites
 
 
         #Attack animation
-        if (self.image == self.right_sprites[self.current_frame]) and self.attack:
+        if (self.image == self.right_sprites[self.current_frame]) and self.attack and not(self.win):
             self.current_anim_list.clear
             self.current_frame = 0
             self.current_anim_list = self.attack_right[0]
             self.current_anim_list = self.attack_right
-        if (self.image == self.left_sprites[self.current_frame]) and self.attack:
+        if (self.image == self.left_sprites[self.current_frame]) and self.attack and not(self.win):
             self.current_anim_list.clear
             self.current_frame = 0
             self.current_anim_list = self.attack_left[0]
@@ -205,10 +216,16 @@ class Player(pygame.sprite.Sprite):
         else:
             self.fps = 0.1
 
+        # lose
         if self.lose:
             self.fps = 1
             self.current_anim_list = self.lose_sprites
 
+        # win
+        if self.win:
+            self.fps = 0.2
+            self.current_anim_list = self.win_sprites
+            
         if self.lose:
             if (self.last_frame_update > self.fps):
                 if self.current_frame_unique != 3:
@@ -218,7 +235,6 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.image = self.current_anim_list[3]
                     self.last_frame_update = 0
-    
 
         #Advance the animation if enough time has elapsed
         if self.last_frame_update > self.fps:
@@ -256,6 +272,8 @@ class Player(pygame.sprite.Sprite):
             self.attack_left.append(SP.get_sprite(x, 595, 198, 200, (0,0,0)))
         for x in range(2,5):
             self.lose_sprites.append(SP.get_sprite(x, 800, 205, 200, (0,0,0)))
+        for x in range(2):
+            self.win_sprites.append(SP.get_sprite(x, 1000, 180, 200, (0,0,0)))
             
         self.image = self.right_sprites[0]
         self.current_anim_list = self.right_sprites

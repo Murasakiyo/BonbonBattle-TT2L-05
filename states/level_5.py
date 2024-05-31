@@ -14,11 +14,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
     def __init__(self, game):
         super().__init__(game)
         self.camera = CameraGroup(self.game)
-        self.c_time = 0
-        self.newctime = pygame.time.get_ticks()
         self.ultimate = False
-        self.countdown = 0
-        self.immunity = False
 
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
@@ -30,14 +26,11 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.load_health_bar()
         self.load_moxie_bar()
         self.enemy4 = Enemy4(self.game, self.player.rect.centerx, self.player.rect.centery)
-
-
         self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
 
 
         self.deal_damage = True
         self.attack_cooldown = 0
-
 
 
     def update(self, deltatime, player_action):
@@ -72,7 +65,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.camera.custom_draw(display)
 
         display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
-        self.player.render(display)
+        # self.player.render(display)
         self.enemy4.render(display)
 
         self.health_render(display)

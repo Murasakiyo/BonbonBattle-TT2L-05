@@ -39,6 +39,8 @@ class Enemy4(pygame.sprite.Sprite):
 
 
     def update(self, deltatime, player_action, player_x, player_y):
+       
+        self.string_extension(deltatime, player_x, player_y)
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
@@ -77,12 +79,6 @@ class Enemy4(pygame.sprite.Sprite):
                 self.ult_check = False
                 self.ultimate = False
                 self.ult_timer = 0
-
-
-
-
-
-
 
         # print(self.positional)
         # print(self.string_check1)
