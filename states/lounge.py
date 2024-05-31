@@ -42,6 +42,9 @@ class Lounge(State, Dialogue):
         self.button_render(display, 130, 300, self.button_e, self.button_rect)
         self.button_render(display, 1010, 1020, self.level_button, self.lvlbtn_rect)
 
+        display.blit(self.game.sugarcube_image, (10, 10))
+        self.game.draw_text(display, f"{int(self.game.current_currency)}", (30,30,30), 40, 5, 35)
+
 
     def button_render(self, display, x, y, button, button_rect):
         if self.camera.offset.x >= x and self.camera.offset.x <= y:

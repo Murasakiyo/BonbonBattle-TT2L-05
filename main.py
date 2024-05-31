@@ -148,7 +148,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = Lounge(self)
+        self.title_screen = Circus(self)
         self.state_stack.append(self.title_screen)
 
     # Reset all player keys
@@ -197,6 +197,9 @@ class Game():
         self.circus = pygame.image.load("sprites/circus.png").convert()
         self.shop = pygame.image.load("sprites/shop.png").convert_alpha()
         self.end_screen = self.win_screen
+
+        sugarcube_image = pygame.image.load("sprites/sugarcube.png").convert_alpha()
+        self.sugarcube_image = pygame.transform.scale(sugarcube_image, (25,25)).convert_alpha()
     
     def buttons(self):
         self.lvl1 = pygame.image.load("sprites/buttons/lvl1.png").convert_alpha()

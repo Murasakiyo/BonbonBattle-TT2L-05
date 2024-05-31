@@ -40,12 +40,13 @@ class Circus(State, Dialogue):
 
     def render(self, display):
         display.blit(self.game.circus, (0, -100))
-        self.player.render(display)
         self.krie.render(display)
         display.blit(self.game.shop, (0, -100))
         self.camera.custom_draw(display)
         if self.player.rect.colliderect(self.door_rect):
             display.blit(self.button_e, self.button_rect)
-        pygame.draw.rect(display, (255,255,255), self.door_rect, 2)
+
+        display.blit(self.game.sugarcube_image, (10, 10))
+        self.game.draw_text(display, f"{int(self.game.current_currency)}", (30,30,30), 40, 10, 35)
 
         
