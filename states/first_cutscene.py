@@ -16,8 +16,7 @@ class Story(State, Dialogue):
             "5": pygame.image.load("sprites/first_cutscene/5.png").convert()
         }
         self.current_scene = self.scene["0"]
-        self.intro = list()
-        self.dialogue("intro.txt")
+        self.intro = self.dialogue("intro.txt")
         self.variable("black", 24, self.intro)
 
 

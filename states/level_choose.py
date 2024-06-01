@@ -10,7 +10,7 @@ class Level_Options(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.game = game
-        self.enter = pygame.image.load("sprites/buttons/enter.png").convert_alpha()
+        self.enter = pygame.transform.scale(pygame.image.load("sprites/buttons/enter.png"), (100, 44) ).convert_alpha()
         self.backgrounds()
         self.current_time = 0
         self.first_level = First_Stage(self.game)
@@ -77,13 +77,6 @@ class Level_Options(State):
         if player_action["pause"]:
             self.back = True
 
-        # if self.back:
-        #     player_action["transition"] = True
-        #     if self.game.alpha == 255:
-        #         self.exit_state(-1)
-        #         self.back = False
-        #         player_action["transition"] = False
-
         # For resetting level after leaving through pause menu
         if not(self.back):
             if not(self.game.init_reset):
@@ -98,6 +91,7 @@ class Level_Options(State):
             player_action["transition"] = True
             if self.game.alpha == 255:
                 self.exit_state(-1)
+                self.index = 0
                 self.back = False
                 player_action["transition"] = False
 
@@ -112,9 +106,16 @@ class Level_Options(State):
         display.blit(self.current_level4, (self.game.button1.x + 600, self.game.button1.y))
         display.blit(self.current_level5, (self.game.button1.x + 800, self.game.button1.y))
         if not(self.game.player_action["transition"]):
-            display.blit(self.enter, (900, 500))
+            self.game.draw_text(display, "[Left]", False, "white", 790, 490, 25)
+            display.blit(self.game.A_button, (790, 530))
+            self.game.draw_text(display, "[Right]", False, "white", 870, 490, 25)
+            display.blit(self.game.D_button, (870, 530))
+            self.game.draw_text(display, "[Enter]", False, "white", 960, 490, 25)
+            display.blit(self.enter, (960, 530))
+            self.game.draw_text(display, "[Back]", False, "white", 960, 50, 30)
+            display.blit(self.game.backspace, (960, 10))
         display.blit(self.game.sugarcube_image, (10, 10))
-        self.game.draw_text(display, f"{int(self.game.current_currency)}", self.text_color, 40, 10, 35)
+        self.game.draw_text(display, f"{int(self.game.current_currency)}", True, self.text_color, 40, 10, 35)
 
 
     def update_keys(self, player_action, deltatime):

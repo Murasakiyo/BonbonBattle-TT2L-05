@@ -138,9 +138,9 @@ class Game():
         
 
     # Function to draw texts
-    def draw_text(self, surface, text, colour, x, y, size):
+    def draw_text(self, surface, text, bold, colour, x, y, size):
         self.font = pygame.font.Font("Fonts/retro-pixel-cute-prop.ttf", size)
-        text_surface = self.font.render(text, True, colour, size).convert_alpha()
+        text_surface = self.font.render(text, bold, colour, size).convert_alpha()
         text_surface.set_colorkey((0,0,0))
         text_rect = text_surface.get_rect()
         text_rect.topleft = (x, y)
@@ -148,7 +148,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = Circus(self)
+        self.title_screen = MainMenu(self)
         self.state_stack.append(self.title_screen)
 
     # Reset all player keys
@@ -211,6 +211,9 @@ class Game():
         self.resume = pygame.image.load("sprites/buttons/resume.png").convert_alpha()
         self.restart = pygame.image.load("sprites/buttons/restart.png").convert_alpha()
         self.E_button = pygame.image.load("sprites/buttons/E.png").convert_alpha()
+        self.A_button = pygame.image.load("sprites/buttons/A.png").convert_alpha()
+        self.D_button = pygame.image.load("sprites/buttons/D.png").convert_alpha()
+        self.backspace = pygame.image.load("sprites/buttons/backspace.png").convert_alpha()
         self.up = pygame.image.load("sprites/buttons/up.png").convert_alpha()
         self.down = pygame.image.load("sprites/buttons/down.png").convert_alpha()
         self.buy = pygame.image.load("sprites/buttons/buy.png").convert_alpha()

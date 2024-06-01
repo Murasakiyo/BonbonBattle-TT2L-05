@@ -43,7 +43,7 @@ class Lounge(State, Dialogue):
         self.button_render(display, 1010, 1020, self.level_button, self.lvlbtn_rect)
 
         display.blit(self.game.sugarcube_image, (10, 10))
-        self.game.draw_text(display, f"{int(self.game.current_currency)}", (30,30,30), 40, 5, 35)
+        self.game.draw_text(display, f"{int(self.game.current_currency)}", True, (30,30,30), 40, 5, 35)
 
 
     def button_render(self, display, x, y, button, button_rect):

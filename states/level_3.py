@@ -200,7 +200,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         if self.game.start == False:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
-                self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
+                self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
             self.ending_state(display)

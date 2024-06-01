@@ -1,6 +1,5 @@
 import pygame
 vec = pygame.math.Vector2
-from abc import ABC, abstractmethod
 
 class LoungeCamera(pygame.sprite.Group):
     def __init__(self, game):
@@ -32,7 +31,6 @@ class LoungeCamera(pygame.sprite.Group):
             self.offset.x = 1010
         if self.offset.x <= 15:
             self.offset.x = 15
-        # self.offset.x = min(self.offset.x, 400 - self.h_width)
 
 
     def custom_draw(self, display, player):
@@ -43,8 +41,6 @@ class LoungeCamera(pygame.sprite.Group):
         self.level_rect.x = grass_offset.x + 1600
         display.blit(self.bg, sky_offset)
         display.blit(self.grass, grass_offset)
-        # pygame.draw.rect(display, (255,255,255), self.level_rect, 2)
-        print(self.offset)
 
 
         for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
