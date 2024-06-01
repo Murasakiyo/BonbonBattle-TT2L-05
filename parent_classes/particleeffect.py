@@ -76,10 +76,10 @@ class Particle(pygame.sprite.Sprite):
     def create_surf(self):
         self.surface = pygame.Surface((self.size, self.size)).convert_alpha()
         self.surface.set_alpha(0)
-        self.pic1 = pygame.image.load("sprites/red.png").convert_alpha()
-        self.pic2 = pygame.image.load("sprites/yellow.png").convert_alpha()
-        self.pic3 = pygame.image.load("sprites/pink.png").convert_alpha()
-        self.pic4 = pygame.image.load("sprites/blue.png").convert_alpha()
+        self.pic1 = pygame.image.load("sprites/particles/red.png").convert_alpha()
+        self.pic2 = pygame.image.load("sprites/particles/yellow.png").convert_alpha()
+        self.pic3 = pygame.image.load("sprites/particles/pink.png").convert_alpha()
+        self.pic4 = pygame.image.load("sprites/particles/blue.png").convert_alpha()
         self.confetti = choice((self.pic1, self.pic2, self.pic3, self.pic4))
         self.image_set = self.confetti
         self.rotate()

@@ -29,7 +29,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         
         self.current_time, self.end_time = 0,0
         self.enemy_defeat = False
-        self.snow_value = 2
+        self.snow_value = 1
         self.enemy3_heal = 0
         self.enemy_group.add(self.enemy3)
 
@@ -58,7 +58,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         
         if player_action["reset_game"]:
             self.sugarcube_list.empty()
-            self.snow_value = 2
+            self.snow_value = 1
             self.enemy3.enemy_reset()
             self.player.reset_player(200,200)
             self.ultimate_reset()
@@ -166,7 +166,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         if self.game.start == False:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
-                self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
+                self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
 
         if self.end:

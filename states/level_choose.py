@@ -10,10 +10,8 @@ class Level_Options(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.game = game
-        self.enter = pygame.image.load("sprites/buttons/enter.png").convert_alpha()
+        self.enter = pygame.transform.scale(pygame.image.load("sprites/buttons/enter.png"), (100, 44) ).convert_alpha()
         self.backgrounds()
-        # self.buttons()
-        self.game.buttons()
         self.current_time = 0
         self.first_level = First_Stage(self.game)
         self.second_level = Sec_Stage(self.game)
@@ -31,13 +29,12 @@ class Level_Options(State):
 
         self.menu_options = {0 :"lvl1", 1 : "lvl2", 2 :"lvl3", 3 : "lvl4",  4 : "lvl5"}
         self.index = 0
+        self.back = False
 
         self.level_unlocked = [False, False, False, False, False]
 
         self.text_color = (30, 30, 30)
-        self.font = pygame.font.SysFont(None, 40)
-        sugarcube_image = pygame.image.load("sprites/sugarcube.png").convert()
-        self.sugarcube_image = pygame.transform.scale(sugarcube_image, (25,25)).convert_alpha()
+        
 
 
     def update(self, deltatime, player_action):
@@ -82,17 +79,28 @@ class Level_Options(State):
         if player_action["go"]:
             player_action["transition"] = True
 
-        if not(self.game.init_reset):
-            if self.game.alpha == 255:
-                new_state.enter_state()
-                self.start = False
-                self.game.reset_keys()
+        if player_action["pause"]:
+            self.back = True
+
+        # For resetting level after leaving through pause menu
+        if not(self.back):
+            if not(self.game.init_reset):
+                if self.game.alpha == 255:
+                    new_state.enter_state()
+                    self.start = False
+                    self.game.reset_keys()
+            else:
+                player_action["transition"] = False
+                self.game.init_reset = False
         else:
-            player_action["transition"] = False
-            self.game.init_reset = False
+            player_action["transition"] = True
+            if self.game.alpha == 255:
+                self.exit_state(-1)
+                self.index = 0
+                self.back = False
+                player_action["transition"] = False
 
         
-            
 
     def render(self, display):
         # display.fill((0,0,0))
@@ -103,10 +111,16 @@ class Level_Options(State):
         display.blit(self.current_level4, (self.game.button1.x + 600, self.game.button1.y))
         display.blit(self.current_level5, (self.game.button1.x + 800, self.game.button1.y))
         if not(self.game.player_action["transition"]):
-            display.blit(self.enter, (900, 500))
-        currency_text = self.font.render(f"{int(self.game.current_currency)}", True, self.text_color)
-        display.blit(self.sugarcube_image, (10, 10))
-        display.blit(currency_text, (40, 10))
+            self.game.draw_text(display, "[Left]", False, "white", 790, 490, 25)
+            display.blit(self.game.A_button, (790, 530))
+            self.game.draw_text(display, "[Right]", False, "white", 870, 490, 25)
+            display.blit(self.game.D_button, (870, 530))
+            self.game.draw_text(display, "[Enter]", False, "white", 960, 490, 25)
+            display.blit(self.enter, (960, 530))
+            self.game.draw_text(display, "[Back]", False, "white", 960, 50, 30)
+            display.blit(self.game.backspace, (960, 10))
+        display.blit(self.game.sugarcube_image, (10, 10))
+        self.game.draw_text(display, f"{int(self.game.current_currency)}", True, self.text_color, 40, 10, 35)
 
 
     def update_keys(self, player_action, deltatime):
