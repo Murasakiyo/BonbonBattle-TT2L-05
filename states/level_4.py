@@ -45,7 +45,11 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
 
-        self.current_sugarcube_value = 50
+        if self.game.current_level == 3:
+            self.current_sugarcube_value = 50
+        else:
+            self.current_sugarcube_value = 10
+        
         self.sugarcube_received = 0
 
 
@@ -72,6 +76,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.end_time = 0
 
         if self.end:
+            # self.game.current_level = 4
             self.button_go()
 
         if self.game.init_reset:
@@ -165,6 +170,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
 
         if self.end:
+            self.game.current_level = max(self.game.current_level, 4)
             self.ending_state(display)
 
 

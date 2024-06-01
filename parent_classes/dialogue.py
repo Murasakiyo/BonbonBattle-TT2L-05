@@ -61,7 +61,7 @@ class Dialogue():
             self.counter = 0
             self.counter2 = 0
             player_action["next"] = False
-        
+
 
     def draw_text(self,display):
         # print(list(self.message2))

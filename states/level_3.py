@@ -53,7 +53,12 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.restart_game = False
         self.click = False
         self.state = "none"
-        self.current_sugarcube_value = 50
+
+        if self.game.current_level == 2:
+            self.current_sugarcube_value = 50
+        else:
+            self.current_sugarcube_value = 10
+        
         self.sugarcube_received = 0
 
 
@@ -87,6 +92,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.end_time = 0
 
         if self.end:
+            # self.game.current_level = 3
             self.button_go()
 
         if self.game.init_reset:
@@ -203,4 +209,5 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
 
         if self.end:
+            self.game.current_level = max(self.game.current_level, 3)
             self.ending_state(display)
