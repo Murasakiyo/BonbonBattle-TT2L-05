@@ -46,8 +46,8 @@ class MainMenu(State):
                 self.game.first_game = True
                 self.game.current_currency = 0
                 self.game.current_level = 0
-                # new_state = Story(self.game)
-                new_state = CutscenesTest(self.game)
+                new_state = Story(self.game)
+                # new_state = CutscenesTest(self.game)
                 new_state.enter_state()
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
@@ -58,8 +58,8 @@ class MainMenu(State):
         if self.game.alpha == 255:
             if self.game.skip_cutscenes:
                 new_state = Lounge(self.game)
-            else:
-                new_state = CutscenesTest(self.game)
+            # else:
+            #     new_state = CutscenesTest(self.game)
             new_state.enter_state()
             player_action["transition"] =  False
             self.next = False
