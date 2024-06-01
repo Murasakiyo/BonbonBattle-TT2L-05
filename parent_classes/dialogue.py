@@ -84,13 +84,14 @@ class Dialogue():
 
     
     def dialogue(self, filename):
+        text = list()
         self.open_file = open(f"texts/{filename}")
-        self.intro = self.open_file.readlines()
-        print(self.intro)
+        text = self.open_file.readlines()
 
-        for x in range(len(self.intro)):
-            self.intro[x] = self.intro[x].strip()
-        self.intro.append(" ")
+        for x in range(len(text)):
+            text[x] = text[x].strip()
+        text.append(" ")
         self.open_file.close()
+        return text
 
             

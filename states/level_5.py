@@ -31,6 +31,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
 
         self.deal_damage = True
         self.attack_cooldown = 0
+        self.countdown = 0
 
 
     def update(self, deltatime, player_action):
@@ -77,7 +78,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         if self.game.start == False:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
-                self.game.draw_text(display, self.game.ct_display, "white", 500,150,200)
+                self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
     def get_hit(self, deltatime, player_action):
         if self.player.take_damage == False and self.enemy4.ultimate:

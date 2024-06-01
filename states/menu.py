@@ -1,7 +1,7 @@
 import pygame
 from parent_classes.state import State
 from states.testcutscenes import CutscenesTest
-from states.level_choose import Level_Options
+from states.lounge import Lounge
 from states.level_1 import First_Stage
 from states.level_2 import Sec_Stage
 from states.level_3 import Trio_Stage
@@ -51,7 +51,7 @@ class MainMenu(State):
 
         if self.game.alpha == 255:
             if self.game.skip_cutscenes:
-                new_state = Level_Options(self.game)
+                new_state = Lounge(self.game)
             else:
                 new_state = CutscenesTest(self.game)
             new_state.enter_state()
