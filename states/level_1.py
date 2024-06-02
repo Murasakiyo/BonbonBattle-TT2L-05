@@ -54,9 +54,9 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.state = "none"
         
         if self.game.current_level == 0:
-            self.current_sugarcube_value = 50
+            self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
-            self.current_sugarcube_value = 10
+            self.current_sugarcube_value = self.game.settings.sugarcube_value
             
         self.sugarcube_received = 0
 
@@ -64,6 +64,10 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
+            if not self.game.settings.first_win1:
+                self.game.settings.first_win1 = True
+                self.game.settings.reset_sugarcube_value()
+                self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.enemy1.enemy_reset()
             self.player.reset_player(200,200)
             self.ultimate_reset()
@@ -141,6 +145,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         else:
             self.game.start_timer()
 
+            
        
     def render(self, display):
 

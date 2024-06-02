@@ -55,10 +55,10 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.state = "none"
 
         if self.game.current_level == 2:
-            self.current_sugarcube_value = 50
+            self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
-            self.current_sugarcube_value = 10
-        
+            self.current_sugarcube_value = self.game.settings.sugarcube_value
+            
         self.sugarcube_received = 0
 
 
@@ -66,6 +66,10 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
+            if not self.game.settings.first_win1:
+                self.game.settings.first_win1 = True
+                self.game.settings.reset_sugarcube_value()
+                self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.sugarcube_list.empty()
             self.camera.remove(self.enemy1, self.tongue, self.tongue2)
             self.enemy1.enemy_reset()
