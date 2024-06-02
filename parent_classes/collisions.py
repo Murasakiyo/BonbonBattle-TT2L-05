@@ -8,10 +8,9 @@ class Collisions():
     def __init__(self, game):
         self.game = game
         
-    def enemy_collisions(self, deltatime, player_action, body_group, attack_group, 
+    # Frog collision
+    def enemy_collisions(self, player_action, body_group, attack_group, 
                          enemy, enemy_damage, body_damage, attack_sprite1, attack_sprite2):
-        
-        self.cooldown_for_attacking(deltatime)
 
         # If player got attacked
         if self.player.take_damage == False and not player_action["defend"]:
@@ -33,22 +32,8 @@ class Collisions():
                         self.player.healthpoints -= body_damage
                         self.player.take_damage = True
 
-        if self.player.attack == True and not self.player.deal_damage:
-            if pygame.sprite.spritecollide(self.player, body_group, False): #first check: rectangular collision
-                if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask):
-                    if any(enemy.rect.clipline(*line) for line in self.player.horiz_line):
-                        self.player.moxiepoints += 25
-                        enemy.HP -= self.player.attackpoints
-                        self.player.deal_damage = True
-                        self.gacha = random.randint(0, 10)
-
-
-
 # ------------------------------------------------------------------------------------------------------------------------------
-    def flies_collisions(self, deltatime, player_action, body_group, attack_group, enemy, enemy_damage):
-        
-        self.cooldown_for_attacking(deltatime)
-         
+    def flies_collisions(self, player_action, body_group, attack_group, enemy, enemy_damage):
         if self.player.take_damage == False and not player_action["defend"]:
             if enemy.attack:
                 if pygame.sprite.spritecollide(self.player, attack_group, False): #first check: rectangular collision
@@ -57,9 +42,10 @@ class Collisions():
                         self.player.healthpoints -= enemy_damage
                         self.player.take_damage = True
     
-            self.player_attacking(body_group, enemy)
 
-    def player_attacking(self, body_group, enemy):
+    def player_attacking(self, deltatime, body_group, enemy):
+        self.cooldown_for_attacking(deltatime)
+
         if self.player.attack == True and not self.player.deal_damage:
             if pygame.sprite.spritecollide(self.player, body_group, False): #first check: rectangular collision
                 if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask):

@@ -54,7 +54,6 @@ class FrogEnemy(pygame.sprite.Sprite):
                 self.collision = False
                 self.current_time = 0
 
-        # self.frog_health = pygame.Rect(self.rect.x, self.rect.y, self.HP, 10)
         
         self.animate(deltatime, self.dx, self.speed)
 

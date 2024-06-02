@@ -83,22 +83,26 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
             if self.game.ult == False:
                 # Update player
                 self.player.update(deltatime, player_action)
+                for flies in self.fly_swarm.flylist.sprites():
+                    self.player_attacking(deltatime, self.fly_swarm.flylist, flies)
                 self.update_ultimate(deltatime, player_action)
                 self.cooldown_for_attacked(deltatime)
                 self.health_update()
                 self.moxie_update(player_action)
                 self.particle_group.update(deltatime)
+                self.game.frozen()
+
 
                 if not(self.game.defeat):
                 # Check if flies are all still alive
                     if self.swarming:
-                        self.fly_swarm.update(deltatime, player_action, self.player.rect.center[0], 
-                                            self.player.rect.center[1], self.player.rect, self.player.rect.x)
+                        if not(self.game.freeze):
+                            self.fly_swarm.update(deltatime, player_action, self.player.rect.center[0], 
+                                                self.player.rect.center[1], self.player.rect, self.player.rect.x)
                     
                     for flies in self.fly_swarm.flylist.sprites():
                         if not(flies.HP <= 0):
-                            self.flies_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
-                                                flies.damage)
+                            self.flies_collisions(player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, flies.damage)
                         if flies.HP <= 0:
                             flies.kill()
                             self.spawn_exploding_particles(100, flies)
@@ -116,8 +120,9 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                     if self.game.win:
                         self.spawn_particles(200, deltatime)
                            
-
-            self.add_ultimate(deltatime, player_action)
+            else:
+                self.add_ultimate(deltatime, player_action, self.fly_swarm.flylist)
+                
         else:
             self.game.start_timer()
                 

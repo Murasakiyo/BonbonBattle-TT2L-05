@@ -14,7 +14,6 @@ class Ults():
 
     # Updating the ultimate when initiated
     def update_ultimate(self, deltatime, player_action):
-            print(self.vanilla_grp)
             # Sprite group update
             for support in self.support_dolls.sprites():
                 support.update(deltatime, self.player, player_action, self.player.rect.x, self.player.rect.y)
@@ -44,19 +43,31 @@ class Ults():
             self.check_specifics()
 
     # Check which support doll is initiated        
-    def add_ultimate(self, deltatime, player_action):
+    def add_ultimate(self, deltatime, player_action, enemies):
             if self.game.ult:
                 if self.init_stan:
                     self.stan_ult.update(deltatime, player_action)
                 elif self.init_louie:
                     self.louie_ult.update(deltatime, player_action)
                 elif self.init_krie:
-                    self.krie_ult.update(deltatime,player_action)
+                    self.krie_ult.update(deltatime,player_action, self.player)
                 else:
                     self.torres_ult.update(deltatime,player_action)
+                    self.ult_collisions(self.torres_ult, enemies)
 
             if self.game.ult_finish:
                 self.ultimate_reset()
+
+    def ult_collisions(self, support, enemies):
+        test = 0
+        if pygame.sprite.spritecollide(support, enemies, False): #first check: rectangular collision
+                print("collision work")
+                if pygame.sprite.spritecollide(support, enemies, False, pygame.sprite.collide_mask):
+                    for enemy in enemies:
+                        test += 3
+                        enemy.HP -= 3
+                        print(test)
+                        
 
     # Display confection
     def confection_display(self,display):

@@ -15,7 +15,7 @@ class Moxie():
             if self.player.moxiepoints >= 250:
                 self.game.ult = True
                 if not(self.init_stan):
-                    self.player.moxiepoints = 0
+                    self.player.moxiepoints = 250
                 else:
                     self.player.moxiepoints = self.player.moxiepoints
 

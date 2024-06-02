@@ -89,33 +89,34 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
                 # Update player 
                 self.player.update(deltatime, player_action)
+                self.player_attacking(deltatime, self.enemy_group, self.enemy3)
                 self.update_ultimate(deltatime, player_action)
                 self.health_update()
                 self.moxie_update(player_action)
                 self.cooldown_for_attacked(deltatime)
+                self.game.frozen()
                 
 
                 if not(self.game.defeat):
                     if not(self.enemy3.HP <= 0):
-                        self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect.x)
-                        self.snake_attacked(deltatime, player_action, self.enemy_group, self.enemy3, self.enemy3.body_damage)
+                        if not(self.game.freeze):
+                            self.enemy3.update(deltatime, player_action, self.player.rect.center[0], self.player.rect.center[1], self.player.rect.x)
+                            self.snake_attacked(deltatime, player_action, self.enemy_group, self.enemy3, self.enemy3.body_damage)
+                            for minions in self.enemy3.minionlist.sprites():
+                                self.minion_collisions(deltatime, player_action, self.enemy3.minionlist, self.enemy3.minionlist, minions, minions.damage)
+                            if self.enemy3.HP < 300:
+                                if self.enemy3.leech == True:
+                                    self.old_health = self.player.healthpoints
+                                    self.player.healthpoints -= (self.player.healthpoints * 20/100)
+                                    self.enemy3_heal = (self.old_health * 20/100)
+                                    self.enemy3.HP += self.enemy3_heal
+
                         self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
 
                     # self.snow_particles(2)
-                        if self.enemy3.HP < 300:
-                            if self.enemy3.leech == True:
-                                self.old_health = self.player.healthpoints
-                                self.player.healthpoints -= (self.player.healthpoints * 20/100)
-                                self.enemy3_heal = (self.old_health * 20/100)
-                                self.enemy3.HP += self.enemy3_heal
-
+                        
                         if self.enemy3.HP > 300:
                             self.enemy3.HP = 300
-                
-               
-                        for minions in self.enemy3.minionlist.sprites():
-                            self.minion_collisions(deltatime, player_action, self.enemy3.minionlist, self.enemy3.minionlist, minions, minions.damage)
-
                     
                         for enemy in self.enemy_group.sprites():
                             if enemy.HP <= 0:
@@ -136,8 +137,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             new_state = self.pause
                             new_state.enter_state()
                             self.game.start = False 
-
-            self.add_ultimate(deltatime, player_action)
+            else:
+                self.add_ultimate(deltatime, player_action, self.enemy_group)
         else:
             self.game.start_timer()
 
