@@ -8,6 +8,7 @@ class Moxie():
         self.moxie_rect = pygame.Rect(10, 150, 40, 250)
         self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.player.moxiepoints)
 
+    # Check if enough moxie to init ultimate attack
     def moxie_update(self, player_action):
         self.moxie_bar = pygame.Rect(10, 150, 40, 250 - self.player.moxiepoints)
         if player_action["ultimate"]:

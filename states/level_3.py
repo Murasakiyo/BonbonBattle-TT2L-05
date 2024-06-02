@@ -39,6 +39,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
         self.attack_group.add(self.tongue, self.tongue2)
         self.body_group.add(self.enemy1)
+        self.gacha = 0
+        self.accept_ult = False
 
         self.current_time, self.end_time = 0,0
         self.moxie_points = 0

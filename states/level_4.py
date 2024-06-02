@@ -31,6 +31,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.enemy_defeat = False
         self.snow_value = 1
         self.enemy3_heal = 0
+        self.gacha = 0
+        self.accept_ult = False
         self.enemy_group.add(self.enemy3)
 
         self.end = False

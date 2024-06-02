@@ -33,6 +33,8 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         self.current_time, self.end_time = 0,0
         self.swarming = True
         self.moxie_points = 0
+        self.gacha = 0
+        self.accept_ult = False
         self.enemy_defeat = False
         
         self.end = False

@@ -44,6 +44,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         self.current_time, self.end_time = 0,0
         self.moxie_points = 0
+        self.gacha = 0
+        self.accept_ult = False
         self.enemy_defeat = False
 
         # Variables for game reset

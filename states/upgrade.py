@@ -21,6 +21,8 @@ class Upgrade(State, Dialogue):
         self.menu_rect = self.assets["menu"].get_rect(x = 250, y = 50)
         self.attack_up, self.health_up, self.speed_up = self.assets["up"], self.assets["up"], self.assets["up"]
         self.attack_down, self.health_down, self.speed_down = self.assets["down"], self.assets["down"], self.assets["down"]
+
+        # Button's rect
         self.attk_up_rect = self.attack_up.get_rect(topleft = (self.menu_rect.topleft))
         self.attk_down_rect = self.attack_down.get_rect(x = self.attk_up_rect.x + 480, y = self.attk_up_rect.y + 80 )
         self.health_rect = self.health_up.get_rect(x = self.attk_up_rect.x + 300, y= self.attk_up_rect.y + 180 )
@@ -28,15 +30,19 @@ class Upgrade(State, Dialogue):
         self.speed_rect = self.health_up.get_rect(x = self.attk_up_rect.x + 300, y = self.attk_up_rect.y + 280 )
         self.sdown_rect = self.health_down.get_rect(x = self.attk_up_rect.x + 480, y= self.attk_up_rect.y + 280)
         self.upgrade_rect = self.assets["upgrade"].get_rect(x = self.attk_up_rect.x + 330, y = self.attk_up_rect.y + 360)
+
         self.current_upgrade = self.assets["upgrade"]
         self.new_attack = 0
 
 
     def update(self, deltatime, player_action):
+        # Only want Player's animation, not input
         player_action["up"], player_action["down"], player_action["right"], player_action["left"] = False, False, False, False
         player_action["ultimate"], player_action["attack"], player_action["defend"],= False, False, False
+
         self.player.update(deltatime,player_action)
 
+        # Backspace key, leave room
         if player_action["pause"]:
             self.exit_state(-1)
 
