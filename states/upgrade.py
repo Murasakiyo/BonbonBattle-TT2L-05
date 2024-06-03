@@ -103,7 +103,7 @@ class Upgrade(State, Dialogue):
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
 
-        print(self.sugar_price)
+
 
 
         if self.upgrade_rect.collidepoint(self.game.mouse):

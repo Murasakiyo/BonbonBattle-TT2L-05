@@ -63,8 +63,8 @@ class Circus(State, Dialogue):
         if self.player.rect.colliderect(self.krie.rect):
             display.blit(self.button_shop, self.shop_rect)
 
-        display.blit(self.game.sugarcube_image, (10, 10))
-        self.game.draw_text(display, f"{int(self.game.current_currency)}", True, (30,30,30), 40, 10, 35)
+        # display.blit(self.game.sugarcube_image, (10, 10))
+        # self.game.draw_text(display, f"{int(self.game.current_currency)}", True, (30,30,30), 40, 10, 35)
 
 
 
