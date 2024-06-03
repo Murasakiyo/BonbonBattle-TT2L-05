@@ -115,12 +115,12 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                                         self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
                     
                     if self.game.win:
-                        self.game.particle.spawn_particles(200, deltatime)
+                        self.spawn_particles(200, deltatime)
 
                     for enemy in self.body_group.sprites():
                         if enemy.HP <= 0:
                             enemy.kill()
-                            self.game.particle.spawn_exploding_particles(100, enemy)
+                            self.spawn_exploding_particles(100, enemy)
                             self.tongue.kill()
                             self.tongue2.kill()
                             self.enemy_defeat = True
@@ -133,7 +133,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                             self.game.start = False
             self.particle_group.update(deltatime)
             if self.game.ult and self.init_louie:
-                self.game.particle.louie_particles(4)
+                self.louie_particles(4)
 
             self.add_ultimate(deltatime, player_action)
         else:
