@@ -27,17 +27,17 @@ class Settings:
         if any([self.first_win1, self.first_win2, self.first_win3, self.first_win4, self.first_win5]):
             self.sugarcube_value = 10
 
-    # def set_first_win(self, level):
-    #     if level == 1:
-    #         self.first_win1 = True
-    #     elif level == 2:
-    #         self.first_win2 = True
-    #     elif level == 3:
-    #         self.first_win3 = True
-    #     elif level == 4:
-    #         self.first_win4 = True
-    #     elif level == 5:
-    #         self.first_win5 = True
+    def set_first_win(self, level):
+        if level == 1:
+            self.first_win1 = True
+        elif level == 2:
+            self.first_win2 = True
+        elif level == 3:
+            self.first_win3 = True
+        elif level == 4:
+            self.first_win4 = True
+        elif level == 5:
+            self.first_win5 = True
 
     def upgrade_player(self, health=None, speed=None, attack=None):
         if health:
@@ -47,6 +47,6 @@ class Settings:
         if attack:
             self.player_attack += attack
 
-    # def unlock_level(self, level):
-    #     if self.level_unlock:
-    #         self.levels_unlocked_list[level - 1] = True
+    def unlock_level(self, level):
+        if self.level_unlock:
+            self.levels_unlocked_list[level - 1] = True

@@ -12,8 +12,8 @@ class SaveDataSystem:
             'healthpoints': self.player.healthpoints,
             'attackpoints': self.player.attackpoints,
             'speed': self.player.speed,
-            'skip_cutscenes': self.player.game.skip_cutscenes,
-            'current_currency': self.player.game.current_currency
+            'skip_cutscenes': self.game.skip_cutscenes,
+            'current_currency': self.game.current_currency
         }
     
     def default_value(self):
@@ -37,7 +37,6 @@ class SaveDataSystem:
         try:
             with open(self.file_name, 'rb') as file:
                 return pickle.load(file)
-        except FileNotFoundError:  # returns None if error occured (FileNotFound)
-            print("hi")
+        except FileNotFoundError: 
             return self.default_value()
         
