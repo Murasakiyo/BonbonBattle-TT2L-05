@@ -29,10 +29,13 @@ class Upgrade(State, Dialogue):
         self.sdown_rect = self.health_down.get_rect(x = self.menu_rect.x + 480, y= self.menu_rect.y + 280)
         self.upgrade_rect = self.assets["upgrade"].get_rect(x = self.menu_rect.x + 330, y = self.menu_rect.y + 360)
         self.current_upgrade = self.assets["upgrade"]
-        self.new_attack = 0
-        self.new_health = 0
-        self.new_speed = 0
+        self.atk_level = 0
+        self.HP_level = 0
+        self.spd_level = 0
         self.sugar_price = 0
+        self.add_atk = 0
+        self.add_HP = 0
+        self.add_spd = 0
         self.apply_upgrades = False
 
 
@@ -43,15 +46,17 @@ class Upgrade(State, Dialogue):
 
         if self.attack_up_rect.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click:
-                self.new_attack += 1
+                self.atk_level += 1
+                self.add_atk += 5
                 self.sugar_price += 20
                 self.click = True
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
 
         if self.attk_down_rect.collidepoint(self.game.mouse):
-            if pygame.mouse.get_pressed()[0] and not self.click and not self.new_attack <= 0:
-                self.new_attack -= 1
+            if pygame.mouse.get_pressed()[0] and not self.click and not self.atk_level <= 0:
+                self.atk_level -= 1
+                self.add_atk -= 5
                 self.sugar_price -= 20
                 self.click = True
             if not pygame.mouse.get_pressed()[0]:
@@ -61,15 +66,17 @@ class Upgrade(State, Dialogue):
 
         if self.health_rect.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click:
-                self.new_health += 1
+                self.HP_level += 1
+                self.add_HP += 5
                 self.sugar_price += 20
                 self.click = True
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
 
         if self.hdown_rect.collidepoint(self.game.mouse):
-            if pygame.mouse.get_pressed()[0] and not self.click and not self.new_health <= 0:
-                self.new_health -= 1
+            if pygame.mouse.get_pressed()[0] and not self.click and not self.HP_level <= 0:
+                self.HP_level -= 1
+                self.add_HP -= 5
                 self.sugar_price -= 20
                 self.click = True
             if not pygame.mouse.get_pressed()[0]:
@@ -80,15 +87,17 @@ class Upgrade(State, Dialogue):
 
         if self.speed_rect.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click:
-                self.new_speed += 1
+                self.spd_level += 1
+                self.add_spd += 5
                 self.sugar_price += 20
                 self.click = True
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
 
         if self.sdown_rect.collidepoint(self.game.mouse):
-            if pygame.mouse.get_pressed()[0] and not self.click and not self.new_speed <= 0:
-                self.new_speed -= 1
+            if pygame.mouse.get_pressed()[0] and not self.click and not self.spd_level <= 0:
+                self.spd_level -= 1
+                self.add_spd -= 5
                 self.sugar_price -= 20
                 self.click = True
             if not pygame.mouse.get_pressed()[0]:
@@ -105,11 +114,15 @@ class Upgrade(State, Dialogue):
                 self.apply_upgrades = False
                 self.click = False            
 
-        if self.apply_upgrades:
-            self.player.attackpoints += self.new_attack
-            self.player.healthpoints += self.new_health
-            self.player.speed += self.new_speed
-            self.current_currency -= self.sugar_price
+        if self.apply_upgrades and self.sugar_price <= self.game.current_currency:
+            self.player.attackpoints += self.add_atk
+            self.player.healthpoints += self.add_HP
+            self.player.speed += self.add_spd
+            self.game.current_currency -= self.sugar_price
+            self.add_atk = 0
+            self.add_HP = 0
+            self.add_spd = 0
+            self.sugar_price = 0
 
 
 
@@ -140,19 +153,19 @@ class Upgrade(State, Dialogue):
         # Displaying Attack upgrades
         display.blit(self.attack_up, (self.menu_rect.x + 300, self.menu_rect.y + 80))
         display.blit(self.attack_down, self.attk_down_rect)
-        self.game.draw_text(display, f"{int(self.new_attack)}", True, (0,0,14), self.menu_rect.x + 405, self.menu_rect.y + 80, 40)
+        self.game.draw_text(display, f"{int(self.atk_level)}", True, (0,0,14), self.menu_rect.x + 405, self.menu_rect.y + 80, 40)
         self.game.draw_text(display, "ATTACK", True, (0,0,14), self.menu_rect.x + 370, self.menu_rect.y + 35, 30)
 
         # Displaying Health upgrades
         display.blit(self.health_up, self.health_rect)
         display.blit(self.health_down, self.hdown_rect)
-        self.game.draw_text(display, f"{int(self.new_health)}", True, (0,0,14), self.menu_rect.x + 405, self.menu_rect.y + 180, 40)
+        self.game.draw_text(display, f"{int(self.HP_level)}", True, (0,0,14), self.menu_rect.x + 405, self.menu_rect.y + 180, 40)
         self.game.draw_text(display, "HEALTH", True, (0,0,14), self.menu_rect.x + 370, self.menu_rect.y + 140, 30)
 
         # Displaying Speed upgrades
         display.blit(self.speed_up, self.speed_rect)
         display.blit(self.speed_down, self.sdown_rect)
-        self.game.draw_text(display, f"{int(self.new_speed)}", True, (0,0,14), self.menu_rect.x + 405, self.menu_rect.y + 280, 40)
+        self.game.draw_text(display, f"{int(self.spd_level)}", True, (0,0,14), self.menu_rect.x + 405, self.menu_rect.y + 280, 40)
         self.game.draw_text(display, "SPEED", True, (0,0,14), self.menu_rect.x + 375, self.menu_rect.y + 240, 30)
 
         self.game.draw_text(display, "[Back]", False, ("white"), 965, 60, 30)
