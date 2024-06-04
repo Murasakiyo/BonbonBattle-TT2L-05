@@ -135,7 +135,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
             self.particle_group.update(deltatime)
             if self.game.ult and self.init_louie:
-                self.louie_particles(8)
+                self.louie_particles(4)
 
             self.add_ultimate(deltatime, player_action)
         else:
