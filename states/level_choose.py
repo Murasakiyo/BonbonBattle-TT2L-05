@@ -31,6 +31,8 @@ class Level_Options(State):
         self.index = 0
         self.back = False
 
+        # self.level_unlocked = [False, False, False, False, False]
+
         self.text_color = (30, 30, 30)
         
 
@@ -40,6 +42,9 @@ class Level_Options(State):
         self.show_bg = self.current_background
         self.bg_transition(player_action)
         self.update_keys(player_action, deltatime)
+        print(f"level_index: {self.index}")
+        
+
         if self.menu_options[self.index] == "lvl1": 
             self.current_level1 = self.game.lvl1_hover
             self.current_background = self.level1
@@ -120,11 +125,21 @@ class Level_Options(State):
 
     def update_keys(self, player_action, deltatime):
         self.current_time += deltatime
+        current_level = self.game.current_level
+        selected_level = self.index
+        
+        MAX_LEVEL = 4
         if self.current_time > 0.13:
             if player_action["right"]:
-                self.index = (self.index + 1) % len(self.menu_options)
+                if current_level == selected_level:
+                    pass
+                else:    
+                    self.index = (self.index + 1) % len(self.menu_options)
             elif player_action["left"]:
-                self.index = (self.index - 1) % len(self.menu_options)
+                if selected_level == 0 and current_level < MAX_LEVEL:
+                    pass
+                else:
+                    self.index = (self.index - 1) % len(self.menu_options)
             self.current_time = 0
 
     def bg_transition(self, player_action):

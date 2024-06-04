@@ -42,13 +42,22 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         self.restart_game = False
         self.click = False
         self.state = "none"
-        self.current_sugarcube_value = 50
+
+        if self.game.current_level == 1:
+            self.current_sugarcube_value = self.game.settings.first_sugarcube_value
+        else:
+            self.current_sugarcube_value = self.game.settings.sugarcube_value
+            
         self.sugarcube_received = 0
 
 
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
+            if not self.game.settings.first_win2:
+                self.game.settings.first_win2 = True
+                self.game.settings.reset_sugarcube_value()
+                self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.sugarcube_list.empty()
             for flies in self.fly_swarm.flylist.sprites():
                 flies.kill()
@@ -73,6 +82,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.exit_state(-1)
 
         if self.end:
+            # self.game.current_level = 2
             self.button_go()
 
         self.game_over(player_action)
@@ -160,5 +170,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
+            self.game.current_level = max(self.game.current_level, 2)
             self.ending_state(display)
 
