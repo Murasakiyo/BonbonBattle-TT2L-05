@@ -21,6 +21,11 @@ class Stanley(pygame.sprite.Sprite, Support):
  
 
     def update(self,deltatime, player, player_action, player_x, player_y):
+        if self.attack:
+            if not(self.attack_cooldown > 0.02):
+                player.attackpoints = player.attackpoints + (player.attackpoints * 0.5)
+        else:
+            player.attackpoints = 3
         self.update_movement(deltatime, player, player_action, player_x, player_y, self.animate)
         
     def update_lounge(self, deltatime, player, player_action):

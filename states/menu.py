@@ -3,6 +3,7 @@ from parent_classes.state import State
 from states.testcutscenes import CutscenesTest
 from states.lounge import Lounge
 from states.level_5 import Penta_Stage
+from states.level_1 import First_Stage
 
 
 class MainMenu(State):

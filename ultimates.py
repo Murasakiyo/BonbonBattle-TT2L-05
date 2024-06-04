@@ -58,13 +58,19 @@ class Stan_Ult(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.mask.to_surface()
 
-    def update(self, deltatime, player_action):
+    def update(self, deltatime, player_action, enemies):
         self.animate(deltatime)
         if self.image == self.current_anim_list[13]:
+            self.ult_collisions(enemies)
             self.game.ult_finish = True
             self.game.ult = False
             self.image = self.current_anim_list[0]
             self.current_frame = 0
+
+    def ult_collisions(self, enemies):
+        if pygame.sprite.spritecollide(self, enemies, False): #first check: rectangular collision
+                for enemy in enemies:
+                    enemy.HP -= 50
 
     def render(self, display):
         display.blit(self.image, (0,0))

@@ -28,6 +28,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.particle_group = pygame.sprite.Group()
         
         self.current_time, self.end_time = 0,0
+        self.enemy_moxie = 0
         self.enemy_defeat = False
         self.snow_value = 1
         self.enemy3_heal = 0

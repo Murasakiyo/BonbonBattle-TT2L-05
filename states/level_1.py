@@ -43,7 +43,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.body_group.add(self.enemy1)
 
         self.current_time, self.end_time = 0,0
-        self.moxie_points = 0
+        self.enemy_moxie = 0
         self.gacha = 0
         self.accept_ult = False
         self.enemy_defeat = False
@@ -94,6 +94,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         if self.game.start == True:
             if not(self.game.ult):
+                print(self.player.attackpoints)
 
                 # Update player
                 self.player.update(deltatime, player_action)

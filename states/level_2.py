@@ -32,7 +32,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
 
         self.current_time, self.end_time = 0,0
         self.swarming = True
-        self.moxie_points = 0
+        self.enemy_moxie = 0
         self.gacha = 0
         self.accept_ult = False
         self.enemy_defeat = False
@@ -121,7 +121,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
 
             else:
                 self.add_ultimate(deltatime, player_action, self.fly_swarm.flylist)
-                
+
             self.particle_group.update(deltatime)
             if self.game.ult and self.init_louie:
                 self.louie_particles(4)

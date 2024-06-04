@@ -43,7 +43,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.accept_ult = False
 
         self.current_time, self.end_time = 0,0
-        self.moxie_points = 0
+        self.enemy_moxie = 0
         self.swarming = True
         self.swamping = False
         self.enemy_defeat = False

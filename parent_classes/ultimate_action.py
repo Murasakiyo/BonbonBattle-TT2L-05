@@ -46,11 +46,12 @@ class Ults():
     def add_ultimate(self, deltatime, player_action, enemies):
             if self.game.ult:
                 if self.init_stan:
-                    self.stan_ult.update(deltatime, player_action)
+                    self.stan_ult.update(deltatime, player_action, enemies)
+                    self.enemy_moxie = 0
                 elif self.init_louie:
                     self.louie_ult.update(deltatime, player_action)
                 elif self.init_krie:
-                    self.krie_ult.update(deltatime,player_action, self.player)
+                    self.krie_ult.update(deltatime, player_action, self.player)
                 else:
                     self.torres_ult.update(deltatime,player_action)
                     self.ult_collisions(self.torres_ult, enemies)
@@ -59,14 +60,11 @@ class Ults():
                 self.ultimate_reset()
 
     def ult_collisions(self, support, enemies):
-        test = 0
         if pygame.sprite.spritecollide(support, enemies, False): #first check: rectangular collision
                 print("collision work")
                 if pygame.sprite.spritecollide(support, enemies, False, pygame.sprite.collide_mask):
                     for enemy in enemies:
-                        test += 3
-                        enemy.HP -= 3
-                        print(test)
+                        enemy.HP -= 2
                         
 
     # Display confection
