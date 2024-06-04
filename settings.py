@@ -3,9 +3,9 @@ import pygame
 class Settings:
     def __init__(self):
         # Initialize player stats
-        self.player_healthpoints = 250
-        self.player_attackpoints = 20
-        self.player_speed = 400
+        self.current_healthpoints = 250
+        self.current_attackpoints = 3
+        self.current_speed = 400
 
         # Initialize sugarcube values
         self.sugarcube_value = 10
@@ -25,9 +25,10 @@ class Settings:
 
 
     def upgrade_player(self, health=None, attack=None, speed=None):
-        if health:
-            self.player_healthpoints += health
-        if attack:
-            self.player_attackpoints += attack
-        if speed:
-            self.player_speed += speed
+        pass
+        # if health:
+        #     self.player_healthpoints += health
+        # if attack:
+        #     self.player_attackpoints += attack
+        # if speed:
+        #     self.player_speed += speed
