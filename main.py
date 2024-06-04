@@ -120,7 +120,7 @@ class Game():
     # Updates the state stack
     def update(self):
         self.state_stack[-1].update(self.deltatime, self.player_action)
-        self.ct_display = str(int(self.countdown -self.current_time))
+        self.ct_display = str(int(self.countdown - self.current_time))
         
 
     # Rendering images on screen

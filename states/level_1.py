@@ -131,9 +131,11 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                             new_state = self.pause
                             new_state.enter_state()
                             self.game.start = False
+
+
             self.particle_group.update(deltatime)
             if self.game.ult and self.init_louie:
-                self.louie_particles(4)
+                self.louie_particles(8)
 
             self.add_ultimate(deltatime, player_action)
         else:
@@ -171,8 +173,10 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         if not(self.enemy1.HP <= 0):
             self.enemy_health_render(display, self.enemy1.rect.x, self.enemy1.rect.y)
 
-        self.ultimate_display(display)
+        if self.game.ult:
+            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
         self.particle_group.draw(display)
+        self.ultimate_display(display)
 
         if self.game.start == False:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))

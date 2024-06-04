@@ -204,5 +204,5 @@ class ParticleFunctions():
             color = "white"
             direction = pygame.math.Vector2(-1, 0)
             direction = direction.normalize()
-            speed = randint(100, 800)
+            speed = randint(500, 800)
             Snow(self.particle_group, pos, color, direction, speed)
