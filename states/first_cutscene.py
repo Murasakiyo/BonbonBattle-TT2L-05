@@ -32,8 +32,8 @@ class Story(State, Dialogue):
             if player_action["next"]:
                 self.game.state_stack.pop()
                 player_action["next"] = False
-                # self.game.state_stack.append(Lounge(self.game))
-                self.game.state_stack.append(Level_Options(self.game))
+                self.game.state_stack.append(Lounge(self.game))
+                # self.game.state_stack.append(Level_Options(self.game))
                 
 
     def render(self, display):

@@ -42,6 +42,9 @@ class MainMenu(State):
                 self.game.first_game = True
                 self.game.current_currency = 0
                 self.game.current_level = 0
+                self.game.settings.current_healthpoints = 250
+                self.game.settings.current_attackpoints = 3
+                self.game.settings.current_speed = 400
                 new_state = Story(self.game)
                 # new_state = CutscenesTest(self.game)
                 new_state.enter_state()

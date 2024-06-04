@@ -24,11 +24,3 @@ class Settings:
             self.sugarcube_value = 10
 
 
-    def upgrade_player(self, health=None, attack=None, speed=None):
-        pass
-        # if health:
-        #     self.player_healthpoints += health
-        # if attack:
-        #     self.player_attackpoints += attack
-        # if speed:
-        #     self.player_speed += speed
