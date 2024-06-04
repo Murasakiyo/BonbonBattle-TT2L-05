@@ -33,6 +33,8 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.deal_damage = True
         self.attack_cooldown = 0
         self.countdown = 0
+        self.gacha = 0
+        self.accept_ult = False
 
 
     def update(self, deltatime, player_action):
@@ -57,7 +59,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 
                         
 
-            self.add_ultimate(deltatime, player_action)
+            self.add_ultimate(deltatime, player_action, self.body_group)
         else:
             self.game.start_timer()
 

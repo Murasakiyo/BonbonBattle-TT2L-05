@@ -16,6 +16,7 @@ from savingsystem import *
 class Game():
     def __init__(self):
         pygame.init()
+        pygame.display.set_caption("Bonbon Battle: Treading Through Cotton Woods")
         self.SCREENWIDTH, self.SCREENHEIGHT = 1100, 600
         self.game_canvas = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.screen = pygame.display.set_mode((self.SCREENWIDTH, self.SCREENHEIGHT))
@@ -26,7 +27,7 @@ class Game():
         self.alpha = 0
         self.start = False
         self.reset_game = False
-        self.deltatime, self.prevtime, self.current_time, self.countdown = 0 , 0, 0, 4
+        self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
         self.backgrounds()
         self.buttons()
 
@@ -38,7 +39,7 @@ class Game():
         self.cutscene = {"Intro": False}
         self.state_stack = []
         self.load_states()
-        self.ultimates()
+        self.battle_state()
 
         self.player = Player(self, 200, 200)
         self.first_game = False
@@ -62,6 +63,12 @@ class Game():
             self.clock.tick((60))
 
 
+    # First state/room in the game (can be changed)
+    def load_states(self):
+        self.title_screen = MainMenu(self)
+        self.state_stack.append(self.title_screen)
+
+        
     # All key events are here. Receive input from player, display output for player
     def get_events(self):
 
@@ -152,25 +159,27 @@ class Game():
         text_rect.topleft = (x, y)
         surface.blit(text_surface, text_rect)
 
-    # First state/room in the game (can be changed)
-    def load_states(self):
-        self.title_screen = MainMenu(self)
-        self.state_stack.append(self.title_screen)
-
     # Reset all player keys
     def reset_keys(self):
         for actions in self.player_action:
             self.player_action[actions] = False
 
-    # For all ultimates
-    def ultimates(self):
+    # For all battle states
+    def battle_state(self):
         self.ult = False
         self.ult_finish = False
+        self.freeze = False
         self.defeat = False
         self.win = False
         self.init_reset = False
         
-    
+    def frozen(self):
+        if self.freeze:
+            self.freeze_time += self.deltatime
+            if self.freeze_time > 5:
+                self.freeze = False
+                self.freeze_time = 0
+
     # Transition screen between states
     def transition(self):
         if self.player_action["transition"]:

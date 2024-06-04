@@ -21,6 +21,7 @@ class Upgrade(State, Dialogue):
         self.menu_rect = self.assets["menu"].get_rect(x = 250, y = 50)
         self.attack_up, self.health_up, self.speed_up = self.assets["up"], self.assets["up"], self.assets["up"]
         self.attack_down, self.health_down, self.speed_down = self.assets["down"], self.assets["down"], self.assets["down"]
+
         self.attack_up_rect = self.attack_up.get_rect(x= 550, y= 130)
         self.attk_down_rect = self.attack_down.get_rect(x = self.menu_rect.x + 480, y = self.menu_rect.y + 80 )
         self.health_rect = self.health_up.get_rect(x = self.menu_rect.x + 300, y= self.menu_rect.y + 180 )
@@ -40,10 +41,13 @@ class Upgrade(State, Dialogue):
 
 
     def update(self, deltatime, player_action):
+        # Only want Player's animation, not input
         player_action["up"], player_action["down"], player_action["right"], player_action["left"] = False, False, False, False
         player_action["ultimate"], player_action["attack"], player_action["defend"],= False, False, False
+
         self.player.update(deltatime,player_action)
 
+        # Backspace key, leave room
         if self.attack_up_rect.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click and self.atk_level < 12:
                 self.atk_level += 1 # Max is 12
@@ -123,8 +127,6 @@ class Upgrade(State, Dialogue):
             self.add_HP = 0
             self.add_spd = 0
             self.sugar_price = 0
-
-
 
         if player_action["pause"]:
             self.exit_state(-1)

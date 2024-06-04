@@ -119,7 +119,10 @@ class State():
             self.game.defeat = True
             player_action["ultimate"] = False
             if self.player.image == self.player.lose_sprites[3]:
-                self.end = True
+                self.current_time += deltatime
+                if self.current_time > 1:
+                    self.end = True
+                    self.current_time = 0
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self, game):
