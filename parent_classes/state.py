@@ -102,9 +102,6 @@ class State():
     def ending_options(self, deltatime, player_action, x, y):
         if self.enemy_defeat:
             self.current_time += deltatime
-            # if not self.sugar_spawned:
-            #     self.sugar_spawned = True
-            #     print("spawning sugarcubes")
             self.spawn_sugarcubes(x, y)
             if not(self.sugarcube_received > x):
                 self.sugarcube_collision()

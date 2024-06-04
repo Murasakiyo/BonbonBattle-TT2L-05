@@ -7,10 +7,6 @@ class Settings:
         self.player_attackpoints = 20
         self.player_speed = 400
 
-        # Initialize game progress
-        # self.levels_unlocked_list = [False, False, False, False, False]  # Five levels
-        # self.level_unlock = False
-
         # Initialize sugarcube values
         self.sugarcube_value = 10
         self.first_sugarcube_value = 50
@@ -35,8 +31,3 @@ class Settings:
             self.player_attackpoints += attack
         if speed:
             self.player_speed += speed
-        
-
-    # def unlock_level(self, level):
-    #     if self.level_unlock:
-    #         self.levels_unlocked_list[level - 1] = True
