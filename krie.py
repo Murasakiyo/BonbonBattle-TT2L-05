@@ -21,7 +21,9 @@ class Krie(pygame.sprite.Sprite, Support):
 
 
     def update(self,deltatime, player, player_action, player_x, player_y):
-        
+        if self.attack:
+            if not(self.attack_cooldown > 0.05):
+                player.healthpoints += 5
         self.update_movement(deltatime,player, player_action, player_x, player_y, self.animate)
 
     def update_circus(self, deltatime, player, player_action):
