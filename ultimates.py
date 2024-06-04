@@ -1,10 +1,15 @@
 import pygame
 
-class Torres_Ult():
+class Torres_Ult(pygame.sprite.Sprite):
     def __init__(self, game):
+        super().__init__()
         self.game = game
         self.load_sprites()
         self.current_frame, self.last_frame_update = 0,0
+        self.ult_mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.ult_mask.to_surface()
+        self.rect = self.image.get_rect(x = 0, y = 0)
+        
 
     def update(self, deltatime, player_action):
         self.animate(deltatime)
@@ -14,8 +19,11 @@ class Torres_Ult():
             self.image = self.current_anim_list[0]
             self.current_frame = 0
 
+
     def render(self, display):
         display.blit(self.image, (0,0))
+        pygame.draw.rect(display, "red", self.rect, 2)
+
 
 
     def animate(self, deltatime):
@@ -40,11 +48,15 @@ class Torres_Ult():
 
 
 
-class Stan_Ult():
+class Stan_Ult(pygame.sprite.Sprite):
     def __init__(self, game):
+        super().__init__()
         self.game = game
         self.load_sprites()
         self.current_frame, self.last_frame_update = 0,0
+        self.rect = self.image.get_rect(x = 0, y = 0)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.mask.to_surface()
 
     def update(self, deltatime, player_action):
         self.animate(deltatime)
@@ -89,15 +101,20 @@ class Stan_Ult():
 
 
 
-class Louie_Ult():
+class Louie_Ult(pygame.sprite.Sprite):
     def __init__(self, game):
+        super().__init__()
         self.game = game
         self.load_sprites()
         self.current_frame, self.last_frame_update = 0,0
+        self.rect = self.image.get_rect(x = 0, y = 0)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.mask.to_surface()
 
     def update(self, deltatime, player_action):
         self.animate(deltatime)
         if self.image == self.current_anim_list[18]:
+            self.game.freeze = True
             self.game.ult_finish = True
             self.game.ult = False
             self.image = self.current_anim_list[0]
@@ -105,7 +122,6 @@ class Louie_Ult():
             
     def render(self, display):
         display.blit(self.image, (0,0))
-
 
     def animate(self, deltatime):
         self.last_frame_update += deltatime
@@ -143,21 +159,24 @@ class Louie_Ult():
 
 
 
-class Krie_Ult():
+class Krie_Ult(pygame.sprite.Sprite):
     def __init__(self, game):
+        super().__init__()
         self.game = game
         self.load_sprites()
         self.current_frame, self.last_frame_update = 0,0
+        self.rect = self.image.get_rect(x = 0, y = 0)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.mask.to_surface()
 
-    def update(self, deltatime, player_action):
+    def update(self, deltatime, player_action, target):
         self.animate(deltatime)
         if self.image == self.current_anim_list[10]:
+            target.healthpoints += 100
             self.game.ult_finish = True
             self.game.ult = False
             self.image = self.current_anim_list[0]
             self.current_frame = 0
-
-
 
     def render(self, display):
         display.blit(self.image, (0,0))

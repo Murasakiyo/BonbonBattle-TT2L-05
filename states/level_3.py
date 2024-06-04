@@ -39,6 +39,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
         self.attack_group.add(self.tongue, self.tongue2)
         self.body_group.add(self.enemy1)
+        self.gacha = 0
+        self.accept_ult = False
 
         self.current_time, self.end_time = 0,0
         self.moxie_points = 0
@@ -47,6 +49,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.enemy_defeat = False
         self.enemyfrog_defeat = False
         self.enemyflies_defeat = False
+        self.current_enemy = self.fly_swarm.flylist
 
         self.end = False
         self.exit_game = False
@@ -62,6 +65,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
         if player_action["reset_game"]:
             self.sugarcube_list.empty()
+            self.current_enemy = self.fly_swarm.flylist
             self.camera.remove(self.enemy1, self.tongue, self.tongue2)
             self.enemy1.enemy_reset()
             self.player.reset_player(200,200)
@@ -102,20 +106,25 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 # Update player
                 self.player.update(deltatime, player_action)
                 self.update_ultimate(deltatime, player_action)
+                for flies in self.fly_swarm.flylist.sprites():
+                    self.player_attacking(deltatime, self.fly_swarm.flylist, flies)
+                self.player_attacking(deltatime, self.body_group, self.enemy1)
                 self.health_update()
                 self.moxie_update(player_action)
                 self.cooldown_for_attacked(deltatime)
+                self.game.frozen()
+
 
                 if not(self.game.defeat):
                     # Check if flies are all still alive
                     if self.swarming:
-                        self.fly_swarm.update(deltatime, player_action, self.player.rect.center[0], 
-                                            self.player.rect.center[1], self.player.rect, self.player.rect.x)
+                        if not(self.game.freeze):
+                            self.fly_swarm.update(deltatime, player_action, self.player.rect.center[0], 
+                                                self.player.rect.center[1], self.player.rect, self.player.rect.x)
                     
                     for flies in self.fly_swarm.flylist.sprites():
                         if not(flies.HP <= 0):
-                            self.flies_collisions(deltatime, player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, 
-                                                flies.damage)
+                            self.flies_collisions(player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, flies.damage)
                         if flies.HP <= 0:
                             flies.kill()
                             self.spawn_exploding_particles(100, flies)
@@ -124,18 +133,21 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             self.swarming = False
                             self.swamping = True
                             self.enemyflies_defeat = True
+                            self.current_enemy = self.body_group
                             self.camera.add(self.enemy1)
 
                     if self.swamping:
                         if not(self.enemy1.HP <= 0):
-                            self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
-                                            self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
-                            self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
-                            self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                            if not(self.game.freeze):
+                                self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
+                                                self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
+                                self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                                self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                                self.enemy_collisions(player_action, self.body_group, self.attack_group, self.enemy1, 
+                                            self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
                             self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
 
-                        self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
-                                            self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
+                        
                         
                         for enemy in self.body_group.sprites():
                             if enemy.HP <= 0:
@@ -160,12 +172,13 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             new_state = self.pause
                             new_state.enter_state()
                             self.game.start = False
+            else:
+                self.add_ultimate(deltatime, player_action, self.current_enemy)
             
             self.particle_group.update(deltatime)
             if self.game.ult and self.init_louie:
                 self.louie_particles(4)
 
-            self.add_ultimate(deltatime, player_action)
         else:
             self.game.start_timer()
 

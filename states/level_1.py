@@ -44,6 +44,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         self.current_time, self.end_time = 0,0
         self.moxie_points = 0
+        self.gacha = 0
+        self.accept_ult = False
         self.enemy_defeat = False
 
         # Variables for game reset
@@ -91,28 +93,31 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.ending_options(deltatime, player_action, 2, 1)
 
         if self.game.start == True:
-            if self.game.ult == False:
+            if not(self.game.ult):
 
                 # Update player
                 self.player.update(deltatime, player_action)
+                self.player_attacking(deltatime, self.body_group, self.enemy1)
                 self.update_ultimate(deltatime, player_action)
                 self.cooldown_for_attacked(deltatime)
                 self.health_update()
                 self.moxie_update(player_action)
-                
+                self.game.frozen()
+
 
                 # Update enemies
                 if not(self.game.defeat):
                     if not(self.enemy1.HP <= 0):
-                        self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
-                                        self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
-                        self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
-                        self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                        if not(self.game.freeze):
+                            self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
+                                            self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
+                            self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                            self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                            self.enemy_collisions(player_action, self.body_group, self.attack_group, self.enemy1, 
+                                            self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
                         self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
-                    
-                    # Check collision of enemies and players
-                    self.enemy_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy1, 
-                                        self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
+                        # Check collision of enemies and players
+                        
                     
                     if self.game.win:
                         self.spawn_particles(200, deltatime)
@@ -125,19 +130,19 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                             self.tongue2.kill()
                             self.enemy_defeat = True
 
-
                     if not(self.end):
                         if player_action["pause"]:
                             new_state = self.pause
                             new_state.enter_state()
                             self.game.start = False
-
+            else:
+                self.add_ultimate(deltatime, player_action, self.body_group)
 
             self.particle_group.update(deltatime)
             if self.game.ult and self.init_louie:
                 self.louie_particles(4)
 
-            self.add_ultimate(deltatime, player_action)
+
         else:
             self.game.start_timer()
 

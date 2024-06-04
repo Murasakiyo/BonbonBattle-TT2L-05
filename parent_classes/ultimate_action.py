@@ -5,43 +5,76 @@ from louie import *
 from krie import *
 from ultimates import *
 from confection import *
+import random
 
 class Ults():
     def __init__(self, game):
         self.game = game
 
 
+    # Updating the ultimate when initiated
     def update_ultimate(self, deltatime, player_action):
             # Sprite group update
             for support in self.support_dolls.sprites():
                 support.update(deltatime, self.player, player_action, self.player.rect.x, self.player.rect.y)
 
             if self.game.ult_finish == False:
-                # Check for collision rect and the mask collision
-                if pygame.sprite.spritecollide(self.player, self.confection_ult, False):
-                    if pygame.sprite.spritecollide(self.player, self.confection_ult, False, pygame.sprite.collide_mask):
-                        self.confection_ult.empty() # Remove everything in the sprite group
+                
+                if not(self.accept_ult):
+                    if self.gacha == 3:
+                        self.vanilla.update()
+                        self.confection_ult.add(self.vanilla)
+                        self.vanilla_grp.add(self.vanilla)
+                    elif self.gacha == 6:
+                        self.strawb.update()
+                        self.confection_ult.add(self.strawb)
+                        self.strawb_grp.add(self.strawb)
+                    elif self.gacha == 9:
+                        self.float.update()
+                        self.confection_ult.add(self.float)
+                        self.float_grp.add(self.float)
+
+            
+                    # Check for collision rect and the mask collision
+                    if pygame.sprite.spritecollide(self.player, self.confection_ult, False):
+                        if pygame.sprite.spritecollide(self.player, self.confection_ult, False, pygame.sprite.collide_mask):
+                            self.confection_ult.empty() # Remove everything in the sprite group
 
             self.check_specifics()
-            
-    def add_ultimate(self, deltatime, player_action):
+
+    # Check which support doll is initiated        
+    def add_ultimate(self, deltatime, player_action, enemies):
             if self.game.ult:
                 if self.init_stan:
                     self.stan_ult.update(deltatime, player_action)
                 elif self.init_louie:
                     self.louie_ult.update(deltatime, player_action)
                 elif self.init_krie:
-                    self.krie_ult.update(deltatime,player_action)
+                    self.krie_ult.update(deltatime,player_action, self.player)
                 else:
                     self.torres_ult.update(deltatime,player_action)
+                    self.ult_collisions(self.torres_ult, enemies)
 
             if self.game.ult_finish:
                 self.ultimate_reset()
 
+    def ult_collisions(self, support, enemies):
+        test = 0
+        if pygame.sprite.spritecollide(support, enemies, False): #first check: rectangular collision
+                print("collision work")
+                if pygame.sprite.spritecollide(support, enemies, False, pygame.sprite.collide_mask):
+                    for enemy in enemies:
+                        test += 3
+                        enemy.HP -= 3
+                        print(test)
+                        
+
+    # Display confection
     def confection_display(self,display):
         for confection in self.confection_ult.sprites():
             confection.render(display)
 
+    # Display the ultimate animation
     def ultimate_display(self, display):
         if self.game.ult:
             if self.init_stan:
@@ -53,7 +86,7 @@ class Ults():
             else:
                 self.torres_ult.render(display)
 
-
+    # Initialize the objects
     def characters(self):
         self.player = Player(self.game, 200,200) 
         self.louie = Louie(self.game) 
@@ -66,7 +99,6 @@ class Ults():
         self.init_krie = False
 
 
-    
     # All sprites, ultimate sprite groups, and non-sprite ultimates are here
     def ultimates(self):
 
@@ -80,13 +112,9 @@ class Ults():
         self.krie_ult = Krie_Ult(self.game)
 
         # Confection drops--------------------------------
-        self.vanilla = Vanilla(self.game, self.vanilla_grp)
-        self.float = Float(self.game, self.float_grp)
-        self.strawb = Strawb(self.game, self.strawb_grp)
-
-        self.confection_ult.add(self.vanilla)
-        self.confection_ult.add(self.float)
-        self.confection_ult.add(self.strawb)
+        self.vanilla = Vanilla(self.game)
+        self.float = Float(self.game)
+        self.strawb = Strawb(self.game)
         # -------------------------------------------------
 
     # Reset all sprite groups and sprite position
@@ -98,36 +126,46 @@ class Ults():
         for support in self.support_dolls.sprites():
             support.rect.x, support.rect.y = 0,200
 
-        self.confection_ult.add(self.vanilla, self.float, self.strawb)
+        min_x, max_x = 100, self.game.SCREENWIDTH - 100
+        min_y, max_y = 100, self.game.SCREENHEIGHT - 100
+        self.vanilla.rect.x, self.vanilla.rect.y = random.randint(min_x, max_x), random.randint(min_y, max_y)
+        self.float.rect.x, self.float.rect.y = random.randint(min_x, max_x), random.randint(min_y, max_y)
+        self.strawb.rect.x, self.strawb.rect.y = random.randint(min_x, max_x), random.randint(min_y, max_y)
 
         self.stan.kill()
         self.louie.kill()
         self.krie.kill()
+        self.vanilla.kill()
+        self.float.kill()
+        self.strawb.kill()
         self.game.ult_finish = False
+        self.gacha = 0
+        self.accept_ult = False
 
 
     # Check the specific confection that is picked up
     def check_specifics(self):
 
-        # Enable ultimate initiation and adding sprites into sprite groups
-        if self.init_louie == False and self.init_krie == False:
-            if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
-                self.init_stan = True
-                self.camera.add(self.stan)
-        if self.init_stan == False and self.init_krie == False:
-            if pygame.sprite.spritecollide(self.player, self.float_grp, False, pygame.sprite.collide_mask):
-                self.init_louie = True
-                self.camera.add(self.louie)
-        if self.init_louie == False and self.init_stan == False:
-            if pygame.sprite.spritecollide(self.player, self.strawb_grp, False, pygame.sprite.collide_mask):
-                self.init_krie = True
-                self.camera.add(self.krie)
+        if not(self.accept_ult):
+            # Enable ultimate initiation and adding sprites into sprite groups
+            if self.init_louie == False and self.init_krie == False:
+                if pygame.sprite.spritecollide(self.player, self.vanilla_grp, False, pygame.sprite.collide_mask):
+                    self.init_stan = True
+                    self.camera.add(self.stan)
+                    self.support_dolls.add(self.stan)
+                    self.accept_ult = True
+            if self.init_stan == False and self.init_krie == False:
+                if pygame.sprite.spritecollide(self.player, self.float_grp, False, pygame.sprite.collide_mask):
+                    self.init_louie = True
+                    self.camera.add(self.louie)
+                    self.support_dolls.add(self.louie)
+                    self.accept_ult = True
+            if self.init_louie == False and self.init_stan == False:
+                if pygame.sprite.spritecollide(self.player, self.strawb_grp, False, pygame.sprite.collide_mask):
+                    self.init_krie = True
+                    self.camera.add(self.krie)
+                    self.support_dolls.add(self.krie)
+                    self.accept_ult = True
 
-        # Add sprites into support doll sprite grp for UPDATES
-        if self.init_stan:
-            self.support_dolls.add(self.stan)
-        if self.init_louie:
-            self.support_dolls.add(self.louie)
-        if self.init_krie:
-            self.support_dolls.add(self.krie)
+                
 
