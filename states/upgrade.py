@@ -119,9 +119,9 @@ class Upgrade(State, Dialogue):
                 self.click = False            
 
         if self.apply_upgrades and self.sugar_price <= self.game.current_currency:
-            self.player.attackpoints += self.add_atk
-            self.player.healthpoints += self.add_HP
-            self.player.speed += self.add_spd
+            self.game.settings.current_attackpoints += self.add_atk
+            self.game.settings.current_healthpoints += self.add_HP
+            self.game.settings.current_speed += self.add_spd
             self.game.current_currency -= self.sugar_price
             self.add_atk = 0
             self.add_HP = 0
@@ -137,9 +137,9 @@ class Upgrade(State, Dialogue):
         self.camera.custom_draw(display)
         display.blit(self.game.sugarcube_image, (285, 80))
         self.game.draw_text(display, f"{int(self.game.current_currency)}", False, "white", 315, 80, 35)
-        self.game.draw_text(display, f"Attack: {int(self.player.attackpoints)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 320, 25)
-        self.game.draw_text(display, f"Health: {int(self.player.healthpoints)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 350, 25)
-        self.game.draw_text(display, f"Speed: {int(self.player.speed)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 380, 25)
+        self.game.draw_text(display, f"Attack: {int(self.game.settings.current_attackpoints)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 320, 25)
+        self.game.draw_text(display, f"Health: {int(self.game.settings.current_healthpoints)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 350, 25)
+        self.game.draw_text(display, f"Speed: {int(self.game.settings.current_speed)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 380, 25)
         self.game.draw_text(display, f"Total:{int(self.sugar_price)}", False, (0, 0, 14), self.menu_rect.x + 185, self.menu_rect.y + 380, 25)
         self.game.draw_text(display, "Torres Ganache", True, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 280, 30)
         self.hover_button(display, self.upgrade_rect, self.current_upgrade, self.assets["upgrade"], self.assets["upg_hover"])

@@ -1,17 +1,17 @@
 import pickle
 
 class SaveDataSystem:
-    def __init__(self, file_name, player, game):
+    def __init__(self, file_name, game):
         self.file_name = file_name
-        self.player = player
+        # self.player = player
         self.game = game
 
     def get_save_data(self):
         return {
             'current_level': self.game.current_level,
-            'healthpoints': self.player.healthpoints,
-            'attackpoints': self.player.attackpoints,
-            'speed': self.player.speed,
+            'healthpoints': self.game.settings.current_healthpoints,
+            'attackpoints': self.game.settings.current_attackpoints,
+            'speed': self.game.settings.current_speed,
             'skip_cutscenes': self.game.skip_cutscenes,
             'current_currency': self.game.current_currency
         }
@@ -20,7 +20,7 @@ class SaveDataSystem:
         return {
             'current_level': 0,
             'healthpoints': 250,
-            'attackpoints': 20,
+            'attackpoints': 3,
             'speed': 400,
             'skip_cutscenes': False,
             'current_currency': 0
