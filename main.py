@@ -59,7 +59,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = Level_Options(self)
+        self.title_screen = MainMenu(self)
         self.state_stack.append(self.title_screen)
 
         

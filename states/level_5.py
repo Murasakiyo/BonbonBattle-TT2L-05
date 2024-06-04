@@ -58,7 +58,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
                 
                         
 
-            self.add_ultimate(deltatime, player_action)
+            self.add_ultimate(deltatime, player_action, self.body_group)
         else:
             self.game.start_timer()
 
