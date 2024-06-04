@@ -8,6 +8,7 @@ from states.first_cutscene import Story
 from states.lounge import Lounge
 from states.level_choose import Level_Options
 from states.circus import Circus
+from parent_classes.particleeffect import *
 # from parent_classes.ultimate_action import *
 from savingsystem import *
 
@@ -39,6 +40,7 @@ class Game():
         self.ultimates()
 
         self.player = Player(self, 200, 200)
+        self.particle = ParticleFunctions(self) # Changing all particle functions to have self.game.particle
         self.skip_cutscenes = False
         self.current_currency = 0
         # self.current_sugarcube_value = 10
@@ -118,7 +120,7 @@ class Game():
     # Updates the state stack
     def update(self):
         self.state_stack[-1].update(self.deltatime, self.player_action)
-        self.ct_display = str(int(self.countdown -self.current_time))
+        self.ct_display = str(int(self.countdown - self.current_time))
         
 
     # Rendering images on screen

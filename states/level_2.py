@@ -85,7 +85,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.cooldown_for_attacked(deltatime)
                 self.health_update()
                 self.moxie_update(player_action)
-                self.particle_group.update(deltatime)
+          
 
                 if not(self.game.defeat):
                 # Check if flies are all still alive
@@ -113,6 +113,10 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
 
                     if self.game.win:
                         self.spawn_particles(200, deltatime)
+
+            self.particle_group.update(deltatime)
+            if self.game.ult and self.init_louie:
+                self.louie_particles(4)
                            
 
             self.add_ultimate(deltatime, player_action)
@@ -140,6 +144,8 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         if not self.fly_swarm.flylist.sprites():
             self.sugarcube_list.draw(display)
 
+        if self.game.ult:
+            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
         self.particle_group.draw(display)
         self.ultimate_display(display)
     

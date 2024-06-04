@@ -34,6 +34,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.attack = False
         self.ult_timer = 0
         self.ult = False
+        self.moxie = 0
         self.leech = False
 
     def update(self, deltatime, player_action, player_x, player_y, player_rectx):
@@ -75,7 +76,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.enemy3_moxie_function(deltatime)
         self.animate(deltatime, self.direction)
 
-
+        print(self.moxie)
 
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
@@ -106,7 +107,8 @@ class Enemy3(pygame.sprite.Sprite):
                         self.minionlist.add(new_minion)     
                     if i == 4:
                         new_minion = Minions(self.game, self.rect.centerx, self.rect.centery - 100, 1+(i * 1))
-                        self.minionlist.add(new_minion)                      
+                        self.minionlist.add(new_minion)
+                self.moxie += 1                      
                 self.minion_time = 0
 
         # To stop the attacking animation
@@ -123,18 +125,17 @@ class Enemy3(pygame.sprite.Sprite):
 
 
     def enemy3_moxie_function(self, deltatime):
-        self.ult_timer += deltatime
 
-        if self.ult_timer >= 5:
+        if self.moxie >= 3:
             self.ult = True
 
-        if self.ult_timer < 5:
+        if self.moxie < 3:
             self.ult = False
             self.leech = False
 
         if self.ult == True:
             self.leech = True
-            self.ult_timer = 0
+            self.moxie = 0
 
 
     def enemy3_movement(self, player_x, player_y):
