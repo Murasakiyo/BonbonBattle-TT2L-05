@@ -197,3 +197,12 @@ class ParticleFunctions():
             direction = direction.normalize()
             speed = randint(25, 200)
             Snow(self.particle_group, pos, color, direction, speed)
+
+    def louie_particles(self, n: int):
+        for _ in range(n):
+            pos = (1100, (randint(0, 600)))
+            color = "white"
+            direction = pygame.math.Vector2(-1, 0)
+            direction = direction.normalize()
+            speed = randint(500, 800)
+            Snow(self.particle_group, pos, color, direction, speed)

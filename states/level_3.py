@@ -111,7 +111,6 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.player_attacking(deltatime, self.body_group, self.enemy1)
                 self.health_update()
                 self.moxie_update(player_action)
-                self.particle_group.update(deltatime)
                 self.cooldown_for_attacked(deltatime)
                 self.game.frozen()
 
@@ -175,6 +174,11 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             self.game.start = False
             else:
                 self.add_ultimate(deltatime, player_action, self.current_enemy)
+            
+            self.particle_group.update(deltatime)
+            if self.game.ult and self.init_louie:
+                self.louie_particles(4)
+
         else:
             self.game.start_timer()
 
@@ -189,7 +193,10 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         # Player stats
         self.health_render(display)
         self.moxie_render(display)
+        if self.game.ult:
+            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
         self.particle_group.draw(display)
+        self.ultimate_display(display)
 
         
         for flies in self.fly_swarm.flylist.sprites():
@@ -207,7 +214,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.enemy_health_render(display, self.enemy1.rect.x, self.enemy1.rect.y)
                 
         self.sugarcube_list.draw(display)
-        self.ultimate_display(display)
+
     
         if self.game.start == False:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))

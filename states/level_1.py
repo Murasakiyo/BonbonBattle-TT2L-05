@@ -102,8 +102,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.cooldown_for_attacked(deltatime)
                 self.health_update()
                 self.moxie_update(player_action)
-                self.particle_group.update(deltatime)
                 self.game.frozen()
+
 
                 # Update enemies
                 if not(self.game.defeat):
@@ -137,6 +137,10 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                             self.game.start = False
             else:
                 self.add_ultimate(deltatime, player_action, self.body_group)
+
+            self.particle_group.update(deltatime)
+            if self.game.ult and self.init_louie:
+                self.louie_particles(8)
         else:
             self.game.start_timer()
 
@@ -166,13 +170,15 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.health_render(display)
         self.moxie_render(display)
         if self.enemy1.HP <= 0:
-            self.particle_group.draw(display)
             self.sugarcube_list.draw(display)
 
 
         if not(self.enemy1.HP <= 0):
             self.enemy_health_render(display, self.enemy1.rect.x, self.enemy1.rect.y)
 
+        if self.game.ult:
+            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
+        self.particle_group.draw(display)
         self.ultimate_display(display)
 
         if self.game.start == False:

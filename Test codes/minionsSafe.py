@@ -2,7 +2,7 @@ import os
 import random
 import pygame
 import math
-import parent_classes.state as state
+
 
 # Class for the orange dude
 class Player(object):
@@ -119,3 +119,19 @@ while running:
     pygame.draw.rect(screen, (255, 0, 0), end_rect)
     pygame.draw.rect(screen, (255, 200, 0), player.rect)
     pygame.display.flip()
+
+
+
+    def enemy3_moxie_function(self, deltatime):
+        self.ult_timer += deltatime
+
+        if self.ult_timer >= 5:
+            self.ult = True
+
+        if self.ult_timer < 5:
+            self.ult = False
+            self.leech = False
+
+        if self.ult == True:
+            self.leech = True
+            self.ult_timer = 0

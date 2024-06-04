@@ -8,9 +8,10 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
+from parent_classes.particleeffect import *
 
 
-class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
+class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions):
     def __init__(self, game):
         super().__init__(game)
         self.camera = CameraGroup(self.game)
@@ -75,6 +76,9 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar):
         self.moxie_render(display)
         self.boss_health_render(display)
         
+        if self.game.ult:
+            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
+        self.particle_group.draw(display)
         self.ultimate_display(display)
     
         if self.game.start == False:

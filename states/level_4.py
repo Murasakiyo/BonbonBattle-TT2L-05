@@ -125,7 +125,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                                 self.spawn_exploding_particles(300, enemy)
                                 self.enemy_defeat = True
 
-                    self.particle_group.update(deltatime)
+                   
+
                     self.snow_particles(self.snow_value)
 
                     if self.game.win:
@@ -139,6 +140,11 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             self.game.start = False 
             else:
                 self.add_ultimate(deltatime, player_action, self.enemy_group)
+
+            self.particle_group.update(deltatime)
+            if self.game.ult and self.init_louie:
+                self.louie_particles(4)
+
         else:
             self.game.start_timer()
 
@@ -156,9 +162,11 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.moxie_render(display)
         if self.game.start:
             self.boss_health_render(display)
-            self.particle_group.draw(display)
             self.sugarcube_list.draw(display)
-        
+
+        if self.game.ult:
+            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
+        self.particle_group.draw(display)
         self.ultimate_display(display)
     
         if self.game.start == False:

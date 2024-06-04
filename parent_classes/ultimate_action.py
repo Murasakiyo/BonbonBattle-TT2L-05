@@ -77,7 +77,6 @@ class Ults():
     # Display the ultimate animation
     def ultimate_display(self, display):
         if self.game.ult:
-            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.init_stan:
                 self.stan_ult.render(display)
             elif self.init_louie:
