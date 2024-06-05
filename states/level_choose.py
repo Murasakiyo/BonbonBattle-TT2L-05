@@ -112,7 +112,7 @@ class Level_Options(State):
             display.blit(self.game.D_button, (870, 530))
             self.game.draw_text(display, "[Enter]", False, "white", 960, 490, 25)
             display.blit(self.enter, (960, 530))
-            self.game.draw_text(display, "[Back]", False, "white", 960, 50, 30)
+            self.game.draw_text(display, "[Backspace]", False, "white", 920, 50, 30)
             display.blit(self.game.backspace, (960, 10))
         display.blit(self.game.sugarcube_image, (10, 10))
         self.game.draw_text(display, f"{int(self.game.current_currency)}", True, self.text_color, 40, 10, 35)

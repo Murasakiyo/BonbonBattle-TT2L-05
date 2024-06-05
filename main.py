@@ -172,7 +172,8 @@ class Game():
         self.defeat = False
         self.win = False
         self.init_reset = False
-        
+    
+    # Louie's freeze ultimate
     def frozen(self):
         if self.freeze:
             self.freeze_time += self.deltatime
@@ -192,6 +193,7 @@ class Game():
         self.screen.blit(self.black_surface, (0,0))
         pygame.display.flip()
 
+    # Screen shake
     def screen_shake(self, intensity, amplitude):
         s = -1
         for i in range(0,3):
@@ -210,6 +212,7 @@ class Game():
             self.start = True
             self.current_time = 0
           
+    # Backgrounds ingame
     def backgrounds(self):
         self.forest = pygame.image.load("sprites/backgrounds/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
@@ -227,6 +230,7 @@ class Game():
         sugarcube_image = pygame.image.load("sprites/sugarcube.png").convert_alpha()
         self.sugarcube_image = pygame.transform.scale(sugarcube_image, (25,25)).convert_alpha()
     
+    # Buttons for all
     def buttons(self):
         self.lvl1 = pygame.image.load("sprites/buttons/lvl1.png").convert_alpha()
         self.lvl2 = pygame.image.load("sprites/buttons/lvl2.png").convert_alpha()

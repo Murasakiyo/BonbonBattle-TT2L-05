@@ -23,12 +23,12 @@ class FlyEnemy(pygame.sprite.Sprite):
             flies.update(deltatime, player_action, player_x, player_y, player_rect, player_rectx)
             flies.rect.clamp_ip(self.game.screen_rect)
             for flies in self.sprite_grp:
-                for i in range(3):
+                for i in range(len(self.sprite_grp)):
                     if louie.slow_down:
                         self.sprite_grp[i].moving_speed = int(self.slowness_amount[i])
                     else:
                         self.sprite_grp[i].moving_speed = int(self.original_speed[i])
-                    print(f"Speed of fly{[i]}:{self.sprite_grp[i].moving_speed}")   
+                    # print(f"Speed of fly{[i]}:{self.sprite_grp[i].moving_speed}")
 
         
     def render(self, display):

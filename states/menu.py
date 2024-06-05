@@ -49,7 +49,7 @@ class MainMenu(State):
 
         if self.game.alpha == 255:
             if self.game.skip_cutscenes:
-                new_state = Sec_Stage(self.game)
+                new_state = Lounge(self.game)
             else:
                 new_state = CutscenesTest(self.game)
             new_state.enter_state()

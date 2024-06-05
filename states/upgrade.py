@@ -130,6 +130,10 @@ class Upgrade(State, Dialogue):
 
         if player_action["pause"]:
             self.exit_state(-1)
+            self.add_atk = 0
+            self.add_HP = 0
+            self.add_spd = 0
+            self.sugar_price = 0
 
 
     def render(self, display):
@@ -174,7 +178,7 @@ class Upgrade(State, Dialogue):
             self.game.draw_text(display, "MAX", True, (0,0,14), self.menu_rect.x + 385, self.menu_rect.y + 280, 40)
         self.game.draw_text(display, "SPEED", True, (0,0,14), self.menu_rect.x + 375, self.menu_rect.y + 240, 30)
 
-        self.game.draw_text(display, "[Back]", False, ("white"), 965, 60, 30)
+        self.game.draw_text(display, "[Backspace]", False, ("white"), 920, 60, 30)
         display.blit(self.game.backspace, (960, 10))
 
         
