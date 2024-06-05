@@ -30,7 +30,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.tongue2 = Tongue2(self.game)
         self.pause = Pause(self.game)
         # self.effect_time = 0
-        self.pos = ((550, 300))
         # self.confetti = True
         self.ultimates()
         self.characters()
@@ -48,19 +47,33 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.accept_ult = False
         self.enemy_defeat = False
 
+        self.allow_effect_for_krie = False
+        self.allow_effect_for_stan = False
+        self.effect_time = 0
+        self.pos = ((550, 300))
+
         # Variables for game reset
         self.end = False
         self.exit_game = False
         self.restart_game = False
         self.click = False
         self.state = "none"
-        self.current_sugarcube_value = 50
+        
+        if self.game.current_level == 0:
+            self.current_sugarcube_value = self.game.settings.first_sugarcube_value
+        else:
+            self.current_sugarcube_value = self.game.settings.sugarcube_value
+            
         self.sugarcube_received = 0
 
 
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
+            if not self.game.settings.first_win1:
+                self.game.settings.first_win1 = True
+                self.game.settings.reset_sugarcube_value()
+                self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.enemy1.enemy_reset()
             self.player.reset_player(200,200)
             self.ultimate_reset()
@@ -86,6 +99,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.exit_state(-1)
 
         if self.end:
+            # self.game.current_level = 1
             self.button_go()
 
         self.game_over(player_action)
@@ -119,7 +133,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                                             self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
                         self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
                         
-                    
+                    if self.louie.slow_down:
+                        self.enemy1.speed = self.enemy1.speed * (50/100)
                     if self.game.win:
                         self.spawn_particles(200, deltatime)
 
@@ -141,11 +156,36 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.add_ultimate(deltatime, player_action, self.body_group)
 
             self.particle_group.update(deltatime)
+
+            # Character Ultimate VFX
             if self.game.ult and self.init_louie:
-                self.louie_particles(8)
+                self.louie_particles(4)
+
+
+            if self.game.ult and self.init_krie:
+                self.allow_effect_for_krie = True
+
+            if self.allow_effect_for_krie and not self.init_krie:
+                self.heal_particles(75)
+                self.allow_effect_for_krie = False
+
+
+            if self.game.ult and self.init_stan:
+                self.allow_effect_for_stan = True
+
+            if self.allow_effect_for_stan and not self.init_stan:
+                self.effect_time += deltatime
+                self.confetti_fireworks(50, self.effect_time)
+                if self.effect_time > 0.4:
+                    self.effect_time = 0
+                    self.allow_effect_for_stan = False
+
+
+
         else:
             self.game.start_timer()
 
+            
        
     def render(self, display):
 
@@ -189,7 +229,10 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
+            self.game.current_level = max(self.game.current_level, 1)
+            print("LEVEL END")
             self.ending_state(display)
+            
         
 
 

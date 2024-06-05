@@ -57,7 +57,9 @@ class Particle(pygame.sprite.Sprite):
                color: str, 
                direction: pygame.math.Vector2, 
                speed: int,
-               game):
+               game,
+               heal_bool,
+               for_stan_bool):
         super().__init__(groups)
         self.game = game
         self.pos = pos
@@ -65,34 +67,47 @@ class Particle(pygame.sprite.Sprite):
         self.direction = direction
         self.speed = speed 
         self.alpha = 255
-        self.fade_speed = 400
-        self.size = 4
+        self.fade_speed = 200
+        self.size = 16
+        self.heal_size = randint(16, 32)
         self.angle = 0
-        self.timer = 0
+        self.heal_bool = heal_bool
+        self.for_stan = for_stan_bool
 
-        self.create_surf()
+        self.create_surf(self.heal_bool)
 
 
-    def create_surf(self):
+    def create_surf(self, heal_bool):
         self.surface = pygame.Surface((self.size, self.size)).convert_alpha()
         self.surface.set_alpha(0)
-        self.pic1 = pygame.image.load("sprites/particles/red.png").convert_alpha()
-        self.pic2 = pygame.image.load("sprites/particles/yellow.png").convert_alpha()
-        self.pic3 = pygame.image.load("sprites/particles/pink.png").convert_alpha()
-        self.pic4 = pygame.image.load("sprites/particles/blue.png").convert_alpha()
-        self.confetti = choice((self.pic1, self.pic2, self.pic3, self.pic4))
-        self.image_set = self.confetti
-        self.rotate()
-        self.image = pygame.transform.scale(self.image_set, (8, 8))
-        # self.image = pygame.transform.rotate(self.confetti, self.spin)
+        if not heal_bool:
+            self.pic1 = pygame.image.load("sprites/particles/red.png").convert_alpha()
+            self.pic2 = pygame.image.load("sprites/particles/yellow.png").convert_alpha()
+            self.pic3 = pygame.image.load("sprites/particles/pink.png").convert_alpha()
+            self.pic4 = pygame.image.load("sprites/particles/blue.png").convert_alpha()
+            self.confetti = choice((self.pic1, self.pic2, self.pic3, self.pic4))
+            self.image_set = self.confetti
+            self.image = pygame.transform.scale(self.image_set, (self.size, self.size))
+        if heal_bool:
+            self.HealPic = pygame.image.load("sprites/heal.png").convert_alpha()
+            self.image = pygame.transform.scale(self.HealPic, (self.heal_size, self.heal_size))
+
         pygame.Surface.blit(self.game.screen, self.image, self.pos)
         self.rect = self.image.get_rect(center = self.pos)
 
     def rotate(self):
-        self.angle += 10
+        self.angle += 1
         if self.angle > 360:
             self.angle = 0
         self.image = pygame.transform.rotate(self.image_set, self.angle - 90)
+
+    def rotate2(self):
+        self.angle += 1
+        if self.angle > 360:
+            self.angle = 0
+        self.image_set = pygame.transform.scale(self.image_set, (self.size, self.size))
+        self.image = pygame.transform.rotate(self.image_set, self.angle - 90)
+
 
     def move(self, dt):
         self.pos += self.direction * self.speed * dt
@@ -116,10 +131,14 @@ class Particle(pygame.sprite.Sprite):
 
     def update(self, dt):
         self.move(dt)
-        self.fade(dt)
         self.check_pos()
         self.check_alpha()
-        self.rotate()
+        if not self.heal_bool and not self.for_stan:
+            self.rotate()
+        if self.for_stan:
+            self.rotate2()
+        self.fade(dt)
+
 
 
 
@@ -133,7 +152,7 @@ class ExplodingParticle(Particle):
                speed: int,
                game):
         self.game = game
-        super().__init__(groups, pos, color, direction, speed, self.game)
+        super().__init__(groups, pos, color, direction, speed, self.game, False, False)
         self.t0 = pygame.time.get_ticks()
         self.lifetime = randint(1000, 1200)
         self.exploding = False
@@ -178,7 +197,7 @@ class ParticleFunctions():
             direction = pygame.math.Vector2(0,1)
             direction = direction.normalize()
             speed = randint(50, 400)
-            Particle(self.particle_group, self.pos, color, direction, speed, self.game)
+            Particle(self.particle_group, self.pos, color, direction, speed, self.game, False, False)
 
     def spawn_exploding_particles(self, n: int, enemy):
         for _ in range(n):
@@ -204,5 +223,36 @@ class ParticleFunctions():
             color = "white"
             direction = pygame.math.Vector2(-1, 0)
             direction = direction.normalize()
-            speed = randint(500, 800)
+            speed = randint(100, 800)
             Snow(self.particle_group, pos, color, direction, speed)
+
+    def heal_particles(self, n: int):
+        for _ in range(n):
+            pos = ((randint(0, 1100)), (randint(0, 600)))
+            color = "white"
+            direction = pygame.math.Vector2(0, -1)
+            direction = direction.normalize()
+            speed = randint(50, 400)
+            Particle(self.particle_group, pos, color, direction, speed, self.game, True, False)
+
+
+    def confetti_fireworks(self, n: int, effect_time):
+        for _ in range(n):
+            spot1 = ((200, 100))
+            spot2 = ((200, 500))
+            spot3 = ((900, 100))
+            spot4 = ((900, 500))
+            if effect_time > 0.1:
+                self.pos = spot1
+            if effect_time > 0.2:
+                self.pos = spot2
+            if effect_time > 0.3:
+                self.pos = spot3
+            if effect_time > 0.4:
+                self.pos = spot4
+            # pos = choice((spot1, spot2, spot3, spot4, spot5, spot6))
+            color = choice(("red", "green", "blue"))
+            direction = pygame.math.Vector2(uniform(-1, 1), uniform(-1, 1))
+            direction = direction.normalize()
+            speed = randint(100, 800)
+            Particle(self.particle_group, self.pos, color, direction, speed, self.game, False, True)

@@ -10,6 +10,7 @@ from states.level_choose import Level_Options
 from states.circus import Circus
 from parent_classes.particleeffect import *
 # from parent_classes.ultimate_action import *
+from settings import Settings
 from savingsystem import *
 from itertools import repeat
 
@@ -32,6 +33,7 @@ class Game():
         self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
         self.backgrounds()
         self.buttons()
+        self.settings = Settings()
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
@@ -43,14 +45,15 @@ class Game():
         self.load_states()
         self.battle_state()
 
-        self.player = Player(self, 200, 200)
-        self.particle = ParticleFunctions(self) # Changing all particle functions to have self.game.particle
+        # self.player = Player(self, 200, 200)
+        self.first_game = False
         self.skip_cutscenes = False
         self.current_currency = 0
-        # self.current_sugarcube_value = 10
-        self.saving_system = SaveDataSystem('player_data.pickle', self.player)
+        self.current_level = 0
+        self.saving_system = SaveDataSystem('player_data.pickle', self)
         self.load_data() # load saved data when start a game
         
+        self.particle = ParticleFunctions(self) # Changing all particle functions to have self.game.particle
 
     # Game loop
     def game_loop(self):
@@ -273,20 +276,21 @@ class Game():
         print(f"Saving data: {player_data}")
 
     def load_data(self):
-        loaded_data = self.saving_system.load_data_file()
-        if loaded_data: 
-            if 'healthpoints' in loaded_data:
-                self.player.healthpoints = loaded_data['healthpoints']
-            if 'attackpoints' in loaded_data:
-                self.player.attackpoints = loaded_data['attackpoints']
-            if 'speed' in loaded_data:
-                self.player.speed = loaded_data['speed']
-            if 'skip_cutscenes' in loaded_data:
-                self.skip_cutscenes = loaded_data['skip_cutscenes']
-            if 'current_currency' in loaded_data:
-                self.current_currency = loaded_data['current_currency']
-            # if 'current_sugarcube_value' in loaded_data:
-            #     self.current_sugarcube_value = loaded_data['current_sugarcube_value']
+        if not self.first_game:
+            loaded_data = self.saving_system.load_data_file()
+            if loaded_data: 
+                if 'current_level' in loaded_data:
+                    self.current_level = loaded_data['current_level']
+                if 'healthpoints' in loaded_data:
+                    self.settings.current_healthpoints = loaded_data['healthpoints']
+                if 'attackpoints' in loaded_data:
+                    self.settings.current_attackpoints = loaded_data['attackpoints']
+                if 'speed' in loaded_data:
+                    self.settings.current_speed = loaded_data['speed']
+                if 'skip_cutscenes' in loaded_data:
+                    self.skip_cutscenes = loaded_data['skip_cutscenes']
+                if 'current_currency' in loaded_data:
+                    self.current_currency = loaded_data['current_currency']
         
 if __name__ == "__main__":
     game = Game()

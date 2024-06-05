@@ -51,12 +51,22 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.enemyflies_defeat = False
         self.current_enemy = self.fly_swarm.flylist
 
+        self.allow_effect_for_krie = False
+        self.allow_effect_for_stan = False
+        self.effect_time = 0
+        self.pos = ((550, 300))
+
         self.end = False
         self.exit_game = False
         self.restart_game = False
         self.click = False
         self.state = "none"
-        self.current_sugarcube_value = 50
+
+        if self.game.current_level == 2:
+            self.current_sugarcube_value = self.game.settings.first_sugarcube_value
+        else:
+            self.current_sugarcube_value = self.game.settings.sugarcube_value
+            
         self.sugarcube_received = 0
 
 
@@ -64,6 +74,10 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
+            if not self.game.settings.first_win1:
+                self.game.settings.first_win1 = True
+                self.game.settings.reset_sugarcube_value()
+                self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.sugarcube_list.empty()
             self.current_enemy = self.fly_swarm.flylist
             self.camera.remove(self.enemy1, self.tongue, self.tongue2)
@@ -91,6 +105,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.end_time = 0
 
         if self.end:
+            # self.game.current_level = 3
             self.button_go()
 
         if self.game.init_reset:
@@ -174,10 +189,33 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             self.game.start = False
             else:
                 self.add_ultimate(deltatime, player_action, self.current_enemy)
-            
+
             self.particle_group.update(deltatime)
+
+            # Character Ultimate VFX
             if self.game.ult and self.init_louie:
                 self.louie_particles(4)
+
+
+            if self.game.ult and self.init_krie:
+                self.allow_effect_for_krie = True
+
+            if self.allow_effect_for_krie and not self.init_krie:
+                self.heal_particles(75)
+                self.allow_effect_for_krie = False
+
+
+            if self.game.ult and self.init_stan:
+                self.allow_effect_for_stan = True
+
+            if self.allow_effect_for_stan and not self.init_stan:
+                self.effect_time += deltatime
+                self.confetti_fireworks(50, self.effect_time)
+                if self.effect_time > 0.4:
+                    self.effect_time = 0
+                    self.allow_effect_for_stan = False  
+            
+
 
         else:
             self.game.start_timer()
@@ -223,4 +261,5 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
+            self.game.current_level = max(self.game.current_level, 3)
             self.ending_state(display)

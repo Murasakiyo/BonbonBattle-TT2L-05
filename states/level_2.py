@@ -30,25 +30,42 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         self.load_health_bar()
         self.load_moxie_bar()
 
+
         self.current_time, self.end_time = 0,0
         self.swarming = True
         self.enemy_moxie = 0
         self.gacha = 0
+        self.slowness_amount = 0
+        self.original_speed = 0
         self.accept_ult = False
         self.enemy_defeat = False
+
+        self.allow_effect_for_krie = False
+        self.allow_effect_for_stan = False
+        self.effect_time = 0
+        self.pos = ((550, 300))
         
         self.end = False
         self.exit_game = False
         self.restart_game = False
         self.click = False
         self.state = "none"
-        self.current_sugarcube_value = 50
+
+        if self.game.current_level == 1:
+            self.current_sugarcube_value = self.game.settings.first_sugarcube_value
+        else:
+            self.current_sugarcube_value = self.game.settings.sugarcube_value
+            
         self.sugarcube_received = 0
 
 
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
+            if not self.game.settings.first_win2:
+                self.game.settings.first_win2 = True
+                self.game.settings.reset_sugarcube_value()
+                self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.sugarcube_list.empty()
             for flies in self.fly_swarm.flylist.sprites():
                 flies.kill()
@@ -73,6 +90,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.exit_state(-1)
 
         if self.end:
+            # self.game.current_level = 2
             self.button_go()
 
         self.game_over(player_action)
@@ -95,6 +113,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.game.frozen()
 
 
+
                 if not(self.game.defeat):
                 # Check if flies are all still alive
                     if self.swarming:
@@ -103,6 +122,8 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                                                 self.player.rect.center[1], self.player.rect, self.player.rect.x, self.louie)
                     
                     for flies in self.fly_swarm.flylist.sprites():
+                        original_speed = flies.moving_speed
+                        self.slowness_amount = int(flies.moving_speed * (50/100))
                         if not(flies.HP <= 0):
                             self.flies_collisions(player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, flies.damage)
 
@@ -120,6 +141,9 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                             new_state.enter_state()
                             self.game.start = False
 
+
+  
+
                     if self.game.win:
                         self.spawn_particles(200, deltatime)
 
@@ -127,8 +151,29 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.add_ultimate(deltatime, player_action, self.fly_swarm.flylist)
 
             self.particle_group.update(deltatime)
+
+            # Character Ultimate VFX
             if self.game.ult and self.init_louie:
                 self.louie_particles(4)
+
+
+            if self.game.ult and self.init_krie:
+                self.allow_effect_for_krie = True
+
+            if self.allow_effect_for_krie and not self.init_krie:
+                self.heal_particles(75)
+                self.allow_effect_for_krie = False
+
+
+            if self.game.ult and self.init_stan:
+                self.allow_effect_for_stan = True
+
+            if self.allow_effect_for_stan and not self.init_stan:
+                self.effect_time += deltatime
+                self.confetti_fireworks(50, self.effect_time)
+                if self.effect_time > 0.4:
+                    self.effect_time = 0
+                    self.allow_effect_for_stan = False  
         else:
             self.game.start_timer()
                 
@@ -164,5 +209,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
+            self.game.current_level = max(self.game.current_level, 2)
             self.ending_state(display)
 

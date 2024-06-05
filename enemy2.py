@@ -30,6 +30,7 @@ class FlyEnemy(pygame.sprite.Sprite):
                         self.sprite_grp[i].moving_speed = int(self.original_speed[i])
                     # print(f"Speed of fly{[i]}:{self.sprite_grp[i].moving_speed}")
 
+
         
     def render(self, display):
         for self.flies in self.flylist.sprites():
@@ -45,6 +46,8 @@ class FlyEnemy(pygame.sprite.Sprite):
                 self.slowness_amount.append(int(new_fly.moving_speed - 4))
         self.sprite_grp = list(self.flylist)
 
+
+        
 
 class Fly(pygame.sprite.Sprite):
     def __init__(self, game, moving_speed=0.5, color=(0,255,0)):

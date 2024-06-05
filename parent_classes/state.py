@@ -4,6 +4,7 @@ class State():
     def __init__(self, game):
         self.game = game
         self.prev_state = None
+        self.sugar_spawned = False
 
     def update(self, deltatime, player_action):
         pass
