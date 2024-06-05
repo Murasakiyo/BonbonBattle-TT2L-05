@@ -9,6 +9,8 @@ from states.level_2 import Sec_Stage
 from states.level_3 import Trio_Stage
 from states.level_4 import Quad_Stage
 from states.level_5 import Penta_Stage
+from states.level_1 import First_Stage
+from states.level_2 import Sec_Stage
 
 
 class MainMenu(State):

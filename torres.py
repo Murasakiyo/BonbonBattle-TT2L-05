@@ -134,13 +134,8 @@ class Player(pygame.sprite.Sprite):
         display.blit(self.image, (self.rect.x - camera.offset.x, self.rect.y - camera.offset.y))
 
 
-    def player_stats(self):
-        self.healthpoints = 100
-        self.attackpoints = 10
-        self.defense = 10 # defense formula
-
     def reset_player(self, position_x, position_y):
-        self.healthpoints = 250
+        self.healthpoints = self.game.settings.current_healthpoints
         self.moxiepoints = 0
         self.rect.x, self.rect.y = position_x, position_y
         self.image = self.right_sprites[0]
