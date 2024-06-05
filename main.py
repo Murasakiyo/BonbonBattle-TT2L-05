@@ -11,6 +11,7 @@ from states.circus import Circus
 from parent_classes.particleeffect import *
 # from parent_classes.ultimate_action import *
 from settings import Settings
+from music import Sounds
 from savingsystem import *
 
 class Game():
@@ -28,9 +29,10 @@ class Game():
         self.start = False
         self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
+        self.settings = Settings()
+        self.sounds = Sounds(self)
         self.backgrounds()
         self.buttons()
-        self.settings = Settings()
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
@@ -42,7 +44,6 @@ class Game():
         self.load_states()
         self.battle_state()
 
-        # self.player = Player(self, 200, 200)
         self.first_game = False
         self.skip_cutscenes = False
         self.current_currency = 0
