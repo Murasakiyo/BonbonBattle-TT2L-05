@@ -4,6 +4,7 @@ from states.testcutscenes import CutscenesTest
 from states.lounge import Lounge
 from states.level_5 import Penta_Stage
 from states.level_1 import First_Stage
+from states.level_2 import Sec_Stage
 
 
 class MainMenu(State):
@@ -48,7 +49,7 @@ class MainMenu(State):
 
         if self.game.alpha == 255:
             if self.game.skip_cutscenes:
-                new_state = First_Stage(self.game)
+                new_state = Sec_Stage(self.game)
             else:
                 new_state = CutscenesTest(self.game)
             new_state.enter_state()

@@ -78,6 +78,9 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         self.game_over(player_action)
         self.game_restart(player_action)
         self.ending_options(deltatime, player_action, 3, 2)
+        
+
+
 
         if self.game.start == True:
             if self.game.ult == False:
@@ -97,15 +100,16 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                     if self.swarming:
                         if not(self.game.freeze):
                             self.fly_swarm.update(deltatime, player_action, self.player.rect.center[0], 
-                                                self.player.rect.center[1], self.player.rect, self.player.rect.x)
+                                                self.player.rect.center[1], self.player.rect, self.player.rect.x, self.louie)
                     
                     for flies in self.fly_swarm.flylist.sprites():
                         if not(flies.HP <= 0):
                             self.flies_collisions(player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, flies.damage)
+
                         if flies.HP <= 0:
                             flies.kill()
                             self.spawn_exploding_particles(100, flies)
-
+                            
                         if not self.fly_swarm.flylist.sprites():
                             self.swarming = False 
                             self.enemy_defeat = True

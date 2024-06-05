@@ -21,16 +21,19 @@ class Collisions():
                             if any(attack_sprite1.rect.clipline(*line) for line in self.player.lines):
                                 self.player.healthpoints -= enemy_damage
                                 self.player.take_damage = True
+
                         if enemy.current_anim_list == enemy.attack_right:
                             if any(attack_sprite2.rect.clipline(*line) for line in self.player.lines):
                                 self.player.healthpoints -= enemy_damage
                                 self.player.take_damage = True
+
             # For any enemy body and player body collision damage
             if pygame.sprite.spritecollide(self.player, body_group, False):
                 if any(enemy.rect.clipline(*line) for line in self.player.lines):
                     if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask):
                         self.player.healthpoints -= body_damage
                         self.player.take_damage = True
+
 
 # ------------------------------------------------------------------------------------------------------------------------------
     def flies_collisions(self, player_action, body_group, attack_group, enemy, enemy_damage):

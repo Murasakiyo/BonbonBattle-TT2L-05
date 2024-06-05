@@ -79,6 +79,7 @@ class Ults():
                 self.stan_ult.render(display)
             elif self.init_louie:
                 self.louie_ult.render(display)
+                self.louie.slow_down = False
             elif self.init_krie:
                 self.krie_ult.render(display)
             else:
