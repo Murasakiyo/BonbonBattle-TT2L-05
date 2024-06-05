@@ -51,7 +51,7 @@ class MainMenu(State):
 
         if self.game.alpha == 255:
             if self.game.skip_cutscenes:
-                new_state = First_Stage(self.game)
+                new_state = Quad_Stage(self.game)
             else:
                 new_state = CutscenesTest(self.game)
             new_state.enter_state()

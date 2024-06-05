@@ -30,12 +30,20 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         self.load_health_bar()
         self.load_moxie_bar()
 
+
         self.current_time, self.end_time = 0,0
         self.swarming = True
         self.moxie_points = 0
         self.gacha = 0
+        self.slowness_amount = 0
+        self.original_speed = 0
         self.accept_ult = False
         self.enemy_defeat = False
+
+        self.allow_effect_for_krie = False
+        self.allow_effect_for_stan = False
+        self.effect_time = 0
+        self.pos = ((550, 300))
         
         self.end = False
         self.exit_game = False
@@ -92,6 +100,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.game.frozen()
 
 
+
                 if not(self.game.defeat):
                 # Check if flies are all still alive
                     if self.swarming:
@@ -100,11 +109,20 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                                                 self.player.rect.center[1], self.player.rect, self.player.rect.x)
                     
                     for flies in self.fly_swarm.flylist.sprites():
+                        original_speed = flies.moving_speed
+                        self.slowness_amount = int(flies.moving_speed * (50/100))
                         if not(flies.HP <= 0):
                             self.flies_collisions(player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, flies.damage)
+                        if self.louie.slow_down:
+                            flies.moving_speed = self.slowness_amount
+                        else:
+                            flies.moving_speed = original_speed 
                         if flies.HP <= 0:
                             flies.kill()
                             self.spawn_exploding_particles(100, flies)
+                        print(self.slowness_amount)
+                        # print(self.louie.slow_down)
+                        # print(self.louie.attack_cooldown)
 
                         if not self.fly_swarm.flylist.sprites():
                             self.swarming = False 
@@ -116,15 +134,42 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                             new_state.enter_state()
                             self.game.start = False
 
+
+  
+
                     if self.game.win:
                         self.spawn_particles(200, deltatime)
 
             else:
                 self.add_ultimate(deltatime, player_action, self.fly_swarm.flylist)
-                
+
             self.particle_group.update(deltatime)
+
+            # Character Ultimate VFX
             if self.game.ult and self.init_louie:
                 self.louie_particles(4)
+
+
+            if self.game.ult and self.init_krie:
+                self.allow_effect_for_krie = True
+
+            if self.allow_effect_for_krie and not self.init_krie:
+                self.heal_particles(75)
+                self.allow_effect_for_krie = False
+
+
+            if self.game.ult and self.init_stan:
+                self.allow_effect_for_stan = True
+
+            if self.allow_effect_for_stan and not self.init_stan:
+                self.effect_time += deltatime
+                self.confetti_fireworks(50, self.effect_time)
+                if self.effect_time > 0.4:
+                    self.effect_time = 0
+                    self.allow_effect_for_stan = False  
+                
+
+
         else:
             self.game.start_timer()
                 
