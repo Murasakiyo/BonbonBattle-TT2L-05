@@ -61,7 +61,12 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.restart_game = False
         self.click = False
         self.state = "none"
-        self.current_sugarcube_value = 50
+
+        if self.game.current_level == 2:
+            self.current_sugarcube_value = self.game.settings.first_sugarcube_value
+        else:
+            self.current_sugarcube_value = self.game.settings.sugarcube_value
+            
         self.sugarcube_received = 0
 
 
@@ -69,6 +74,10 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
+            if not self.game.settings.first_win1:
+                self.game.settings.first_win1 = True
+                self.game.settings.reset_sugarcube_value()
+                self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.sugarcube_list.empty()
             self.current_enemy = self.fly_swarm.flylist
             self.camera.remove(self.enemy1, self.tongue, self.tongue2)
@@ -96,6 +105,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.end_time = 0
 
         if self.end:
+            # self.game.current_level = 3
             self.button_go()
 
         if self.game.init_reset:
@@ -250,4 +260,5 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
+            self.game.current_level = max(self.game.current_level, 3)
             self.ending_state(display)
