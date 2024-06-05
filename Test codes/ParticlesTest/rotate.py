@@ -15,7 +15,7 @@ pygame.display.set_caption("Rotating Objects")
 BG = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-turret_original = pygame.image.load("sprites/red.png").convert_alpha()
+turret_original = pygame.image.load("sprites/heal.png").convert_alpha()
 x = 500
 y = 300
 # x_dist = 0

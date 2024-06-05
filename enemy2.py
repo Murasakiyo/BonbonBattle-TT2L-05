@@ -20,6 +20,7 @@ class FlyEnemy(pygame.sprite.Sprite):
             flies.update(deltatime, player_action, player_x, player_y, player_rect, player_rectx)
             flies.rect.clamp_ip(self.game.screen_rect)
 
+
         
     def render(self, display):
         for self.flies in self.flylist.sprites():
@@ -31,7 +32,11 @@ class FlyEnemy(pygame.sprite.Sprite):
             for i in range(3):
                 new_fly = Fly(self, moving_speed= 1+(i+1))
                 self.flylist.add(new_fly)
+                
+        # for flies in self.flylist.sprites():
+        #     self.flies.original_speed = flies.moving_speed
 
+        
 
 class Fly(pygame.sprite.Sprite):
     def __init__(self, game, moving_speed=0.5, color=(0,255,0)):
@@ -55,7 +60,7 @@ class Fly(pygame.sprite.Sprite):
         self.teleport_x = None
         self.teleport_y = None
         self.HP = 150
-        self.damage = 2
+        self.damage = 10
 
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
