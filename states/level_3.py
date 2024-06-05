@@ -214,9 +214,6 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 if self.effect_time > 0.4:
                     self.effect_time = 0
                     self.allow_effect_for_stan = False  
-            
-
-
         else:
             self.game.start_timer()
 

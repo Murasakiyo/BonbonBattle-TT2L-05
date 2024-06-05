@@ -179,14 +179,10 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 if self.effect_time > 0.4:
                     self.effect_time = 0
                     self.allow_effect_for_stan = False
-
-
-
         else:
             self.game.start_timer()
 
-            
-       
+
     def render(self, display):
 
         display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
@@ -230,7 +226,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         if self.end:
             self.game.current_level = max(self.game.current_level, 1)
-            print("LEVEL END")
+            # print("LEVEL END")
             self.ending_state(display)
             
         
