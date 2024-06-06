@@ -262,6 +262,11 @@ class Game():
         self.restart_hover = pygame.image.load("sprites/buttons/restart_hover.png").convert_alpha()
         self.buy_hover = pygame.image.load("sprites/buttons/buy_hover.png").convert_alpha()
 
+        self.lvl2_lock = pygame.image.load("sprites/buttons/lvl2_lock.png").convert_alpha()
+        self.lvl3_lock = pygame.image.load("sprites/buttons/lvl3_lock.png").convert_alpha()
+        self.lvl4_lock = pygame.image.load("sprites/buttons/lvl4_lock.png").convert_alpha()
+        self.lvl5_lock = pygame.image.load("sprites/buttons/lvl5_lock.png").convert_alpha()
+
         self.button1 = self.lvl1.get_rect(width= 100, height=100)
         self.button1.x, self.button1.y = 75,225
         self.exit_rect = self.exit.get_rect(width= 126, height=126)

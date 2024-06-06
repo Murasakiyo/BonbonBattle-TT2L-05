@@ -258,5 +258,6 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
-            self.game.current_level = max(self.game.current_level, 3)
             self.ending_state(display)
+            if self.game.win:
+                self.game.current_level = max(self.game.current_level, 3)

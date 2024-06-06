@@ -212,8 +212,9 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
 
         if self.end:
-            self.game.current_level = max(self.game.current_level, 4)
             self.ending_state(display)
+            if self.game.win:
+                self.game.current_level = max(self.game.current_level, 4)
 
 
 
