@@ -68,19 +68,20 @@ class Particle(pygame.sprite.Sprite):
         self.speed = speed 
         self.alpha = 255
         self.fade_speed = 200
-        self.size = 16
+        self.size = 8
+        self.stan_confetti_size = 12
         self.heal_size = randint(16, 32)
         self.angle = 0
         self.heal_bool = heal_bool
         self.for_stan = for_stan_bool
 
-        self.create_surf(self.heal_bool)
+        self.create_surf(self.heal_bool, self.for_stan)
 
 
-    def create_surf(self, heal_bool):
+    def create_surf(self, heal_bool, for_stan):
         self.surface = pygame.Surface((self.size, self.size)).convert_alpha()
         self.surface.set_alpha(0)
-        if not heal_bool:
+        if not heal_bool and not for_stan:
             self.pic1 = pygame.image.load("sprites/particles/red.png").convert_alpha()
             self.pic2 = pygame.image.load("sprites/particles/yellow.png").convert_alpha()
             self.pic3 = pygame.image.load("sprites/particles/pink.png").convert_alpha()
@@ -88,6 +89,14 @@ class Particle(pygame.sprite.Sprite):
             self.confetti = choice((self.pic1, self.pic2, self.pic3, self.pic4))
             self.image_set = self.confetti
             self.image = pygame.transform.scale(self.image_set, (self.size, self.size))
+        if not heal_bool and for_stan:
+            self.pic1 = pygame.image.load("sprites/particles/red.png").convert_alpha()
+            self.pic2 = pygame.image.load("sprites/particles/yellow.png").convert_alpha()
+            self.pic3 = pygame.image.load("sprites/particles/pink.png").convert_alpha()
+            self.pic4 = pygame.image.load("sprites/particles/blue.png").convert_alpha()
+            self.confetti = choice((self.pic1, self.pic2, self.pic3, self.pic4))
+            self.image_set = self.confetti
+            self.image = pygame.transform.scale(self.image_set, (self.stan_confetti_size, self.stan_confetti_size))
         if heal_bool:
             self.HealPic = pygame.image.load("sprites/particles/heal.png").convert_alpha()
             self.image = pygame.transform.scale(self.HealPic, (self.heal_size, self.heal_size))

@@ -16,7 +16,7 @@ class Ults():
     def update_ultimate(self, deltatime, player_action):
             # Sprite group update
             for support in self.support_dolls.sprites():
-                support.update(deltatime, self.player, player_action, self.player.rect.x, self.player.rect.y, self.enemy_moxie)
+                support.update(deltatime, self.player, player_action, self.player.rect.x, self.player.rect.y)
 
             if self.game.ult_finish == False:
                 
@@ -47,7 +47,7 @@ class Ults():
             if self.game.ult:
                 if self.init_stan:
                     self.stan_ult.update(deltatime, player_action, enemies)
-                    self.enemy_moxie = 0
+                    
                 elif self.init_louie:
                     self.louie_ult.update(deltatime, player_action)
                     

@@ -34,12 +34,26 @@ class Enemy3(pygame.sprite.Sprite):
         self.attack = False
         self.ult_timer = 0
         self.ult = False
+        self.atk_timer = 0
         self.moxie = 0
         self.leech = False
 
     def update(self, deltatime, player_action, player_x, player_y, player_rectx):
 
-        self.enemy3_movement(player_x, player_y)
+        if not self.leech:
+            self.enemy3_movement(player_x, player_y)
+
+        if self.attack:
+            self.moxie +=  250 * deltatime
+
+        if self.leech:
+            self.atk_timer += deltatime
+        if not self.leech:
+            self.atk_timer = 0
+
+        print(self.atk_timer)
+
+
         self.move_towards_border()
         self.rect.clamp_ip(self.game.screen_rect)
         
@@ -76,7 +90,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.enemy3_moxie_function(deltatime)
         self.animate(deltatime, self.direction)
 
-        print(self.moxie)
+        
 
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
@@ -90,7 +104,7 @@ class Enemy3(pygame.sprite.Sprite):
 
 
     def minion_spawn(self, deltatime):
-        if len(self.minionlist) == 0:
+        if len(self.minionlist) == 0 and not self.leech:
             self.minion_time += deltatime
             if self.minion_time > 3:
                 self.attack = True
@@ -126,13 +140,16 @@ class Enemy3(pygame.sprite.Sprite):
 
     def enemy3_moxie_function(self, deltatime):
 
-        if self.moxie >= 3:
+        if self.moxie >= 300 and not(self.attack):
             self.ult = True
 
-        if self.moxie < 3:
+        if self.moxie < 300 and self.atk_timer > 3:
             self.ult = False
             self.leech = False
 
+        if self.moxie <= 0:
+            self.moxie = 0
+            
         if self.ult == True:
             self.leech = True
             self.moxie = 0
