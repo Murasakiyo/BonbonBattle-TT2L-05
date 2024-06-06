@@ -119,9 +119,9 @@ class Upgrade(State, Dialogue):
                 self.click = False            
 
         if self.apply_upgrades and self.sugar_price <= self.game.current_currency:
-            self.player.attackpoints += self.add_atk
-            self.player.healthpoints += self.add_HP
-            self.player.speed += self.add_spd
+            self.game.settings.current_attackpoints += self.add_atk
+            self.game.settings.current_healthpoints += self.add_HP
+            self.game.settings.current_speed += self.add_spd
             self.game.current_currency -= self.sugar_price
             self.add_atk = 0
             self.add_HP = 0
@@ -130,6 +130,10 @@ class Upgrade(State, Dialogue):
 
         if player_action["pause"]:
             self.exit_state(-1)
+            self.add_atk = 0
+            self.add_HP = 0
+            self.add_spd = 0
+            self.sugar_price = 0
 
 
     def render(self, display):
@@ -137,9 +141,9 @@ class Upgrade(State, Dialogue):
         self.camera.custom_draw(display)
         display.blit(self.game.sugarcube_image, (285, 80))
         self.game.draw_text(display, f"{int(self.game.current_currency)}", False, "white", 315, 80, 35)
-        self.game.draw_text(display, f"Attack: {int(self.player.attackpoints)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 320, 25)
-        self.game.draw_text(display, f"Health: {int(self.player.healthpoints)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 350, 25)
-        self.game.draw_text(display, f"Speed: {int(self.player.speed)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 380, 25)
+        self.game.draw_text(display, f"Attack: {int(self.game.settings.current_attackpoints)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 320, 25)
+        self.game.draw_text(display, f"Health: {int(self.game.settings.current_healthpoints)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 350, 25)
+        self.game.draw_text(display, f"Speed: {int(self.game.settings.current_speed)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 380, 25)
         self.game.draw_text(display, f"Total:{int(self.sugar_price)}", False, (0, 0, 14), self.menu_rect.x + 185, self.menu_rect.y + 380, 25)
         self.game.draw_text(display, "Torres Ganache", True, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 280, 30)
         self.hover_button(display, self.upgrade_rect, self.current_upgrade, self.assets["upgrade"], self.assets["upg_hover"])
@@ -174,7 +178,7 @@ class Upgrade(State, Dialogue):
             self.game.draw_text(display, "MAX", True, (0,0,14), self.menu_rect.x + 385, self.menu_rect.y + 280, 40)
         self.game.draw_text(display, "SPEED", True, (0,0,14), self.menu_rect.x + 375, self.menu_rect.y + 240, 30)
 
-        self.game.draw_text(display, "[Back]", False, ("white"), 965, 60, 30)
+        self.game.draw_text(display, "[Backspace]", False, ("white"), 920, 60, 30)
         display.blit(self.game.backspace, (960, 10))
 
         

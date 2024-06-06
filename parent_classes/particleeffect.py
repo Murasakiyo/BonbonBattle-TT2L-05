@@ -89,7 +89,7 @@ class Particle(pygame.sprite.Sprite):
             self.image_set = self.confetti
             self.image = pygame.transform.scale(self.image_set, (self.size, self.size))
         if heal_bool:
-            self.HealPic = pygame.image.load("sprites/heal.png").convert_alpha()
+            self.HealPic = pygame.image.load("sprites/particles/heal.png").convert_alpha()
             self.image = pygame.transform.scale(self.HealPic, (self.heal_size, self.heal_size))
 
         pygame.Surface.blit(self.game.screen, self.image, self.pos)

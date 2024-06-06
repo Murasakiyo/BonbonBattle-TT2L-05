@@ -1,6 +1,8 @@
 import pygame
 from parent_classes.state import *
 from parent_classes.dialogue import *
+from states.level_choose import Level_Options
+from states.lounge import Lounge
 
 
 class Story(State, Dialogue):
@@ -22,6 +24,17 @@ class Story(State, Dialogue):
 
     def update(self, deltatime, player_action):
         self.dialogue_update(player_action)
+        self.transition_to_next_state(player_action)
+
+
+    def transition_to_next_state(self, player_action):
+        if self.activetext >= len(self.text) - 1:
+            if player_action["next"]:
+                self.game.state_stack.pop()
+                player_action["next"] = False
+                self.game.state_stack.append(Lounge(self.game))
+                # self.game.state_stack.append(Level_Options(self.game))
+                
 
     def render(self, display):
         if self.activetext == 2:

@@ -42,7 +42,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.body_group.add(self.enemy1)
 
         self.current_time, self.end_time = 0,0
-        self.moxie_points = 0
+        self.enemy_moxie = 0
         self.gacha = 0
         self.accept_ult = False
         self.enemy_defeat = False
@@ -58,13 +58,22 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.restart_game = False
         self.click = False
         self.state = "none"
-        self.current_sugarcube_value = 50
+        
+        if self.game.current_level == 0:
+            self.current_sugarcube_value = self.game.settings.first_sugarcube_value
+        else:
+            self.current_sugarcube_value = self.game.settings.sugarcube_value
+            
         self.sugarcube_received = 0
 
 
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
+            if not self.game.settings.first_win1:
+                self.game.settings.first_win1 = True
+                self.game.settings.reset_sugarcube_value()
+                self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.enemy1.enemy_reset()
             self.player.reset_player(200,200)
             self.ultimate_reset()
@@ -90,6 +99,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.exit_state(-1)
 
         if self.end:
+            # self.game.current_level = 1
             self.button_go()
 
         self.game_over(player_action)
@@ -98,6 +108,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         if self.game.start == True:
             if not(self.game.ult):
+                print(self.player.attackpoints)
 
                 # Update player
                 self.player.update(deltatime, player_action)
@@ -117,10 +128,10 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                                             self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
                             self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
                             self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                            # Check collision of enemies and players
                             self.enemy_collisions(player_action, self.body_group, self.attack_group, self.enemy1, 
                                             self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
                         self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
-                        # Check collision of enemies and players
                         
                     if self.louie.slow_down:
                         self.enemy1.speed = self.enemy1.speed * (50/100)
@@ -129,6 +140,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
                     for enemy in self.body_group.sprites():
                         if enemy.HP <= 0:
+                            self.game.offset = self.game.screen_shake(5,20)
                             enemy.kill()
                             self.spawn_exploding_particles(100, enemy)
                             self.tongue.kill()
@@ -167,13 +179,10 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 if self.effect_time > 0.4:
                     self.effect_time = 0
                     self.allow_effect_for_stan = False
-
-
-
         else:
             self.game.start_timer()
 
-       
+
     def render(self, display):
 
         display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
@@ -216,7 +225,10 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
+            self.game.current_level = max(self.game.current_level, 1)
+            # print("LEVEL END")
             self.ending_state(display)
+            
         
 
 

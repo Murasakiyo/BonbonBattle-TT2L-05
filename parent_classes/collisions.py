@@ -13,7 +13,7 @@ class Collisions():
                          enemy, enemy_damage, body_damage, attack_sprite1, attack_sprite2):
 
         # If player got attacked
-        if self.player.take_damage == False and not player_action["defend"]:
+        if self.player.take_damage == False and not player_action["defend"] and not(self.game.freeze):
             if enemy.attack:
                 if pygame.sprite.spritecollide(self.player, attack_group, False): #first check: rectangular collision
                     if pygame.sprite.spritecollide(self.player, attack_group, False, pygame.sprite.collide_mask): #second check: mask collision
@@ -21,10 +21,12 @@ class Collisions():
                             if any(attack_sprite1.rect.clipline(*line) for line in self.player.lines):
                                 self.player.healthpoints -= enemy_damage
                                 self.player.take_damage = True
+
                         if enemy.current_anim_list == enemy.attack_right:
                             if any(attack_sprite2.rect.clipline(*line) for line in self.player.lines):
                                 self.player.healthpoints -= enemy_damage
                                 self.player.take_damage = True
+
             # For any enemy body and player body collision damage
             if pygame.sprite.spritecollide(self.player, body_group, False):
                 if any(enemy.rect.clipline(*line) for line in self.player.lines):
@@ -32,9 +34,10 @@ class Collisions():
                         self.player.healthpoints -= body_damage
                         self.player.take_damage = True
 
+
 # ------------------------------------------------------------------------------------------------------------------------------
     def flies_collisions(self, player_action, body_group, attack_group, enemy, enemy_damage):
-        if self.player.take_damage == False and not player_action["defend"]:
+        if self.player.take_damage == False and not player_action["defend"] and not(self.game.freeze):
             if enemy.attack:
                 if pygame.sprite.spritecollide(self.player, attack_group, False): #first check: rectangular collision
                     if pygame.sprite.spritecollide(self.player, attack_group, False, pygame.sprite.collide_mask): #second check: mask collision

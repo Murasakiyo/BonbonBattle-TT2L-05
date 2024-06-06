@@ -78,7 +78,6 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         
         if self.game.ult:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
-        self.particle_group.draw(display)
         self.ultimate_display(display)
     
         if self.game.start == False:

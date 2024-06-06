@@ -33,7 +33,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
 
         self.current_time, self.end_time = 0,0
         self.swarming = True
-        self.moxie_points = 0
+        self.enemy_moxie = 0
         self.gacha = 0
         self.slowness_amount = 0
         self.original_speed = 0
@@ -50,13 +50,22 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         self.restart_game = False
         self.click = False
         self.state = "none"
-        self.current_sugarcube_value = 50
+
+        if self.game.current_level == 1:
+            self.current_sugarcube_value = self.game.settings.first_sugarcube_value
+        else:
+            self.current_sugarcube_value = self.game.settings.sugarcube_value
+            
         self.sugarcube_received = 0
 
 
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
+            if not self.game.settings.first_win2:
+                self.game.settings.first_win2 = True
+                self.game.settings.reset_sugarcube_value()
+                self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.sugarcube_list.empty()
             for flies in self.fly_swarm.flylist.sprites():
                 flies.kill()
@@ -81,11 +90,15 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.exit_state(-1)
 
         if self.end:
+            # self.game.current_level = 2
             self.button_go()
 
         self.game_over(player_action)
         self.game_restart(player_action)
         self.ending_options(deltatime, player_action, 3, 2)
+        
+
+
 
         if self.game.start == True:
             if self.game.ult == False:
@@ -106,24 +119,18 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                     if self.swarming:
                         if not(self.game.freeze):
                             self.fly_swarm.update(deltatime, player_action, self.player.rect.center[0], 
-                                                self.player.rect.center[1], self.player.rect, self.player.rect.x)
+                                                self.player.rect.center[1], self.player.rect, self.player.rect.x, self.louie)
                     
                     for flies in self.fly_swarm.flylist.sprites():
                         original_speed = flies.moving_speed
                         self.slowness_amount = int(flies.moving_speed * (50/100))
                         if not(flies.HP <= 0):
                             self.flies_collisions(player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, flies.damage)
-                        if self.louie.slow_down:
-                            flies.moving_speed = self.slowness_amount
-                        else:
-                            flies.moving_speed = original_speed 
+
                         if flies.HP <= 0:
                             flies.kill()
                             self.spawn_exploding_particles(100, flies)
-                        print(self.slowness_amount)
-                        # print(self.louie.slow_down)
-                        # print(self.louie.attack_cooldown)
-
+                            
                         if not self.fly_swarm.flylist.sprites():
                             self.swarming = False 
                             self.enemy_defeat = True
@@ -167,9 +174,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 if self.effect_time > 0.4:
                     self.effect_time = 0
                     self.allow_effect_for_stan = False  
-                
-
-
         else:
             self.game.start_timer()
                 
@@ -205,5 +209,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
+            self.game.current_level = max(self.game.current_level, 2)
             self.ending_state(display)
 

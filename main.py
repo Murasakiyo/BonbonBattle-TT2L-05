@@ -10,7 +10,9 @@ from states.level_choose import Level_Options
 from states.circus import Circus
 from parent_classes.particleeffect import *
 # from parent_classes.ultimate_action import *
+from settings import Settings
 from savingsystem import *
+from itertools import repeat
 
 class Game():
     def __init__(self):
@@ -18,17 +20,20 @@ class Game():
         pygame.display.set_caption("Bonbon Battle: Treading Through Cotton Woods")
         self.SCREENWIDTH, self.SCREENHEIGHT = 1100, 600
         self.game_canvas = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
-        self.screen = pygame.display.set_mode((self.SCREENWIDTH, self.SCREENHEIGHT))
+        self.shakescreen = pygame.display.set_mode((self.SCREENWIDTH, self.SCREENHEIGHT))
+        self.screen = self.shakescreen.copy()
+        self.offset = repeat((0,0))
         self.screen_rect = self.screen.get_rect()
         self.run, self.play = True, True
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = False
+        self.start = True
         self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
         self.backgrounds()
         self.buttons()
+        self.settings = Settings()
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
@@ -40,14 +45,15 @@ class Game():
         self.load_states()
         self.battle_state()
 
-        self.player = Player(self, 200, 200)
-        self.particle = ParticleFunctions(self) # Changing all particle functions to have self.game.particle
+        # self.player = Player(self, 200, 200)
+        self.first_game = False
         self.skip_cutscenes = False
         self.current_currency = 0
-        # self.current_sugarcube_value = 10
-        self.saving_system = SaveDataSystem('player_data.pickle', self.player)
+        self.current_level = 0
+        self.saving_system = SaveDataSystem('player_data.pickle', self)
         self.load_data() # load saved data when start a game
         
+        self.particle = ParticleFunctions(self) # Changing all particle functions to have self.game.particle
 
     # Game loop
     def game_loop(self):
@@ -133,6 +139,7 @@ class Game():
     # Rendering images on screen
     def render(self):
         self.state_stack[-1].render(self.game_canvas)
+        self.shakescreen.blit(self.screen, next(self.offset))
         self.screen.blit(pygame.transform.scale(self.game_canvas,(self.SCREENWIDTH, self.SCREENHEIGHT)), (0,0)) #image, (width, height), coordinates
         self.transition()
         pygame.display.flip()
@@ -168,7 +175,8 @@ class Game():
         self.defeat = False
         self.win = False
         self.init_reset = False
-        
+    
+    # Louie's freeze ultimate
     def frozen(self):
         if self.freeze:
             self.freeze_time += self.deltatime
@@ -188,6 +196,18 @@ class Game():
         self.screen.blit(self.black_surface, (0,0))
         pygame.display.flip()
 
+    # Screen shake
+    def screen_shake(self, intensity, amplitude):
+        s = -1
+        for i in range(0,3):
+            for x in range(0, amplitude, intensity):
+                yield x * s, 0
+            for x in range(0, amplitude, intensity):
+                yield x * s, 0
+            s *= -1
+        while True:
+            yield 0,0
+
     # Timer before Game Start
     def start_timer(self):
         self.current_time += self.deltatime
@@ -195,6 +215,7 @@ class Game():
             self.start = True
             self.current_time = 0
           
+    # Backgrounds ingame
     def backgrounds(self):
         self.forest = pygame.image.load("sprites/backgrounds/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
@@ -212,6 +233,7 @@ class Game():
         sugarcube_image = pygame.image.load("sprites/sugarcube.png").convert_alpha()
         self.sugarcube_image = pygame.transform.scale(sugarcube_image, (25,25)).convert_alpha()
     
+    # Buttons for all
     def buttons(self):
         self.lvl1 = pygame.image.load("sprites/buttons/lvl1.png").convert_alpha()
         self.lvl2 = pygame.image.load("sprites/buttons/lvl2.png").convert_alpha()
@@ -248,27 +270,27 @@ class Game():
         self.current_exit = self.exit
         self.current_restart = self.restart
 
-    
     def save_data(self):
         self.saving_system.save_data_file()
         player_data = self.saving_system.get_save_data()
         print(f"Saving data: {player_data}")
 
     def load_data(self):
-        loaded_data = self.saving_system.load_data_file()
-        if loaded_data: 
-            if 'healthpoints' in loaded_data:
-                self.player.healthpoints = loaded_data['healthpoints']
-            if 'attackpoints' in loaded_data:
-                self.player.attackpoints = loaded_data['attackpoints']
-            if 'speed' in loaded_data:
-                self.player.speed = loaded_data['speed']
-            if 'skip_cutscenes' in loaded_data:
-                self.skip_cutscenes = loaded_data['skip_cutscenes']
-            if 'current_currency' in loaded_data:
-                self.current_currency = loaded_data['current_currency']
-            # if 'current_sugarcube_value' in loaded_data:
-            #     self.current_sugarcube_value = loaded_data['current_sugarcube_value']
+        if not self.first_game:
+            loaded_data = self.saving_system.load_data_file()
+            if loaded_data: 
+                if 'current_level' in loaded_data:
+                    self.current_level = loaded_data['current_level']
+                if 'healthpoints' in loaded_data:
+                    self.settings.current_healthpoints = loaded_data['healthpoints']
+                if 'attackpoints' in loaded_data:
+                    self.settings.current_attackpoints = loaded_data['attackpoints']
+                if 'speed' in loaded_data:
+                    self.settings.current_speed = loaded_data['speed']
+                if 'skip_cutscenes' in loaded_data:
+                    self.skip_cutscenes = loaded_data['skip_cutscenes']
+                if 'current_currency' in loaded_data:
+                    self.current_currency = loaded_data['current_currency']
         
 if __name__ == "__main__":
     game = Game()
