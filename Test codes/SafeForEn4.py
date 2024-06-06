@@ -40,15 +40,15 @@ class Enemy4(pygame.sprite.Sprite):
 
     def update(self, deltatime, player_action, player_x, player_y):
        
-        self.normal_attack(deltatime, player_x, player_y)
+        self.string_extension(deltatime, player_x, player_y)
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
         if not self.super_attack:
-            self.normal_attack(deltatime, player_x, player_y)
+            self.string_extension(deltatime, player_x, player_y)
         self.placement(deltatime)
 
-        if self.HP <= 150: # Spin attack
+        if self.HP <= 150:
             if self.super_points >= 5 and self.ult_check == False:
                 self.super_timer += deltatime
                 self.super_check = True
@@ -58,25 +58,27 @@ class Enemy4(pygame.sprite.Sprite):
                     self.super_timer = 0
                     
         if self.super_attack and self.positional == 3:
-            self.super_movement(deltatime)
+            self.string_extension2(deltatime)
 
         if self.move_bool:
             self.move_towards_player(self.pos_x, self.pos_y)        
     
 
+        if self.moxie >= 100:
+            self.ultimate = True
 
-        # if self.ultimate and self.positional == 5:
-        #     self.ult_timer += deltatime
-        #     self.ult_check = True
-        #     if self.ult_timer > 5:
-        #         self.move_bool = False
-        #         self.ultimate_movement(player_x, player_y)
-        #     if self.ult_timer > 15:
-        #         self.moxie = 0
-        #         self.move_bool = True
-        #         self.ult_check = False
-        #         self.ultimate = False
-        #         self.ult_timer = 0
+        if self.ultimate and self.positional == 5:
+            self.ult_timer += deltatime
+            self.ult_check = True
+            if self.ult_timer > 5:
+                self.move_bool = False
+                self.ultimate_movement(player_x, player_y)
+            if self.ult_timer > 15:
+                self.moxie = 0
+                self.move_bool = True
+                self.ult_check = False
+                self.ultimate = False
+                self.ult_timer = 0
 
         # print(self.positional)
         # print(self.string_check1)
@@ -99,7 +101,7 @@ class Enemy4(pygame.sprite.Sprite):
 
 
 
-    def normal_attack(self, deltatime, player_x, player_y):
+    def string_extension(self, deltatime, player_x, player_y):
         if self.extend_vert == True:
             if self.attack_bool == False:
                 if self.rect_string1.y <= 0:
@@ -146,7 +148,7 @@ class Enemy4(pygame.sprite.Sprite):
                 self.extend_horiz = True
                 self.extend_count2 = 0
 
-    def ultimate_attack(self, deltatime):
+    def string_extension2(self, deltatime):
         self.super_count += deltatime
         if self.super_count > 8 and self.ult_check == False:
             self.super_count = 0
@@ -167,7 +169,7 @@ class Enemy4(pygame.sprite.Sprite):
 
         # print(self.rect.x)
 
-    def super_movement(self, player_x, player_y):
+    def ultimate_movement(self, player_x, player_y):
         # Find direction vector (dx, dy) between enemy and player.
         dx, dy = player_x - self.rect.x, player_y - self.rect.y
         dist = math.hypot(dx, dy)
