@@ -22,6 +22,7 @@ class Enemy4(pygame.sprite.Sprite):
         self.attack_bool2 = False
         self.extend_vert = False
         self.extend_horiz = False
+
         self.super_attack = False
         self.super_check = False
         self.string_check1 = True
@@ -29,6 +30,7 @@ class Enemy4(pygame.sprite.Sprite):
         self.ultimate = False
         self.ult_check = False
         self.move_bool = True
+        
         self.speed = 20
         self.move_speed = 5
         self.HP = 300

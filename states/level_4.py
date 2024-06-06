@@ -112,6 +112,12 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.cooldown_for_attacked(deltatime)
                 self.game.frozen()
                 
+                for enemy in self.enemy_group.sprites():
+                    if enemy.HP <= 0:
+                        enemy.kill()
+                        self.enemy3.minionlist.empty()
+                        self.spawn_exploding_particles(300, enemy)
+                        self.enemy_defeat = True
 
                 if not(self.game.defeat):
                     if not(self.enemy3.HP <= 0):
@@ -130,17 +136,14 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                         self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
                         self.enemy_moxie_update(self.enemy3.moxie)
 
-                    # self.snow_particles(2)
+
                         
                         if self.enemy3.HP > 300:
                             self.enemy3.HP = 300
-                    
-                        for enemy in self.enemy_group.sprites():
-                            if enemy.HP <= 0:
-                                enemy.kill()
-                                self.enemy3.minionlist.empty()
-                                self.spawn_exploding_particles(300, enemy)
-                                self.enemy_defeat = True
+
+                    self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
+                    self.enemy_moxie_update(self.enemy3.moxie)
+                       
 
                     self.snow_particles(self.snow_value)
 
