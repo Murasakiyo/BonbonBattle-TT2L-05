@@ -65,10 +65,10 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
     def update(self, deltatime, player_action):
         
         if player_action["reset_game"]:
-            if not self.game.settings.first_win1:
-                self.game.settings.first_win1 = True
-                self.game.settings.reset_sugarcube_value()
+            if not self.game.settings.first_win4:
+                self.game.settings.first_win4 = True
                 self.current_sugarcube_value = self.game.settings.sugarcube_value
+                self.game.settings.reset_sugarcube_value()
             self.sugarcube_list.empty()
             self.snow_value = 1
             self.enemy3.enemy_reset()

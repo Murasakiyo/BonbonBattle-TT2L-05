@@ -108,7 +108,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         if self.game.start == True:
             if not(self.game.ult):
-                print(self.player.attackpoints)
+                # print(self.player.attackpoints)
 
                 # Update player
                 self.player.update(deltatime, player_action)
