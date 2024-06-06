@@ -30,7 +30,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.tongue2 = Tongue2(self.game)
         self.pause = Pause(self.game)
         # self.effect_time = 0
-        self.pos = ((550, 300))
         # self.confetti = True
         self.ultimates()
         self.characters()
@@ -43,10 +42,15 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.body_group.add(self.enemy1)
 
         self.current_time, self.end_time = 0,0
-        self.moxie_points = 0
+        self.enemy_moxie = 0
         self.gacha = 0
         self.accept_ult = False
         self.enemy_defeat = False
+
+        self.allow_effect_for_krie = False
+        self.allow_effect_for_stan = False
+        self.effect_time = 0
+        self.pos = ((550, 300))
 
         # Variables for game reset
         self.end = False
@@ -104,6 +108,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         if self.game.start == True:
             if not(self.game.ult):
+                print(self.player.attackpoints)
 
                 # Update player
                 self.player.update(deltatime, player_action)
@@ -123,17 +128,19 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                                             self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
                             self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
                             self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                            # Check collision of enemies and players
                             self.enemy_collisions(player_action, self.body_group, self.attack_group, self.enemy1, 
                                             self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
                         self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
-                        # Check collision of enemies and players
                         
-                    
+                    if self.louie.slow_down:
+                        self.enemy1.speed = self.enemy1.speed * (50/100)
                     if self.game.win:
                         self.spawn_particles(200, deltatime)
 
                     for enemy in self.body_group.sprites():
                         if enemy.HP <= 0:
+                            self.game.offset = self.game.screen_shake(5,20)
                             enemy.kill()
                             self.spawn_exploding_particles(100, enemy)
                             self.tongue.kill()
@@ -149,13 +156,33 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.add_ultimate(deltatime, player_action, self.body_group)
 
             self.particle_group.update(deltatime)
+
+            # Character Ultimate VFX
             if self.game.ult and self.init_louie:
-                self.louie_particles(8)
+                self.louie_particles(4)
+
+
+            if self.game.ult and self.init_krie:
+                self.allow_effect_for_krie = True
+
+            if self.allow_effect_for_krie and not self.init_krie:
+                self.heal_particles(75)
+                self.allow_effect_for_krie = False
+
+
+            if self.game.ult and self.init_stan:
+                self.allow_effect_for_stan = True
+
+            if self.allow_effect_for_stan and not self.init_stan:
+                self.effect_time += deltatime
+                self.confetti_fireworks(50, self.effect_time)
+                if self.effect_time > 0.4:
+                    self.effect_time = 0
+                    self.allow_effect_for_stan = False
         else:
             self.game.start_timer()
 
-            
-       
+
     def render(self, display):
 
         display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
@@ -199,7 +226,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         if self.end:
             self.game.current_level = max(self.game.current_level, 1)
-            print("LEVEL END")
+            # print("LEVEL END")
             self.ending_state(display)
             
         

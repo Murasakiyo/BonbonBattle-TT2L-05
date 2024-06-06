@@ -8,7 +8,9 @@ class Particle(pygame.sprite.Sprite):
                color: str, 
                direction: pygame.math.Vector2, 
                speed: int,
-               display):
+               display,
+               heal_bool,
+               for_stan_bool):
         super().__init__(groups)
         self.pos = pos
         self.color = color
@@ -16,25 +18,31 @@ class Particle(pygame.sprite.Sprite):
         self.speed = speed 
         self.display = display
         self.alpha = 255
-        self.fade_speed = 0
-        self.size = 4
+        self.fade_speed = 200
+        self.size = 16
+        self.heal_size = randint(16, 32)
         self.angle = 0
+        self.heal_bool = heal_bool
+        self.for_stan = for_stan_bool
 
-        self.create_surf()
+        self.create_surf(self.heal_bool)
 
 
-    def create_surf(self):
+    def create_surf(self, heal_bool):
         self.surface = pygame.Surface((self.size, self.size)).convert_alpha()
         self.surface.set_alpha(0)
-        self.pic1 = pygame.image.load("sprites/red.png").convert_alpha()
-        self.pic2 = pygame.image.load("sprites/yellow.png").convert_alpha()
-        self.pic3 = pygame.image.load("sprites/pink.png").convert_alpha()
-        self.pic4 = pygame.image.load("sprites/blue.png").convert_alpha()
-        self.confetti = choice((self.pic1, self.pic2, self.pic3, self.pic4))
-        self.image_set = self.confetti
-        self.rotate()
-        self.image = pygame.transform.scale(self.image_set, (self.size, self.size))
-        # self.image = pygame.transform.rotate(self.confetti, self.spin)
+        if not heal_bool:
+            self.pic1 = pygame.image.load("sprites/particles/red.png").convert_alpha()
+            self.pic2 = pygame.image.load("sprites/particles/yellow.png").convert_alpha()
+            self.pic3 = pygame.image.load("sprites/particles/pink.png").convert_alpha()
+            self.pic4 = pygame.image.load("sprites/particles/blue.png").convert_alpha()
+            self.confetti = choice((self.pic1, self.pic2, self.pic3, self.pic4))
+            self.image_set = self.confetti
+            self.image = pygame.transform.scale(self.image_set, (self.size, self.size))
+        if heal_bool:
+            self.HealPic = pygame.image.load("sprites/heal.png").convert_alpha()
+            self.image = pygame.transform.scale(self.HealPic, (self.heal_size, self.heal_size))
+
         pygame.Surface.blit(self.display, self.image, self.pos)
         self.rect = self.image.get_rect(center = self.pos)
 
@@ -42,6 +50,13 @@ class Particle(pygame.sprite.Sprite):
         self.angle += 1
         if self.angle > 360:
             self.angle = 0
+        self.image = pygame.transform.rotate(self.image_set, self.angle - 90)
+
+    def rotate2(self):
+        self.angle += 1
+        if self.angle > 360:
+            self.angle = 0
+        self.image_set = pygame.transform.scale(self.image_set, (self.size, self.size))
         self.image = pygame.transform.rotate(self.image_set, self.angle - 90)
 
 
@@ -69,8 +84,12 @@ class Particle(pygame.sprite.Sprite):
         self.move(dt)
         self.check_pos()
         self.check_alpha()
-        self.rotate()
+        if not self.heal_bool and not self.for_stan:
+            self.rotate()
+        if self.for_stan:
+            self.rotate2()
         self.fade(dt)
+        print(self.heal_size)
 
 
 

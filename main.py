@@ -13,6 +13,7 @@ from parent_classes.particleeffect import *
 from settings import Settings
 from music import Sounds
 from savingsystem import *
+from itertools import repeat
 
 class Game():
     def __init__(self):
@@ -20,13 +21,15 @@ class Game():
         pygame.display.set_caption("Bonbon Battle: Treading Through Cotton Woods")
         self.SCREENWIDTH, self.SCREENHEIGHT = 1100, 600
         self.game_canvas = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
-        self.screen = pygame.display.set_mode((self.SCREENWIDTH, self.SCREENHEIGHT))
+        self.shakescreen = pygame.display.set_mode((self.SCREENWIDTH, self.SCREENHEIGHT))
+        self.screen = self.shakescreen.copy()
+        self.offset = repeat((0,0))
         self.screen_rect = self.screen.get_rect()
         self.run, self.play = True, True
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = False
+        self.start = True
         self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
         self.settings = Settings()
@@ -137,6 +140,7 @@ class Game():
     # Rendering images on screen
     def render(self):
         self.state_stack[-1].render(self.game_canvas)
+        self.shakescreen.blit(self.screen, next(self.offset))
         self.screen.blit(pygame.transform.scale(self.game_canvas,(self.SCREENWIDTH, self.SCREENHEIGHT)), (0,0)) #image, (width, height), coordinates
         self.transition()
         pygame.display.flip()
@@ -172,7 +176,8 @@ class Game():
         self.defeat = False
         self.win = False
         self.init_reset = False
-        
+    
+    # Louie's freeze ultimate
     def frozen(self):
         if self.freeze:
             self.freeze_time += self.deltatime
@@ -192,6 +197,18 @@ class Game():
         self.screen.blit(self.black_surface, (0,0))
         pygame.display.flip()
 
+    # Screen shake
+    def screen_shake(self, intensity, amplitude):
+        s = -1
+        for i in range(0,3):
+            for x in range(0, amplitude, intensity):
+                yield x * s, 0
+            for x in range(0, amplitude, intensity):
+                yield x * s, 0
+            s *= -1
+        while True:
+            yield 0,0
+
     # Timer before Game Start
     def start_timer(self):
         self.current_time += self.deltatime
@@ -199,6 +216,7 @@ class Game():
             self.start = True
             self.current_time = 0
           
+    # Backgrounds ingame
     def backgrounds(self):
         self.forest = pygame.image.load("sprites/backgrounds/bg_earlylvl.bmp").convert()
         self.black = pygame.image.load("sprites/black.png").convert_alpha()
@@ -216,6 +234,7 @@ class Game():
         sugarcube_image = pygame.image.load("sprites/sugarcube.png").convert_alpha()
         self.sugarcube_image = pygame.transform.scale(sugarcube_image, (25,25)).convert_alpha()
     
+    # Buttons for all
     def buttons(self):
         self.lvl1 = pygame.image.load("sprites/buttons/lvl1.png").convert_alpha()
         self.lvl2 = pygame.image.load("sprites/buttons/lvl2.png").convert_alpha()
@@ -252,7 +271,6 @@ class Game():
         self.current_exit = self.exit
         self.current_restart = self.restart
 
-    
     def save_data(self):
         self.saving_system.save_data_file()
         player_data = self.saving_system.get_save_data()

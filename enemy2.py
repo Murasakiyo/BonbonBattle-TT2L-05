@@ -12,13 +12,24 @@ class FlyEnemy(pygame.sprite.Sprite):
         self.flylist = pygame.sprite.Group()  # List of the flies
         # self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0 #animation
         # self.fps = 0.2
+        self.slowness_amount = []
+        self.original_speed = []
+        self.sprite_grp = []
 
-    def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):
 
+    def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx, louie):
         self.flies_spawn()
         for flies in self.flylist.sprites():
             flies.update(deltatime, player_action, player_x, player_y, player_rect, player_rectx)
             flies.rect.clamp_ip(self.game.screen_rect)
+            for flies in self.sprite_grp:
+                for i in range(len(self.sprite_grp)):
+                    if louie.slow_down:
+                        self.sprite_grp[i].moving_speed = int(self.slowness_amount[i])
+                    else:
+                        self.sprite_grp[i].moving_speed = int(self.original_speed[i])
+                    # print(f"Speed of fly{[i]}:{self.sprite_grp[i].moving_speed}")
+
 
         
     def render(self, display):
@@ -31,7 +42,12 @@ class FlyEnemy(pygame.sprite.Sprite):
             for i in range(3):
                 new_fly = Fly(self, moving_speed= 1+(i+1))
                 self.flylist.add(new_fly)
+                self.original_speed.append(new_fly.moving_speed)
+                self.slowness_amount.append(int(new_fly.moving_speed - 4))
+        self.sprite_grp = list(self.flylist)
 
+
+        
 
 class Fly(pygame.sprite.Sprite):
     def __init__(self, game, moving_speed=0.5, color=(0,255,0)):
@@ -55,7 +71,7 @@ class Fly(pygame.sprite.Sprite):
         self.teleport_x = None
         self.teleport_y = None
         self.HP = 150
-        self.damage = 2
+        self.damage = 10
 
 
     def update(self, deltatime, player_action, player_x, player_y, player_rect, player_rectx):

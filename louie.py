@@ -15,15 +15,20 @@ class Louie(pygame.sprite.Sprite, Support):
         self.rect.x, self.rect.y = 0, 200
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
         self.fps =0.2
+        self.slow_down = False
         self.attack = False
         self.current_time = 0
         self.attack_cooldown = 0
+        self.slow_down = False
         self.min_step, self.max_step = 0,0
  
 
  
-    def update(self,deltatime, player, player_action, player_x, player_y):
-        
+    def update(self,deltatime, player, player_action, player_x, player_y, enemy_moxie):
+        if self.attack:
+            self.slow_down = True
+            if (self.attack_cooldown > 0.5):
+                self.slow_down = False
         self.update_movement(deltatime, player, player_action, player_x, player_y, self.animate)
 
     

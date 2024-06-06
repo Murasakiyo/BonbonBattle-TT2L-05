@@ -40,7 +40,7 @@ class Level_Options(State):
         self.show_bg = self.current_background
         self.bg_transition(player_action)
         self.update_keys(player_action, deltatime)
-        print(f"level_index: {self.index}")
+        # print(f"level_index: {self.index}")
         
 
         if self.menu_options[self.index] == "lvl1": 
@@ -115,7 +115,7 @@ class Level_Options(State):
             display.blit(self.game.D_button, (870, 530))
             self.game.draw_text(display, "[Enter]", False, "white", 960, 490, 25)
             display.blit(self.enter, (960, 530))
-            self.game.draw_text(display, "[Back]", False, "white", 960, 50, 30)
+            self.game.draw_text(display, "[Backspace]", False, "white", 920, 50, 30)
             display.blit(self.game.backspace, (960, 10))
         display.blit(self.game.sugarcube_image, (10, 10))
         self.game.draw_text(display, f"{int(self.game.current_currency)}", True, self.text_color, 40, 10, 35)
@@ -128,16 +128,10 @@ class Level_Options(State):
         
         MAX_LEVEL = 4
         if self.current_time > 0.13:
-            if player_action["right"]:
-                if current_level == selected_level:
-                    pass
-                else:    
-                    self.index = (self.index + 1) % len(self.menu_options)
+            if player_action["right"]:  
+                self.index = (self.index + 1) % (current_level+1)
             elif player_action["left"]:
-                if selected_level == 0 and current_level < MAX_LEVEL:
-                    pass
-                else:
-                    self.index = (self.index - 1) % len(self.menu_options)
+                self.index = (self.index - 1) % (current_level+1)
             self.current_time = 0
 
     def bg_transition(self, player_action):
