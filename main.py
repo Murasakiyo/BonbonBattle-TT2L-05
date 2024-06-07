@@ -7,7 +7,7 @@ from states.pause_menu import Pause
 from states.first_cutscene import Story
 from states.lounge import Lounge
 from states.level_choose import Level_Options
-from states.circus import Circus
+from states.game_set import Game_Settings
 from parent_classes.particleeffect import *
 # from parent_classes.ultimate_action import *
 from settings import Settings
@@ -243,6 +243,7 @@ class Game():
         self.lvl4 = pygame.image.load("sprites/buttons/lvl4.png").convert_alpha()
         self.lvl5 = pygame.image.load("sprites/buttons/lvl5.png").convert_alpha()
         self.exit = pygame.image.load("sprites/buttons/exit.png").convert_alpha()
+        self.button = pygame.image.load("sprites/buttons/button.png").convert_alpha()
         self.resume = pygame.image.load("sprites/buttons/resume.png").convert_alpha()
         self.restart = pygame.image.load("sprites/buttons/restart.png").convert_alpha()
         self.E_button = pygame.image.load("sprites/buttons/E.png").convert_alpha()
@@ -259,6 +260,7 @@ class Game():
         self.lvl4_hover = pygame.image.load("sprites/buttons/lvl4_hover.png").convert_alpha()
         self.lvl5_hover = pygame.image.load("sprites/buttons/lvl5_hover.png").convert_alpha()
         self.exit_hover = pygame.image.load("sprites/buttons/exit_hover.png").convert_alpha()
+        self.button_hover = pygame.image.load("sprites/buttons/button_hover.png").convert_alpha()
         self.resume_hover = pygame.image.load("sprites/buttons/resume_hover.png").convert_alpha()
         self.restart_hover = pygame.image.load("sprites/buttons/restart_hover.png").convert_alpha()
         self.buy_hover = pygame.image.load("sprites/buttons/buy_hover.png").convert_alpha()

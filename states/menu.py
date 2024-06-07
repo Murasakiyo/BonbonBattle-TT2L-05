@@ -2,6 +2,7 @@ import pygame
 from parent_classes.state import State
 from states.testcutscenes import CutscenesTest
 from states.first_cutscene import Story
+from states.game_set import Game_Settings
 from states.level_choose import Level_Options
 from states.lounge import Lounge
 from states.level_1 import First_Stage
@@ -45,13 +46,13 @@ class MainMenu(State):
             if pygame.mouse.get_pressed()[0] and not self.click:
                 # self.next = True
                 self.click = True
-                self.game.first_game = True
-                self.game.current_currency = 0
-                self.game.current_level = 0
-                self.game.settings.current_healthpoints = 250
-                self.game.settings.current_attackpoints = 3
-                self.game.settings.current_speed = 400
-                new_state = Story(self.game)
+                # self.game.first_game = True
+                # self.game.current_currency = 0
+                # self.game.current_level = 0
+                # self.game.settings.current_healthpoints = 250
+                # self.game.settings.current_attackpoints = 3
+                # self.game.settings.current_speed = 400
+                new_state = Game_Settings(self.game)
                 # new_state = CutscenesTest(self.game)
                 new_state.enter_state()
             if not pygame.mouse.get_pressed()[0]:
