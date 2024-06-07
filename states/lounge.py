@@ -27,6 +27,7 @@ class Lounge(State, Dialogue):
         # self.offset = pygame.math.Vector2((0,0))
 
     def update(self, deltatime, player_action):
+        self.player.speed = 400
         player_action["up"], player_action["down"] = False, False
         player_action["ultimate"], player_action["attack"], player_action["defend"],= False, False, False
         self.stan.update_lounge(deltatime, self.player, player_action)

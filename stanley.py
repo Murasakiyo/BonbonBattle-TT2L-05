@@ -26,7 +26,7 @@ class Stanley(pygame.sprite.Sprite, Support):
                 player.attackpoints = player.attackpoints + (player.attackpoints * 0.5)
                 enemy_moxie -= 10
         else:
-            player.attackpoints = 3
+            player.attackpoints = self.game.settings.current_attackpoints
         self.update_movement(deltatime, player, player_action, player_x, player_y, self.animate)
         
     def update_lounge(self, deltatime, player, player_action):

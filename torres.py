@@ -133,8 +133,13 @@ class Player(pygame.sprite.Sprite):
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
         self.current_time = 0
         self.cooldown_variable()
+
+    def upgrade(self):
+        self.healthpoints = self.game.settings.current_healthpoints
+        self.max_health = self.healthpoints
+        self.attackpoints = self.game.settings.current_attackpoints
+        self.speed = self.game.settings.current_speed
                 
-        
 
     def animate(self, deltatime, direction_x, direction_y):
 

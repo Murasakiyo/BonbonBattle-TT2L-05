@@ -56,7 +56,6 @@ class Game():
         self.saving_system = SaveDataSystem('player_data.pickle', self)
         self.load_data() # load saved data when start a game
         
-        self.particle = ParticleFunctions(self) # Changing all particle functions to have self.game.particle
 
     # Game loop
     def game_loop(self):
@@ -231,6 +230,7 @@ class Game():
         self.win_screen = pygame.image.load("sprites/win_screen.png").convert_alpha()
         self.circus = pygame.image.load("sprites/circus.png").convert()
         self.shop = pygame.image.load("sprites/shop.png").convert_alpha()
+        self.ice = pygame.image.load("sprites/ice.png").convert_alpha()
         self.end_screen = self.win_screen
 
         sugarcube_image = pygame.image.load("sprites/sugarcube.png").convert_alpha()
