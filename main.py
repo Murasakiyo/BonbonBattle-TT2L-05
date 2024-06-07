@@ -11,6 +11,7 @@ from states.game_set import Game_Settings
 from parent_classes.particleeffect import *
 # from parent_classes.ultimate_action import *
 from settings import Settings
+from music import Sounds
 from savingsystem import *
 from itertools import repeat
 
@@ -33,9 +34,10 @@ class Game():
         self.start = True
         self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
+        self.settings = Settings()
+        self.sounds = Sounds(self)
         self.backgrounds()
         self.buttons()
-        self.settings = Settings()
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
@@ -47,7 +49,6 @@ class Game():
         self.load_states()
         self.battle_state()
 
-        # self.player = Player(self, 200, 200)
         self.first_game = False
         self.skip_cutscenes = False
         self.current_currency = 0
@@ -264,6 +265,11 @@ class Game():
         self.resume_hover = pygame.image.load("sprites/buttons/resume_hover.png").convert_alpha()
         self.restart_hover = pygame.image.load("sprites/buttons/restart_hover.png").convert_alpha()
         self.buy_hover = pygame.image.load("sprites/buttons/buy_hover.png").convert_alpha()
+
+        self.lvl2_lock = pygame.image.load("sprites/buttons/lvl2_lock.png").convert_alpha()
+        self.lvl3_lock = pygame.image.load("sprites/buttons/lvl3_lock.png").convert_alpha()
+        self.lvl4_lock = pygame.image.load("sprites/buttons/lvl4_lock.png").convert_alpha()
+        self.lvl5_lock = pygame.image.load("sprites/buttons/lvl5_lock.png").convert_alpha()
 
         self.button1 = self.lvl1.get_rect(width= 100, height=100)
         self.button1.x, self.button1.y = 75,225
