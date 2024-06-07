@@ -3,6 +3,7 @@ from parent_classes.state import *
 from parent_classes.dialogue import *
 from torres import *
 from krie import *
+from music import Sounds
 
 class Upgrade(State, Dialogue):
     def __init__(self, game):
@@ -10,6 +11,7 @@ class Upgrade(State, Dialogue):
         self.game = game
         self.player = Player(self.game, 290, 100)
         self.camera = CameraGroup(self.game)
+        self.sounds = Sounds(self.game)
         self.camera.add(self.player)
         self.assets = {
             "menu": pygame.image.load("sprites/upgrade_menu.png").convert_alpha(),
@@ -112,6 +114,7 @@ class Upgrade(State, Dialogue):
 
         if self.upgrade_rect.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click:
+                self.sounds.upgrade_clicked.play()
                 self.apply_upgrades = True
                 self.click = True
             if not pygame.mouse.get_pressed()[0]:

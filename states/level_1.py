@@ -11,6 +11,7 @@ from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
 from parent_classes.particleeffect import *
 from parent_classes.sugarcube import *
+from music import Sounds
 
 
 
@@ -29,6 +30,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.tongue = Tongue(self.game)
         self.tongue2 = Tongue2(self.game)
         self.pause = Pause(self.game)
+        self.sounds = Sounds(self.game)
         # self.effect_time = 0
         # self.confetti = True
         self.ultimates()
@@ -140,6 +142,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
                     for enemy in self.body_group.sprites():
                         if enemy.HP <= 0:
+                            self.sounds.enemies_death.play()
                             self.game.offset = self.game.screen_shake(5,20)
                             enemy.kill()
                             self.spawn_exploding_particles(100, enemy)
