@@ -31,7 +31,7 @@ class Level_Options(State):
         self.index = 0
         self.back = False
 
-        self.text_color = (30, 30, 30)
+        self.text_color = (30, 30, 30)        
         
 
 
