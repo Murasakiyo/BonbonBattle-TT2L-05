@@ -70,9 +70,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
-            if not self.game.settings.first_win1:
-                self.game.settings.first_win1 = True
-                self.game.settings.reset_sugarcube_value()
+            if self.game.settings.first_win1:
                 self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.enemy1.enemy_reset()
             self.player.reset_player(200,200)
@@ -99,7 +97,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.exit_state(-1)
 
         if self.end:
-            # self.game.current_level = 1
             self.button_go()
 
         self.game_over(player_action)
@@ -108,7 +105,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         if self.game.start == True:
             if not(self.game.ult):
-                # print(self.player.attackpoints)
+                print(self.player.attackpoints)
 
                 # Update player
                 self.player.update(deltatime, player_action)
@@ -227,6 +224,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         if self.end:
             self.ending_state(display)
             if self.game.win:
+                self.game.settings.first_win1 = True
                 self.game.current_level = max(self.game.current_level, 1)
             
         

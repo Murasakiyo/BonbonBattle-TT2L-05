@@ -19,9 +19,4 @@ class Settings:
         self.first_win5 = False
 
 
-    def reset_sugarcube_value(self):
-        if any([self.first_win1, self.first_win2, self.first_win3, self.first_win4, self.first_win5]):
-            print("reset sugarcube")
-            self.sugarcube_value = 10
-
 
