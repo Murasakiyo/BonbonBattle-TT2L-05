@@ -9,7 +9,6 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
-from currency import Sugarcube
 from parent_classes.particleeffect import *
 from parent_classes.sugarcube import *
 
@@ -61,14 +60,15 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.restart_game = False
         self.click = False
         self.state = "none"
+            
+        self.sugarcube_received = 0
 
+    def enter_state(self):
+        super().enter_state()
         if self.game.current_level == 2:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
             self.current_sugarcube_value = self.game.settings.sugarcube_value
-            
-        self.sugarcube_received = 0
-
 
 
 

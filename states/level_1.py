@@ -58,13 +58,16 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.restart_game = False
         self.click = False
         self.state = "none"
-        
+                    
+        self.sugarcube_received = 0
+
+    # method overriding
+    def enter_state(self):
+        super().enter_state()  # Call parent class's method (enter_state method from the State class)
         if self.game.current_level == 0:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
             self.current_sugarcube_value = self.game.settings.sugarcube_value
-            
-        self.sugarcube_received = 0
 
 
     def update(self, deltatime, player_action):
@@ -105,7 +108,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         if self.game.start == True:
             if not(self.game.ult):
-                print(self.player.attackpoints)
+                # print(self.player.attackpoints)
 
                 # Update player
                 self.player.update(deltatime, player_action)
