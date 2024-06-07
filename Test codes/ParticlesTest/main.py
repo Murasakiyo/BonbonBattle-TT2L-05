@@ -93,7 +93,7 @@ def main_loop():
         pygame.display.update()
 
         # print(len(particle_group.sprites()))
-        print(pygame.mouse.get_pos())
+        # print(pygame.mouse.get_pos())
 
 if __name__ == "__main__":
     pygame.init()

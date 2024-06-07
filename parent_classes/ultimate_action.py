@@ -62,7 +62,7 @@ class Ults():
 
     def ult_collisions(self, support, enemies):
         if pygame.sprite.spritecollide(support, enemies, False): #first check: rectangular collision
-                print("collision work")
+                # print("collision work")
                 if pygame.sprite.spritecollide(support, enemies, False, pygame.sprite.collide_mask):
                     for enemy in enemies:
                         enemy.HP -= 2

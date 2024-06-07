@@ -19,10 +19,10 @@ class Level_Options(State):
         self.fourth_level= Quad_Stage(self.game)
         self.fifth_level = Penta_Stage(self.game)
         self.current_level1 = self.game.lvl1
-        self.current_level2 = self.game.lvl2
-        self.current_level3 = self.game.lvl3
-        self.current_level4 = self.game.lvl4
-        self.current_level5 = self.game.lvl5
+        self.current_level2 = self.game.lvl2_lock
+        self.current_level3 = self.game.lvl3_lock
+        self.current_level4 = self.game.lvl4_lock
+        self.current_level5 = self.game.lvl5_lock
         self.current_background = self.level1
         self.show_bg = self.current_background
         self.alpha = 0
@@ -49,25 +49,37 @@ class Level_Options(State):
             new_state = self.first_level
         else:
             self.current_level1 = self.game.lvl1
-        if self.menu_options[self.index] == "lvl2": 
+
+        if self.game.current_level < 1:
+            self.current_level2 = self.game.lvl2_lock
+        elif self.menu_options[self.index] == "lvl2": 
             self.current_level2 = self.game.lvl2_hover
             self.current_background = self.level2
             new_state = self.second_level
         else:
             self.current_level2 = self.game.lvl2
-        if self.menu_options[self.index] == "lvl3": 
+        
+        if self.game.current_level < 2:
+            self.current_level3 = self.game.lvl3_lock
+        elif self.menu_options[self.index] == "lvl3": 
             self.current_level3 = self.game.lvl3_hover
             self.current_background = self.level3
             new_state = self.third_level
         else:
             self.current_level3 = self.game.lvl3
-        if self.menu_options[self.index] == "lvl4": 
+
+        if self.game.current_level < 3:
+            self.current_level4 = self.game.lvl4_lock
+        elif self.menu_options[self.index] == "lvl4": 
             self.current_level4 = self.game.lvl4_hover
             self.current_background = self.level4
             new_state = self.fourth_level
         else:
             self.current_level4 = self.game.lvl4
-        if self.menu_options[self.index] == "lvl5": 
+
+        if self.game.current_level < 4:
+            self.current_level5 = self.game.lvl5_lock
+        elif self.menu_options[self.index] == "lvl5": 
             self.current_level5 = self.game.lvl5_hover
             self.current_background = self.level5
             new_state = self.fifth_level
@@ -124,15 +136,18 @@ class Level_Options(State):
     def update_keys(self, player_action, deltatime):
         self.current_time += deltatime
         current_level = self.game.current_level
-        selected_level = self.index
+        # selected_level = self.index
         
-        MAX_LEVEL = 4
+        # MAX_LEVEL = 4  # sef.index = selected_level
         if self.current_time > 0.13:
             if player_action["right"]:  
                 self.index = (self.index + 1) % (current_level+1)
+                print(f"current level = {current_level}")
+                print(f"self.index = {self.index}")
             elif player_action["left"]:
                 self.index = (self.index - 1) % (current_level+1)
             self.current_time = 0
+
 
     def bg_transition(self, player_action):
         if player_action["right"] or player_action["left"]:
