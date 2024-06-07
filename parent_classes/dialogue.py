@@ -31,10 +31,9 @@ class Dialogue():
             self.message2 = self.text[self.activetext + 1]
         else:
             self.message2 = self.text[self.activetext]
-        print(f"activetext:{self.activetext}")
-        print(f"requirements:{len(self.text) - 1}")
+        # print(f"activetext:{self.activetext}")
+        # print(f"requirements:{len(self.text) - 1}")
         
-        # print (self.pos)
         if self.counter < self.speed * len(self.message):
             self.counter = self.counter + 1
         elif self.counter >= self.speed*len(self.message):

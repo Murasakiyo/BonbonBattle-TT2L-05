@@ -57,14 +57,13 @@ class Player(pygame.sprite.Sprite):
             player_action["attack"] = False
             player_action["defend"] = False
 
+        if self.healthpoints > self.game.settings.current_healthpoints:
+            self.healthpoints = self.game.settings.current_healthpoints
+            
         # Get direction from input
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
-
-        # collision with the screen
-        # self.rect.clamp_ip(self.game.screen_rect)
         
-
         # Check for defense button
         if player_action["defend"] == True:
             player_action["attack"] = False

@@ -60,6 +60,8 @@ class MainMenu(State):
         if self.next:
             player_action["transition"] = True
 
+        if self.game.alpha >= 240:
+            self.game.draw_text(self.game.screen, "Loading...", True, "white", 400, 250, 80)
         if self.game.alpha == 255:
             if self.game.skip_cutscenes:
                 new_state = Lounge(self.game)
@@ -74,3 +76,4 @@ class MainMenu(State):
         display.blit(pygame.image.load("sprites/main_screen.bmp").convert(), (0,0))
         self.hover_button(display, self.rect_START, self.current_start, self.start_button, self.start_button_hover)
         self.hover_button(display, self.rect_SET, self.current_set, self.set_button, self.set_button_hover)
+       

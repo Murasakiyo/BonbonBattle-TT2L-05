@@ -18,6 +18,8 @@ class Game():
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Bonbon Battle: Treading Through Cotton Woods")
+        icon = pygame.image.load("sprites/icon.png") 
+        pygame.display.set_icon(icon)
         self.SCREENWIDTH, self.SCREENHEIGHT = 1100, 600
         self.game_canvas = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.shakescreen = pygame.display.set_mode((self.SCREENWIDTH, self.SCREENHEIGHT))

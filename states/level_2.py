@@ -122,12 +122,12 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                                                 self.player.rect.center[1], self.player.rect, self.player.rect.x, self.louie)
                     
                     for flies in self.fly_swarm.flylist.sprites():
-                        original_speed = flies.moving_speed
-                        self.slowness_amount = int(flies.moving_speed * (50/100))
+                        
                         if not(flies.HP <= 0):
                             self.flies_collisions(player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, flies.damage)
 
                         if flies.HP <= 0:
+                            self.game.offset = self.game.screen_shake(5,20)
                             flies.kill()
                             self.spawn_exploding_particles(100, flies)
                             
@@ -140,9 +140,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                             new_state = self.pause
                             new_state.enter_state()
                             self.game.start = False
-
-
-  
 
                     if self.game.win:
                         self.spawn_particles(200, deltatime)
@@ -209,6 +206,7 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
-            self.game.current_level = max(self.game.current_level, 2)
             self.ending_state(display)
+            if self.game.win:
+                self.game.current_level = max(self.game.current_level, 2)
 
