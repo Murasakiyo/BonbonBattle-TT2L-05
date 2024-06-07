@@ -1,7 +1,7 @@
 import pygame
 from parent_classes.state import State
-from states.testcutscenes import CutscenesTest
 from states.first_cutscene import Story
+from states.game_set import Game_Settings
 from states.level_choose import Level_Options
 from states.lounge import Lounge
 from states.level_1 import First_Stage
@@ -43,16 +43,8 @@ class MainMenu(State):
 
         if self.rect_SET.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click:
-                # self.next = True
                 self.click = True
-                self.game.first_game = True
-                self.game.current_currency = 0
-                self.game.current_level = 0
-                self.game.settings.current_healthpoints = 250
-                self.game.settings.current_attackpoints = 3
-                self.game.settings.current_speed = 400
-                new_state = Story(self.game)
-                # new_state = CutscenesTest(self.game)
+                new_state = Game_Settings(self.game)
                 new_state.enter_state()
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
@@ -60,11 +52,13 @@ class MainMenu(State):
         if self.next:
             player_action["transition"] = True
 
+        if self.game.alpha >= 240:
+            self.game.draw_text(self.game.screen, "Loading...", True, "white", 400, 250, 80)
         if self.game.alpha == 255:
             if self.game.skip_cutscenes:
                 new_state = Lounge(self.game)
-            # else:
-            #     new_state = CutscenesTest(self.game)
+            else:
+                new_state = Story(self.game)
             new_state.enter_state()
             player_action["transition"] =  False
             self.next = False
@@ -74,3 +68,4 @@ class MainMenu(State):
         display.blit(pygame.image.load("sprites/main_screen.bmp").convert(), (0,0))
         self.hover_button(display, self.rect_START, self.current_start, self.start_button, self.start_button_hover)
         self.hover_button(display, self.rect_SET, self.current_set, self.set_button, self.set_button_hover)
+       

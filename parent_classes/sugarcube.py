@@ -21,7 +21,7 @@ class SugarcubeSpawn():
         # self.sugarcube_list.update()
         for sugarcube in self.sugarcube_list:
             if sugarcube.rect.colliderect(self.player.rect):
-                print("collide")
+                # print("collide")
                 sugarcube.collect(self.player)
                 self.sugarcube_received += 1
-                print(f"Remaining sugarcubes: {len(self.sugarcube_list)}")
+                # print(f"Remaining sugarcubes: {len(self.sugarcube_list)}")

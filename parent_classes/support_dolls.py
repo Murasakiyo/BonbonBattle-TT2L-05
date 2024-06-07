@@ -13,7 +13,7 @@ class Support():
 
         # Cooldown for attack
         if not self.game.defeat and not self.game.win:
-            if self.current_time > 3:
+            if self.current_time > 2.3:
                 self.attack = True
                 self.attack_cooldown += deltatime
                 if self.attack_cooldown > 0.8:

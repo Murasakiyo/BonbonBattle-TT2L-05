@@ -139,6 +139,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                         if not(flies.HP <= 0):
                             self.flies_collisions(player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, flies.damage)
                         if flies.HP <= 0:
+                            self.game.offset = self.game.screen_shake(5,20)
                             flies.kill()
                             self.spawn_exploding_particles(100, flies)
 
@@ -164,6 +165,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                         
                         for enemy in self.body_group.sprites():
                             if enemy.HP <= 0:
+                                self.game.offset = self.game.screen_shake(5,20)
                                 enemy.kill()
                                 self.spawn_exploding_particles(100, enemy)
                                 self.tongue.kill()
