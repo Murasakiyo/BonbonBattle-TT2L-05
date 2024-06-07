@@ -24,13 +24,10 @@ class Player(pygame.sprite.Sprite):
         self.color = "white"
         self.collide = False
         self.collide_time = 0
-        self.c_time = 0
-        # self.moxie_points = 0
         self.moxie_bool = False
         self.healthpoints = self.game.settings.current_healthpoints
         self.max_health = self.healthpoints
         self.attackpoints = self.game.settings.current_attackpoints
-        self.defensepoints = 10
         self.moxiepoints = 250
         self.speed = self.game.settings.current_speed
         self.lose = False
@@ -38,6 +35,7 @@ class Player(pygame.sprite.Sprite):
         
 
     def update(self,deltatime,player_action):
+        print(f"current speed:{self.speed}, current attack: {self.attackpoints}, current health: {self.healthpoints}")
         
         if self.game.defeat and not(self.game.win):
             self.lose = True
@@ -98,22 +96,11 @@ class Player(pygame.sprite.Sprite):
         self.animate(deltatime, direction_x, direction_y)
 
         # position
-        # if collide_bool == False:
         self.rect.x += self.speed * deltatime * direction_x 
         self.rect.y += (self.speed + 50) * deltatime * direction_y
 
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
-
-        # print(self.collide_time)
-        # print(self.collide)
-        # print(self.moxie_points)
-        # print(collide_bool)
-
-        
-
-
         self.horiz_line = [((self.rect.midleft), (self.rect.midright))]
-        # self.enemy2_collision = [((self.rect.midleft), (self.rect.midright))]
 
 
     def render(self, display):
