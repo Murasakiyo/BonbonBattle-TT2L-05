@@ -31,7 +31,7 @@ class Game_Settings(State, Dialogue):
         self.reset = False
         self.back = False
         self.click = False
-        self.test = False
+        self.init_transition = False
 
     def update(self, deltatime, player_action):
         # print(len(self.warn_list))
@@ -43,6 +43,14 @@ class Game_Settings(State, Dialogue):
                 self.click = True
                 if self.last_warn:
                     print("Insert resets here")
+                    self.game.first_game = True
+                    self.game.current_currency = 0
+                    self.game.current_level = 0
+                    self.game.settings.current_healthpoints = 250
+                    self.game.settings.current_attackpoints = 3
+                    self.game.settings.current_speed = 400
+                    self.game.skip_cutscenes = False
+                    self.exit_state(-1)
             if not pygame.mouse.get_pressed()[0]:
                 self.reset = False
                 self.click = False
@@ -59,10 +67,9 @@ class Game_Settings(State, Dialogue):
             self.last_warn = True
 
         if self.back:
-            self.test = True
+            self.init_transition = True
         if self.alpha == 0:
             self.exit_state(-1)
-        print(self.alpha)
 
 
     def render(self, display):
@@ -83,10 +90,10 @@ class Game_Settings(State, Dialogue):
         
         
     def bg_transition(self, player_action):
-        if not(self.test):
+        if not(self.init_transition):
             if self.alpha != 255:
                 self.alpha = min(self.alpha + 10, 255)
-        if self.test:
+        if self.init_transition:
             if self.alpha != 0:
                 self.alpha = max(self.alpha - 10, 0)
         self.assets["bg"].set_alpha(self.alpha)
