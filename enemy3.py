@@ -44,7 +44,7 @@ class Enemy3(pygame.sprite.Sprite):
             self.enemy3_movement(player_x, player_y)
 
         if self.attack:
-            self.moxie +=  250 * deltatime
+            self.moxie +=  25 * deltatime
 
         if self.leech:
             self.atk_timer += deltatime

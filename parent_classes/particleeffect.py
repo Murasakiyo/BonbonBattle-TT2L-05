@@ -114,7 +114,7 @@ class Particle(pygame.sprite.Sprite):
         self.angle += 1
         if self.angle > 360:
             self.angle = 0
-        self.image_set = pygame.transform.scale(self.image_set, (self.size, self.size))
+        self.image_set = pygame.transform.scale(self.image_set, (self.stan_confetti_size, self.stan_confetti_size))
         self.image = pygame.transform.rotate(self.image_set, self.angle - 90)
 
 
