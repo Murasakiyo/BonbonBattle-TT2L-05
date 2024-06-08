@@ -76,7 +76,6 @@ class Enemy3(pygame.sprite.Sprite):
         self.enemy3_moxie_function(deltatime)
         self.animate(deltatime, self.direction)
 
-        print(self.moxie)
 
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
