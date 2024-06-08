@@ -66,6 +66,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
     # method overriding
     def enter_state(self):
         super().enter_state()  # Call parent class's method (enter_state method from the State class)
+        self.player.attribute_update()
         if self.game.current_level == 0:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:

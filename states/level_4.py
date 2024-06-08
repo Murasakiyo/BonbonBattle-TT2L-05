@@ -57,7 +57,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.sugarcube_received = 0
 
     def enter_state(self):
-        super().enter_state()  
+        super().enter_state()
+        self.player.attribute_update()
         if self.game.current_level == 3:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:

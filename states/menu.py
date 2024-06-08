@@ -11,6 +11,7 @@ from states.level_4 import Quad_Stage
 from states.level_5 import Penta_Stage
 from states.level_1 import First_Stage
 from states.level_2 import Sec_Stage
+from settings import Settings
 from music import Sounds
 
 
@@ -19,6 +20,7 @@ class MainMenu(State):
         State.__init__(self, game)
         self.game = game
         self.sounds = Sounds(self.game)
+        self.settings = Settings(self.game)
         self.start_button = pygame.image.load("sprites/start_button.png").convert_alpha()
         self.start_button_hover = pygame.image.load("sprites/start_button_hover.png").convert_alpha()
         self.current_start = self.start_button
@@ -38,9 +40,15 @@ class MainMenu(State):
         if self.rect_START.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click:
                 self.sounds.start_game.play()
+                if self.game.reset_game:
+                    print("reset")
+                    self.settings.gamereset_value()
+                else:
+                    print("no reset")
                 self.next = True
                 self.click = True
                 player_action["start"] = True
+                
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
 

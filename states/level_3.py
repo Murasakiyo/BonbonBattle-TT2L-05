@@ -67,6 +67,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
     def enter_state(self):
         super().enter_state()
+        self.player.attribute_update()
         if self.game.current_level == 2:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
