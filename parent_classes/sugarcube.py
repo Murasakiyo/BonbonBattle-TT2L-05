@@ -1,9 +1,11 @@
 import pygame
 from currency import Sugarcube
+from music import Sounds
 
 class SugarcubeSpawn():
     def __init__(self, game):
         self.game = game
+        self.sounds = Sounds(self.game)
 
     def spawn_sugarcubes(self, num_sugarcubes, x):
         if len(self.sugarcube_list) < num_sugarcubes - x:
@@ -21,7 +23,7 @@ class SugarcubeSpawn():
         # self.sugarcube_list.update()
         for sugarcube in self.sugarcube_list:
             if sugarcube.rect.colliderect(self.player.rect):
-                # print("collide")
+                self.sounds.collect_sugarcube.play()
                 sugarcube.collect(self.player)
                 self.sugarcube_received += 1
                 # print(f"Remaining sugarcubes: {len(self.sugarcube_list)}")

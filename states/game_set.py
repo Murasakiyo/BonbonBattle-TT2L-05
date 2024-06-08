@@ -43,13 +43,8 @@ class Game_Settings(State, Dialogue):
                 self.click = True
                 if self.last_warn:
                     print("Insert resets here")
+                    self.game.reset_game = True
                     self.game.first_game = True
-                    self.game.current_currency = 0
-                    self.game.current_level = 0
-                    self.game.settings.current_healthpoints = 250
-                    self.game.settings.current_attackpoints = 3
-                    self.game.settings.current_speed = 400
-                    self.game.skip_cutscenes = False
                     self.exit_state(-1)
             if not pygame.mouse.get_pressed()[0]:
                 self.reset = False

@@ -11,6 +11,7 @@ from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
 from parent_classes.particleeffect import *
 from parent_classes.sugarcube import *
+from music import Sounds
 
 
 class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions, SugarcubeSpawn):
@@ -22,6 +23,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.sugarcube_list = pygame.sprite.Group()
         self.fly_swarm = FlyEnemy(self.game)
         self.pause = Pause(self.game)
+        self.sounds = Sounds(self.game)
 
         self.enemy1 = FrogEnemy(self.game)
         self.tongue = Tongue(self.game)
@@ -65,6 +67,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
     def enter_state(self):
         super().enter_state()
+        self.player.attribute_update()
         if self.game.current_level == 2:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
@@ -139,6 +142,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                         if not(flies.HP <= 0):
                             self.flies_collisions(player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, flies.damage)
                         if flies.HP <= 0:
+                            self.sounds.enemies_death.play()
                             self.game.offset = self.game.screen_shake(5,20)
                             flies.kill()
                             self.spawn_exploding_particles(100, flies)
@@ -165,6 +169,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                         
                         for enemy in self.body_group.sprites():
                             if enemy.HP <= 0:
+                                self.sounds.enemies_death.play()
                                 self.game.offset = self.game.screen_shake(5,20)
                                 enemy.kill()
                                 self.spawn_exploding_particles(100, enemy)

@@ -11,6 +11,7 @@ from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
 from parent_classes.particleeffect import *
 from parent_classes.sugarcube import *
+from music import Sounds
 
 
 
@@ -25,6 +26,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.enemy3 = Enemy3(self.game, self.camera)
         self.enemy_group = pygame.sprite.Group()
         self.particle_group = pygame.sprite.Group()
+        self.sounds = Sounds(self.game)
         
         self.current_time, self.end_time = 0,0
         self.enemy_moxie = 0
@@ -55,7 +57,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.sugarcube_received = 0
 
     def enter_state(self):
-        super().enter_state()  
+        super().enter_state()
+        self.player.attribute_update()
         if self.game.current_level == 3:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
@@ -133,6 +136,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                     
                         for enemy in self.enemy_group.sprites():
                             if enemy.HP <= 0:
+                                self.sounds.enemies_death.play()
                                 enemy.kill()
                                 self.enemy3.minionlist.empty()
                                 self.spawn_exploding_particles(300, enemy)
