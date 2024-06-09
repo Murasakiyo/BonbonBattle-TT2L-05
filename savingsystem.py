@@ -3,7 +3,6 @@ import pickle
 class SaveDataSystem:
     def __init__(self, file_name, game):
         self.file_name = file_name
-        # self.player = player
         self.game = game
 
     def get_save_data(self):

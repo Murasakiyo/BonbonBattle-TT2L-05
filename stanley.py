@@ -20,11 +20,11 @@ class Stanley(pygame.sprite.Sprite, Support):
         self.attack_cooldown = 0
         self.min_step, self.max_step = 0,0
  
-    def update(self,deltatime, player, player_action, player_x, player_y, enemy_moxie):
+
+    def update(self,deltatime, player, player_action, player_x, player_y):
         if self.attack:
             if not(self.attack_cooldown > 0.02):
                 player.attackpoints = player.attackpoints + (player.attackpoints * 0.5)
-                enemy_moxie -= 10
         else:
             player.attackpoints = self.game.settings.current_attackpoints
         self.update_movement(deltatime, player, player_action, player_x, player_y, self.animate)
@@ -35,8 +35,6 @@ class Stanley(pygame.sprite.Sprite, Support):
         direction_y = player_action["down"] - player_action["up"]
         self.animate(deltatime, player, direction_x, direction_y, 0)
 
-       
-    
     def render(self, display):
         # display.blit(self.image, (self.doll_vector.x, self.doll_vector.y))
         pygame.draw.rect(display, (255,255,255), self.rect, 2)

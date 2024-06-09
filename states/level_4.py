@@ -11,6 +11,7 @@ from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
 from parent_classes.particleeffect import *
 from parent_classes.sugarcube import *
+from music import Sounds
 
 
 
@@ -25,6 +26,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.enemy3 = Enemy3(self.game, self.camera)
         self.enemy_group = pygame.sprite.Group()
         self.particle_group = pygame.sprite.Group()
+        self.sounds = Sounds(self.game)
         
         self.current_time, self.end_time = 0,0
         self.enemy_moxie = 0
@@ -51,11 +53,13 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.load_health_bar()
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
+        self.enemy_moxie_update(self.enemy3.moxie)
 
         self.sugarcube_received = 0
 
     def enter_state(self):
-        super().enter_state()  
+        super().enter_state()
+        self.player.attribute_update()
         if self.game.current_level == 3:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
@@ -74,6 +78,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             self.player.reset_player(200,200)
             self.ultimate_reset()
             self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
+            self.enemy_moxie_update(self.enemy3.moxie)
             self.load_health_bar()
             self.load_moxie_bar()
             if self.enemy_defeat:
@@ -99,7 +104,6 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
         if self.game.start == True:
             if self.game.ult == False:
-
                 # Update player 
                 self.player.update(deltatime, player_action)
                 self.player_attacking(deltatime, self.enemy_group, self.enemy3)
@@ -109,6 +113,12 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.cooldown_for_attacked(deltatime)
                 self.game.frozen()
                 
+                for enemy in self.enemy_group.sprites():
+                    if enemy.HP <= 0:
+                        enemy.kill()
+                        self.enemy3.minionlist.empty()
+                        self.spawn_exploding_particles(300, enemy)
+                        self.enemy_defeat = True
 
                 if not(self.game.defeat):
                     if not(self.enemy3.HP <= 0):
@@ -123,23 +133,21 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                                     self.player.healthpoints -= (self.player.healthpoints * 20/100)
                                     self.enemy3_heal = (self.old_health * 20/100)
                                     self.enemy3.HP += self.enemy3_heal
-
-                        self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
-
-                    # self.snow_particles(2)
                         
                         if self.enemy3.HP > 300:
                             self.enemy3.HP = 300
                     
                         for enemy in self.enemy_group.sprites():
                             if enemy.HP <= 0:
+                                self.sounds.enemies_death.play()
                                 enemy.kill()
                                 self.enemy3.minionlist.empty()
                                 self.spawn_exploding_particles(300, enemy)
                                 self.enemy_defeat = True
 
-                   
-
+                    self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
+                    self.enemy_moxie_update(self.enemy3.moxie)
+                       
                     self.snow_particles(self.snow_value)
 
                     if self.game.win:
@@ -151,7 +159,17 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             new_state = self.pause
                             new_state.enter_state()
                             self.game.start = False 
+
+                    if self.init_stan:
+                        if self.stan.attack:
+                            if not(self.enemy3.ult):
+                                self.enemy3.moxie -= 1
             else:
+                if self.game.ult:
+                    if self.init_stan:
+                        if not(self.enemy3.leech):
+                            self.enemy3.ult = False
+                            self.enemy3.moxie = 0
                 self.add_ultimate(deltatime, player_action, self.enemy_group)
 
             self.particle_group.update(deltatime)

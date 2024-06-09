@@ -16,8 +16,8 @@ class Ults():
     def update_ultimate(self, deltatime, player_action):
             # Sprite group update
             for support in self.support_dolls.sprites():
-                support.update(deltatime, self.player, player_action, self.player.rect.x, self.player.rect.y, self.enemy_moxie)
-            
+                support.update(deltatime, self.player, player_action, self.player.rect.x, self.player.rect.y)
+
             if self.game.ult_finish == False:
                 
                 if not(self.accept_ult):

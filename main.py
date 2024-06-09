@@ -32,9 +32,8 @@ class Game():
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
         self.start = True
-        self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
-        self.settings = Settings()
+        self.settings = Settings(self)
         self.sounds = Sounds(self)
         self.backgrounds()
         self.dialogue_sprites()
@@ -52,6 +51,7 @@ class Game():
         self.battle_state()
 
         self.first_game = False
+        self.reset_game = False
         self.skip_cutscenes = False
         self.current_currency = 0
         self.current_level = 0
@@ -340,6 +340,7 @@ class Game():
                     self.current_currency = loaded_data['current_currency']
                 if 'krie_intro' in loaded_data:
                     self.settings.krie_intro = loaded_data['krie_intro']
+        print(f"loaded data: lvl- {self.current_level}, health- {self.settings.current_healthpoints}, attack- {self.settings.current_attackpoints}, speed- {self.settings.current_speed}")
         
 if __name__ == "__main__":
     game = Game()
