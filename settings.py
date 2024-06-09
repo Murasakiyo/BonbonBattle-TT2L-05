@@ -18,5 +18,7 @@ class Settings:
         self.first_win4 = False
         self.first_win5 = False
 
+        self.krie_intro = False
+
 
 

@@ -193,7 +193,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         
         if self.game.freeze:
             for enemy in self.body_group:
-                display.blit(self.game.ice, (enemy.rect.x, enemy.rect.y + 15))
+                display.blit(self.game.ice, (enemy.rect.x + 5, enemy.rect.y + 20))
 
         if self.game.ult:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))

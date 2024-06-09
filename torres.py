@@ -35,7 +35,7 @@ class Player(pygame.sprite.Sprite):
         
 
     def update(self,deltatime,player_action):
-        print(f"current speed:{self.speed}, current attack: {self.attackpoints}, current health: {self.healthpoints}")
+        # print(f"current speed:{self.speed}, current attack: {self.attackpoints}, current health: {self.healthpoints}")
         
         if self.game.defeat and not(self.game.win):
             self.lose = True

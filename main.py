@@ -7,7 +7,7 @@ from states.pause_menu import Pause
 from states.first_cutscene import Story
 from states.lounge import Lounge
 from states.level_choose import Level_Options
-from states.game_set import Game_Settings
+from states.circus import Circus
 from parent_classes.particleeffect import *
 # from parent_classes.ultimate_action import *
 from settings import Settings
@@ -43,6 +43,7 @@ class Game():
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
                               "ultimate": False, "transition": False, "go": False, "pause": False, "reset_game":False, "next": False,
                               "E": False} 
+        self.convo_keys = {"up": False, "down": False}
     
         self.cutscene = {"Intro": False}
         self.state_stack = []
@@ -69,10 +70,21 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = MainMenu(self)
+        self.title_screen = Circus(self)
         self.state_stack.append(self.title_screen)
 
-        
+    def open_txt(self, filename):
+        text = list()
+        self.open_file = open(f"texts/{filename}")
+        text = self.open_file.readlines()
+
+        for x in range(len(text)):
+            text[x] = text[x].strip()
+        text.append(" ")
+        self.open_file.close()
+        return text
+    
+
     # All key events are here. Receive input from player, display output for player
     def get_events(self):
 
@@ -92,8 +104,12 @@ class Game():
                     self.player_action["right"] = True
                 if event.key == pygame.K_w:
                     self.player_action["up"] = True
+                if event.key == pygame.K_w:
+                    self.convo_keys["up"] = True
                 if event.key == pygame.K_s:
                     self.player_action["down"] = True
+                if event.key == pygame.K_s:
+                    self.convo_keys["down"] = True
                 if event.key == pygame.K_j:
                     self.player_action["attack"] = True
                 if event.key == pygame.K_k:
@@ -116,8 +132,12 @@ class Game():
                     self.player_action["right"] = False
                 if event.key == pygame.K_w:
                     self.player_action["up"] = False
+                if event.key == pygame.K_w:
+                    self.convo_keys["up"] = False
                 if event.key == pygame.K_s:
                     self.player_action["down"] = False
+                if event.key == pygame.K_s:
+                    self.convo_keys["down"] = False
                 if event.key == pygame.K_k:
                     self.player_action["defend"] = False
                 if event.key == pygame.K_q:
@@ -230,7 +250,7 @@ class Game():
         self.win_screen = pygame.image.load("sprites/win_screen.png").convert_alpha()
         self.circus = pygame.image.load("sprites/circus.png").convert()
         self.shop = pygame.image.load("sprites/shop.png").convert_alpha()
-        self.ice = pygame.image.load("sprites/ice.png").convert_alpha()
+        self.ice = pygame.transform.scale(pygame.image.load("sprites/ice.png"),(125,125) ).convert_alpha()
         self.end_screen = self.win_screen
 
         sugarcube_image = pygame.image.load("sprites/sugarcube.png").convert_alpha()
@@ -301,6 +321,8 @@ class Game():
                     self.skip_cutscenes = loaded_data['skip_cutscenes']
                 if 'current_currency' in loaded_data:
                     self.current_currency = loaded_data['current_currency']
+                if 'krie_intro' in loaded_data:
+                    self.settings.krie_intro = loaded_data['krie_intro']
         
 if __name__ == "__main__":
     game = Game()
