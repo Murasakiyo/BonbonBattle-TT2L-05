@@ -5,7 +5,7 @@ class Krie_Dialogue():
     def __init__(self, game):
        super().__init__()
        self.game = game
-       question_1 = ["Why if it isn't the Ganache Knight! How're the battles?", " " ]
+       question_1 = ["Why if it isn't the Ganache Knight!","How're the battles?", " " ]
        self.convo = Dialogue(self.game, "black", 24, question_1)
        self.answer1 = Answer(self.game, "It was alright.", "Your highness, I require your assistance..!", "I am terrified.")
        self.asset = {
@@ -26,7 +26,6 @@ class Krie_Dialogue():
                 player_action[actions] = False
         self.convo.dialogue_update(player_action)
         self.convo.finish()
-        # if self.convo.finish_convo:
         if not self.pick1 == 1 and not self.pick1 == 2 and not self.pick1 == 3 :
             self.answer1.update(deltatime, player_action)
             self.pick1 = self.answer1.pick_choice(player_action)

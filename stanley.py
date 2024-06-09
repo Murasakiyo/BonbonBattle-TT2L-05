@@ -3,6 +3,7 @@ import time
 import math
 import spritesheet
 from parent_classes.support_dolls import *
+from parent_classes.dialogue import *
 # from torres import Player
 
 class Stanley(pygame.sprite.Sprite, Support):
@@ -18,10 +19,7 @@ class Stanley(pygame.sprite.Sprite, Support):
         self.current_time = 0
         self.attack_cooldown = 0
         self.min_step, self.max_step = 0,0
-        
-
  
-
     def update(self,deltatime, player, player_action, player_x, player_y, enemy_moxie):
         if self.attack:
             if not(self.attack_cooldown > 0.02):
@@ -32,6 +30,7 @@ class Stanley(pygame.sprite.Sprite, Support):
         self.update_movement(deltatime, player, player_action, player_x, player_y, self.animate)
         
     def update_lounge(self, deltatime, player, player_action):
+        
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
         self.animate(deltatime, player, direction_x, direction_y, 0)

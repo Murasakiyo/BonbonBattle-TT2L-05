@@ -106,6 +106,7 @@ class Answer():
         self.index = 0
         self.enter = self.font.render("[ENTER]", True, "Blue")
         self.current_time = 0
+        self.answer = 0
 
         self.option1_hover = self.font.render(f">{self.choice1}", True, self.color_hover)
         self.option1 = self.font.render(f">{self.choice1}", True, self.color)
@@ -123,27 +124,32 @@ class Answer():
         self.update_keys(deltatime)
 
     def pick_choice(self, player_action):
+        
         if self.choicelist[self.index] == "answer1":
             self.current_option1 = self.option1_hover
             if player_action["go"]:
-                answer = 1
-                return answer
+                self.answer = 1
+                return self.answer
         else:
             self.current_option1 = self.option1
         if self.choicelist[self.index] == "answer2":
             self.current_option2 = self.option2_hover
             if player_action["go"]:
-                answer = 2
-                return answer
+                self.answer = 2
+                return self.answer
         else:
             self.current_option2 = self.option2
         if self.choicelist[self.index] == "answer3":
             self.current_option3 = self.option3_hover
             if player_action["go"]:
-                answer = 3
-                return answer
+                self.answer = 3
+                return self.answer
         else:
             self.current_option3 = self.option3
+
+    def reset_choice(self):
+        self.index = 0
+        self.answer = 0
          
 
     def render(self,display):

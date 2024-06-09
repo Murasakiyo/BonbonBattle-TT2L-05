@@ -6,11 +6,12 @@ Such a wet blanket! Our fates are up to you
 y'know, you should be proud!
 Just a reminder, you use the [WASD] keys to
 move around later. 
-[J] to attack and [K] to defend. And when
+Press [J] to attack and [K] to defend. And when
 you're feeling "energized", use [Q]!
 ...?
 
 Why are you telling me this?
+
 You'll understand it later~
 
 Good luck and talk with me if you need
