@@ -160,7 +160,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             new_state.enter_state()
                             self.game.start = False 
 
-                    if self.stan.attack:
+                    if self.init_stan:
+                        if self.stan.attack:
                             if not(self.enemy3.ult):
                                 self.enemy3.moxie -= 1
             else:
