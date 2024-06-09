@@ -92,13 +92,13 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.player.take_damage = True
 
         if self.player.take_damage == False:
-            if any(self.enemy4.rect_string1.clipline(*line) for line in self.player.lines):
+            if any(self.enemy4.vert_string.clipline(*line) for line in self.player.lines):
                 self.player.healthpoints -= 10
                 # self.enemy4.moxie += 20
                 self.player.take_damage = True
 
         if self.player.take_damage == False:
-            if any(self.enemy4.rect_string2.clipline(*line) for line in self.player.lines):
+            if any(self.enemy4.horiz_string.clipline(*line) for line in self.player.lines):
                 self.player.healthpoints -= 10
                 # self.enemy4.moxie += 20
                 self.player.take_damage = True

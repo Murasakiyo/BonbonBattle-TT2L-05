@@ -1,21 +1,24 @@
 import pygame
-import time
 import math
 import random
+from AiraLyra import *
 
 class Enemy4(pygame.sprite.Sprite):
     def __init__(self, game, player_x, player_y):
         self.game = game
-        self.rect_string1 = pygame.Rect(player_x - 25, self.game.screen_rect.midtop[1] - 600, 50, 600 )
-        self.rect_string2 = pygame.Rect(self.game.screen_rect.midleft[0] - 1100, player_y - 25, 1100, 50 )
+        self.vert_string = pygame.Rect(player_x - 25, self.game.screen_rect.midtop[1] - 600, 50, 600 )
+        self.horiz_string = pygame.Rect(self.game.screen_rect.midleft[0] - 1100, player_y - 25, 1100, 50 )
 
-        self.aira_posx, self.aira_posy = 50, 300
-        self.lyra_posx, self.lyra_posy = 1050, 300
-        self.spin_posx, self.spin_posy = self.game.screen_rect.centerx, self.game.screen_rect.centery
-        self.lyraspin_posx, self.lyraspin_posy = self.game.screen_rect.centerx, self.game.screen_rect.centery
-        self.aira_rect = pygame.Rect(self.aira_posx, self.aira_posy, 40, 40)
-        self.lyra_rect = pygame.Rect(self.lyra_posx, self.lyra_posy, 40, 40)
-        self.aira_spin = pygame.Rect(self.spin_posx, self.spin_posy, 40, 40)
+        self.aira = Aira(self.game)
+        self.lyra = Lyra(self.game)
+
+        # self.aira_posx, self.aira_posy = 50, 300
+        # self.lyra_posx, self.lyra_posy = 1050, 300
+        # self.airaspin_posx, self.airaspin_posy = self.game.screen_rect.centerx, self.game.screen_rect.centery
+        # self.lyraspin_posx, self.lyraspin_posy = self.game.screen_rect.centerx, self.game.screen_rect.centery
+        # self.aira_rect = pygame.Rect(self.aira_posx, self.aira_posy, 40, 40)
+        # self.lyra_rect = pygame.Rect(self.lyra_posx, self.lyra_posy, 40, 40)
+        self.aira_spin = pygame.Rect(self.airaspin_posx, self.airaspin_posy, 40, 40)
         self.lyra_spin = pygame.Rect(self.lyraspin_posx, self.lyraspin_posy, 40, 40)
 
         self.positional = 6              # Positional is a variable telling aira and lyra where to move during an instance of their attack
@@ -63,8 +66,8 @@ class Enemy4(pygame.sprite.Sprite):
 
         # Resetting string positions during a special atk phase
         if self.stop_normal_atk or self.super_attack:
-            self.rect_string1.y = -601
-            self.rect_string2.x = -1101
+            self.vert_string.y = -601
+            self.horiz_string.x = -1101
 
         self.placement(deltatime)
 
@@ -108,8 +111,8 @@ class Enemy4(pygame.sprite.Sprite):
 
     def render(self, display):
         if not self.super_attack:
-            pygame.draw.rect(display, "violet", self.rect_string1)
-            pygame.draw.rect(display, "violet", self.rect_string2)
+            pygame.draw.rect(display, "violet", self.vert_string)
+            pygame.draw.rect(display, "violet", self.horiz_string)
 
 
         if self.stop_moving and not self.ult_attack:
@@ -118,8 +121,8 @@ class Enemy4(pygame.sprite.Sprite):
 
 
         if not self.stop_moving:
-            pygame.draw.rect(display, "pink", self.aira_rect)
-            pygame.draw.rect(display, "violet", self.lyra_rect)
+            pygame.draw.rect(display, "pink", self.aira.rect)
+            pygame.draw.rect(display, "violet", self.lyra.rect)
 
         if self.start_ult_atk:
             pygame.Surface.blit(display, self.ultimate_image, (0, 0))
@@ -130,14 +133,14 @@ class Enemy4(pygame.sprite.Sprite):
     def normal_attack(self, deltatime, player_x, player_y):
         if self.extend_vert == True:
             if self.attack_bool == False:
-                if self.rect_string1.y <= 0:
-                    self.rect_string1.y += 1 * self.atk_speed
-                if self.rect_string1.y >= 0:
+                if self.vert_string.y <= 0:
+                    self.vert_string.y += 1 * self.atk_speed
+                if self.vert_string.y >= 0:
                     self.attack_bool = True
 
             if self.attack_bool == True:
-                self.rect_string1.y -= 1 * self.atk_speed
-                if self.rect_string1.y <= -600:
+                self.vert_string.y -= 1 * self.atk_speed
+                if self.vert_string.y <= -600:
                     self.attack_bool = False
                     self.extend_vert = False
 
@@ -145,7 +148,7 @@ class Enemy4(pygame.sprite.Sprite):
             
         if self.extend_vert == False:
             self.extend_count += deltatime
-            self.rect_string1.x = player_x - 25
+            self.vert_string.x = player_x - 25
             if self.extend_count > 4:
                 self.extend_vert = True
                 self.extend_count = 0
@@ -154,14 +157,14 @@ class Enemy4(pygame.sprite.Sprite):
 
         if self.extend_horiz == True:
             if self.attack_bool2 == False:
-                if self.rect_string2.x <= 0:
-                    self.rect_string2.x += 1 * self.atk_speed
-                if self.rect_string2.x >= 0:
+                if self.horiz_string.x <= 0:
+                    self.horiz_string.x += 1 * self.atk_speed
+                if self.horiz_string.x >= 0:
                     self.attack_bool2 = True
 
             if self.attack_bool2 == True:
-                self.rect_string2.x -= 1 * self.atk_speed
-                if self.rect_string2.x <= -1100:
+                self.horiz_string.x -= 1 * self.atk_speed
+                if self.horiz_string.x <= -1100:
                     self.attack_bool2 = False
                     self.extend_horiz = False
 
@@ -169,7 +172,7 @@ class Enemy4(pygame.sprite.Sprite):
             
         if self.extend_horiz == False:
             self.extend_count2 += deltatime
-            self.rect_string2.y = player_y - 25
+            self.horiz_string.y = player_y - 25
             if self.extend_count2 > 2:
                 self.extend_horiz = True
                 self.extend_count2 = 0
@@ -180,7 +183,7 @@ class Enemy4(pygame.sprite.Sprite):
 
     def ultimate_attack(self, deltatime):
 
-        if self.lyra_rect.x < 551:
+        if self.lyra.rect.x < 551:
             self.stop_moving = True
 
         if self.stop_moving:
@@ -199,21 +202,21 @@ class Enemy4(pygame.sprite.Sprite):
     
 
     def move_towards_position(self, lyrapos_x, lyrapos_y, airapos_x, airapos_y):
-        # Find direction vector (dx, dy) between enemy and player. (Lyra's position)
-        dx_lyra, dy_lyra = lyrapos_x - self.lyra_rect.x, lyrapos_y - self.lyra_rect.y
+        #  (Lyra's position)
+        dx_lyra, dy_lyra = lyrapos_x - self.lyra.rect.x, lyrapos_y - self.lyra.rect.y
         dist = math.hypot(dx_lyra, dy_lyra)
         dx_lyra, dy_lyra = dx_lyra / (dist + 0.01), dy_lyra / (dist + 0.01)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
-        self.lyra_rect.x += dx_lyra * self.move_speed
-        self.lyra_rect.y += dy_lyra * self.move_speed
+        self.lyra.rect.x += dx_lyra * self.move_speed
+        self.lyra.rect.y += dy_lyra * self.move_speed
 
-        # Find direction vector (dx, dy) between enemy and player. (Aira's Position)
-        dx_aira, dy_aira = airapos_x - self.aira_rect.x, airapos_y - self.aira_rect.y
+        #  (Aira's Position)
+        dx_aira, dy_aira = airapos_x - self.aira.rect.x, airapos_y - self.aira.rect.y
         dist = math.hypot(dx_aira, dy_aira)
         dx_aira, dy_aira = dx_aira / (dist + 0.01), dy_aira / (dist + 0.01)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
-        self.aira_rect.x += dx_aira * self.move_speed
-        self.aira_rect.y += dy_aira * self.move_speed
+        self.aira.rect.x += dx_aira * self.move_speed
+        self.aira.rect.y += dy_aira * self.move_speed
 
 
 
@@ -243,7 +246,7 @@ class Enemy4(pygame.sprite.Sprite):
         self.lyra_spin.y += dy2 * self.spin_speed_lyra
 
 
-        if self.lyra_rect.x < 551: # To determine the rect position is already at center
+        if self.lyra.rect.x < 551: # To determine the rect position is already at center
             self.stop_moving = True
         
         if self.stop_moving:
