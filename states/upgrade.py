@@ -126,7 +126,7 @@ class Upgrade(State, Dialogue):
             self.game.settings.current_healthpoints += self.add_HP
             self.game.settings.current_speed += self.add_spd
             self.game.current_currency -= self.sugar_price
-            self.game.save_data()
+            # self.game.save_data()
             self.add_atk = 0
             self.add_HP = 0
             self.add_spd = 0
