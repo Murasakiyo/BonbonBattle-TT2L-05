@@ -1,8 +1,7 @@
 import pygame
 from parent_classes.state import *
-from parent_classes.dialogue import *
 
-class Game_Settings(State, Dialogue):
+class Game_Settings(State):
     def __init__(self, game):
         super().__init__(game)
         self.game = game
@@ -24,7 +23,7 @@ class Game_Settings(State, Dialogue):
         # Warning texts
         self.reset_warn = "RESET PROGRESS?"
         self.warning = "Warning: This action cannot be undone"
-        self.warn_list = self.dialogue("reset_warning.txt")
+        self.warn_list = self.game.open_txt("reset_warning.txt")
 
         # Button variables
         self.last_warn = False
@@ -50,6 +49,7 @@ class Game_Settings(State, Dialogue):
                     self.game.settings.current_attackpoints = 3
                     self.game.settings.current_speed = 400
                     self.game.skip_cutscenes = False
+                    self.game.settings.krie_intro = False
                     self.exit_state(-1)
             if not pygame.mouse.get_pressed()[0]:
                 self.reset = False

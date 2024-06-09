@@ -22,7 +22,9 @@ class Lounge(State, Dialogue):
         self.camera.add(self.player, self.stan)
         self.button_e = self.game.E_button
         self.level_button = self.game.E_button
+        self.stan_button = self.game.E_button
         self.button_rect = self.button_e.get_rect()
+        self.stan_rect = self.button_e.get_rect()
         self.lvlbtn_rect = self.level_button.get_rect()
         # self.offset = pygame.math.Vector2((0,0))
 
@@ -37,11 +39,14 @@ class Lounge(State, Dialogue):
         
         self.button_update(player_action, self.circus, self.button_rect, self.camera.circus_rect, 130, 300, 30, 40)
         self.button_update(player_action, self.level, self.lvlbtn_rect, self.camera.level_rect, 1010, 1020, 100, 40)
+        if self.camera.offset.x >= 700 and self.camera.offset.x <= 950:
+            self.stan_rect.x, self.stan_rect.y = self.camera.talk_rect.x + 110, self.camera.talk_rect.y  - 30
 
     def render(self, display):
         self.camera.custom_draw(display, self.player)        
         self.button_render(display, 130, 300, self.button_e, self.button_rect)
         self.button_render(display, 1010, 1020, self.level_button, self.lvlbtn_rect)
+        self.button_render(display, 700, 950, self.stan_button, self.stan_rect)
 
         display.blit(self.game.sugarcube_image, (10, 10))
         self.game.draw_text(display, f"{int(self.game.current_currency)}", True, (30,30,30), 40, 5, 35)
@@ -50,8 +55,7 @@ class Lounge(State, Dialogue):
     def button_render(self, display, x, y, button, button_rect):
         if self.camera.offset.x >= x and self.camera.offset.x <= y:
             display.blit(button, button_rect)
-        # if target.rect.colliderect(self.level_rect):
-        #     pass
+
     
     def button_update(self, player_action, state, rect, offrect, x, y, rectx, recty):
         if self.camera.offset.x >= x and self.camera.offset.x <= y:

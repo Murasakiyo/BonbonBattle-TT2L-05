@@ -37,6 +37,7 @@ class Game():
         self.settings = Settings()
         self.sounds = Sounds(self)
         self.backgrounds()
+        self.dialogue_sprites()
         self.buttons()
 
         # Action dictionary
@@ -70,7 +71,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = Circus(self)
+        self.title_screen = MainMenu(self)
         self.state_stack.append(self.title_screen)
 
     def open_txt(self, filename):
@@ -236,7 +237,23 @@ class Game():
         if int(self.countdown - self.current_time) == 0:
             self.start = True
             self.current_time = 0
-          
+    
+    def dialogue_sprites(self):
+        self.asset = {
+            "torres": {
+                "talk": pygame.image.load("sprites/dialogue/torres/talk.png").convert_alpha(),
+                "proud": pygame.image.load("sprites/dialogue/torres/proud.png").convert_alpha(),
+                "miffed": pygame.image.load("sprites/dialogue/torres/miffed.png").convert_alpha(),
+                "angry": pygame.image.load("sprites/dialogue/torres/angry.png").convert_alpha()
+            },
+            "stanley": {
+                "talk": pygame.image.load("sprites/dialogue/stanley/talk.png").convert_alpha(),
+                "silly": pygame.image.load("sprites/dialogue/stanley/silly.png").convert_alpha(),
+                "shock": pygame.image.load("sprites/dialogue/stanley/shock.png").convert_alpha(),
+                "happy": pygame.image.load("sprites/dialogue/stanley/happy.png").convert_alpha(),
+                "crazy": pygame.image.load("sprites/dialogue/stanley/crazy.png").convert_alpha()
+            }
+        }
     # Backgrounds ingame
     def backgrounds(self):
         self.forest = pygame.image.load("sprites/backgrounds/bg_earlylvl.bmp").convert()

@@ -18,6 +18,8 @@ class Stanley(pygame.sprite.Sprite, Support):
         self.current_time = 0
         self.attack_cooldown = 0
         self.min_step, self.max_step = 0,0
+        
+
  
 
     def update(self,deltatime, player, player_action, player_x, player_y, enemy_moxie):
@@ -33,6 +35,8 @@ class Stanley(pygame.sprite.Sprite, Support):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
         self.animate(deltatime, player, direction_x, direction_y, 0)
+
+       
     
     def render(self, display):
         # display.blit(self.image, (self.doll_vector.x, self.doll_vector.y))
