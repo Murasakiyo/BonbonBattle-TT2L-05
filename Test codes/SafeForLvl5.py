@@ -27,7 +27,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.load_health_bar()
         self.load_moxie_bar()
         self.enemy4 = Enemy4(self.game, self.player.rect.centerx, self.player.rect.centery)
-        # self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
+        self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
 
 
         self.deal_damage = True
@@ -49,13 +49,13 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
                 self.health_update()
                 self.moxie_update(player_action)
-                # self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
+                self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
 
                 self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery)
                 self.update_ultimate(deltatime, player_action)
 
-
-                self.get_hit(deltatime, player_action)  
+                if not self.enemy4.super_check and not self.enemy4.ult_check:
+                    self.get_hit(deltatime, player_action)  
                 
                         
 
@@ -74,10 +74,11 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         self.health_render(display)
         self.moxie_render(display)
-        # self.boss_health_render(display)
+        self.boss_health_render(display)
         
         if self.game.ult:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
+        self.particle_group.draw(display)
         self.ultimate_display(display)
     
         if self.game.start == False:
@@ -86,21 +87,25 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
     def get_hit(self, deltatime, player_action):
-        if self.player.take_damage == False:
-            if any(self.enemy4.aira.rect.clipline(*line) for line in self.player.lines):
+        if self.player.take_damage == False and self.enemy4.ultimate:
+            if any(self.enemy4.rect.clipline(*line) for line in self.player.lines):
                 self.player.healthpoints -= 20
+                self.enemy4.moxie += 0
+                self.enemy4.super_points += 1
                 self.player.take_damage = True
 
         if self.player.take_damage == False:
-            if any(self.enemy4.vert_string.clipline(*line) for line in self.player.lines):
+            if any(self.enemy4.rect_string1.clipline(*line) for line in self.player.lines):
                 self.player.healthpoints -= 10
-                # self.enemy4.moxie += 20
+                self.enemy4.moxie += 20
+                self.enemy4.super_points += 1
                 self.player.take_damage = True
 
         if self.player.take_damage == False:
-            if any(self.enemy4.horiz_string.clipline(*line) for line in self.player.lines):
+            if any(self.enemy4.rect_string2.clipline(*line) for line in self.player.lines):
                 self.player.healthpoints -= 10
-                # self.enemy4.moxie += 20
+                self.enemy4.moxie += 20
+                self.enemy4.super_points += 1
                 self.player.take_damage = True
 
         if self.player.take_damage:
