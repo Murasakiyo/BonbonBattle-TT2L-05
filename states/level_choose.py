@@ -136,14 +136,10 @@ class Level_Options(State):
     def update_keys(self, player_action, deltatime):
         self.current_time += deltatime
         current_level = self.game.current_level
-        # selected_level = self.index
         
-        # MAX_LEVEL = 4  # sef.index = selected_level
         if self.current_time > 0.13:
             if player_action["right"]:  
                 self.index = (self.index + 1) % (current_level+1)
-                print(f"current level = {current_level}")
-                print(f"self.index = {self.index}")
             elif player_action["left"]:
                 self.index = (self.index - 1) % (current_level+1)
             self.current_time = 0
