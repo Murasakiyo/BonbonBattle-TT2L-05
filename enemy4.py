@@ -12,14 +12,9 @@ class Enemy4(pygame.sprite.Sprite):
         self.aira = Aira(self.game)
         self.lyra = Lyra(self.game)
 
-        # self.aira_posx, self.aira_posy = 50, 300
-        # self.lyra_posx, self.lyra_posy = 1050, 300
-        # self.airaspin_posx, self.airaspin_posy = self.game.screen_rect.centerx, self.game.screen_rect.centery
-        # self.lyraspin_posx, self.lyraspin_posy = self.game.screen_rect.centerx, self.game.screen_rect.centery
-        # self.aira_rect = pygame.Rect(self.aira_posx, self.aira_posy, 40, 40)
-        # self.lyra_rect = pygame.Rect(self.lyra_posx, self.lyra_posy, 40, 40)
-        self.aira_spin = pygame.Rect(self.airaspin_posx, self.airaspin_posy, 40, 40)
-        self.lyra_spin = pygame.Rect(self.lyraspin_posx, self.lyraspin_posy, 40, 40)
+        self.airaspin_posx, self.airaspin_posy = self.game.screen_rect.centerx, self.game.screen_rect.centery
+        self.lyraspin_posx, self.lyraspin_posy = self.game.screen_rect.centerx, self.game.screen_rect.centery
+
 
         self.positional = 6              # Positional is a variable telling aira and lyra where to move during an instance of their attack
         self.spin_positional = 0
@@ -36,7 +31,7 @@ class Enemy4(pygame.sprite.Sprite):
         self.super_timer = 0             # A timer for the duration of the super attack
         self.start_super_atk = False     # This is to tell when Aira/Lyra should start spinning 
         self.stop_moving = False         # This is for telling the Aira/Lyra rects to stop moving and blitting in the game as the spinning attack uses a different rect
-        self.change_spin_pos_timer = 0
+        self.change_spin_pos_timer = 0   # This timer is for lyra's spin where she goes to different positions in the game based on time intervals
 
         self.ult_attack = False          # This is when the ultimate is starting to initiate (Aira/Lyra getting ready in positions)
         self.ult_timer = 0               # The timer for the duration of the ultimate attack
@@ -48,6 +43,7 @@ class Enemy4(pygame.sprite.Sprite):
         self.move_speed = 8              # speed for aira/lyra movements
         self.spin_speed_lyra = 8         # Lyra's spin is the one moving around the screen
         self.spin_speed_aira = 5         # Aira's spin is the one following the player
+        self.movement_timer = 0          # This is for changing their movement speeds for fixing the weird jitters that the movement code causes
         self.HP = 300
         self.moxie = 0
         self.ultimate_image = pygame.image.load("sprites/ult_aira.png")
@@ -59,6 +55,16 @@ class Enemy4(pygame.sprite.Sprite):
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
 
+
+        # This code is for setting their speeds to 0 to fix the weird jitters with the sprite movement code
+        if not(self.ult_attack):
+            self.movement_timer += deltatime
+            if self.movement_timer < 1.5:
+                self.move_speed = 8
+            if self.movement_timer > 1.5:
+                self.move_speed = 0
+        if self.ult_attack:
+            self.move_speed = 16
 
         if not self.super_attack and not self.stop_normal_atk:
             self.normal_attack(deltatime, player_x, player_y)
@@ -76,12 +82,14 @@ class Enemy4(pygame.sprite.Sprite):
             self.move_towards_position(self.lyra_posx, self.lyra_posy, self.aira_posx, self.aira_posy)
 
         if self.super_count > 4:
+            self.move_speed = 8
+            self.spin_speed_aira = 8
             self.super_attack = True
                     
         if self.super_attack and not self.stop_super_atk:
             self.super_movement(player_x, player_y, deltatime)
 
-
+    
         # Ultimate Attack Codes
         if not self.ult_attack and not self.super_attack:
             self.moxie += deltatime * 5
@@ -90,7 +98,7 @@ class Enemy4(pygame.sprite.Sprite):
             self.super_count = 0
             self.stop_super_atk = True
 
-        if self.moxie >= 280:
+        if self.moxie >= 298:
             self.stop_normal_atk = True
 
         if self.moxie >= 300:
@@ -104,9 +112,11 @@ class Enemy4(pygame.sprite.Sprite):
         # print(self.start_super_atk)
         # print(self.super_attack)
         # print(self.super_count)
-        # print(self.moxie)
+        print(self.moxie)
         # print(pygame.mouse.get_pos())
-        print(self.spin_positional)
+        # print(self.spin_positional)
+        # print(self.movement_timer)
+        # print(self.move_speed)
 
 
     def render(self, display):
@@ -115,12 +125,8 @@ class Enemy4(pygame.sprite.Sprite):
             pygame.draw.rect(display, "violet", self.horiz_string)
 
 
-        if self.stop_moving and not self.ult_attack:
-            pygame.draw.rect(display, "black", self.aira_spin)
-            pygame.draw.rect(display, "black", self.lyra_spin)
 
-
-        if not self.stop_moving:
+        if not(self.start_ult_atk):
             pygame.draw.rect(display, "pink", self.aira.rect)
             pygame.draw.rect(display, "violet", self.lyra.rect)
 
@@ -188,6 +194,7 @@ class Enemy4(pygame.sprite.Sprite):
 
         if self.stop_moving:
             self.ult_timer += deltatime
+            self.movement_timer = 0
             if self.ult_timer > 0.5:
                 self.start_ult_atk = True
             if self.ult_timer > 5:
@@ -225,32 +232,36 @@ class Enemy4(pygame.sprite.Sprite):
         if self.start_super_atk:
             pos_x = player_x
             pos_y = player_y 
-            dx, dy = pos_x - self.aira_spin.x, pos_y - self.aira_spin.y
-            dx2, dy2 = self.lyraspin_posx - self.lyra_spin.x, self.lyraspin_posy - self.lyra_spin.y
+            dx, dy = pos_x - self.aira.rect.x, pos_y - self.aira.rect.y
+            dx2, dy2 = self.lyraspin_posx - self.lyra.rect.x, self.lyraspin_posy - self.lyra.rect.y
 
         if not self.start_super_atk:
             pos_x = self.game.screen_rect.centerx
             pos_y = self.game.screen_rect.centery
-            dx, dy = pos_x - self.aira_spin.x, pos_y - self.aira_spin.y
-            dx2, dy2 = pos_x - self.lyra_spin.x, pos_y - self.lyra_spin.y
+            dx, dy = pos_x - self.aira.rect.x, pos_y - self.aira.rect.y
+            dx2, dy2 = pos_x - self.lyra.rect.x, pos_y - self.lyra.rect.y
 
         dist = math.hypot(dx, dy)
         dist2 = math.hypot(dx2, dy2)
         dx, dy = dx / (dist + 1), dy / (dist + 1)  # Normalize.
         dx2, dy2 = dx2 / (dist2 + 1), dy2 / (dist2 + 1) 
         # Move along this normalized vector towards the player at current speed.
-        self.aira_spin.x += dx * self.spin_speed_aira
-        self.aira_spin.y += dy * self.spin_speed_aira
+        self.aira.rect.x += dx * self.spin_speed_aira
+        self.aira.rect.y += dy * self.spin_speed_aira
 
-        self.lyra_spin.x += dx2 * self.spin_speed_lyra
-        self.lyra_spin.y += dy2 * self.spin_speed_lyra
+        self.lyra.rect.x += dx2 * self.spin_speed_lyra
+        self.lyra.rect.y += dy2 * self.spin_speed_lyra
 
 
         if self.lyra.rect.x < 551: # To determine the rect position is already at center
             self.stop_moving = True
+            self.spin_speed_aira = 5
+            self.super_count = 1
+
         
         if self.stop_moving:
             self.super_timer += deltatime
+            self.movement_timer = 0
             if self.super_timer > 0.5:
                 self.start_super_atk = True
             if self.super_timer > 10:

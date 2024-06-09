@@ -87,7 +87,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
     def get_hit(self, deltatime, player_action):
         if self.player.take_damage == False:
-            if any(self.enemy4.aira_spin.clipline(*line) for line in self.player.lines):
+            if any(self.enemy4.aira.rect.clipline(*line) for line in self.player.lines):
                 self.player.healthpoints -= 20
                 self.player.take_damage = True
 
