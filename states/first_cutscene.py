@@ -24,7 +24,17 @@ class Story(State, Dialogue):
 
     def update(self, deltatime, player_action):
         self.dialogue_update(player_action)
-        self.transition_to_next_state(player_action)
+        if self.finish_convo:
+            player_action["transition"] = True
+
+        if self.game.alpha >= 240:
+            self.game.draw_text(self.game.screen, "Loading...", True, "white", 400, 250, 80)
+        if self.game.alpha == 255:
+            new_state = Lounge(self.game)
+            new_state.enter_state()
+            player_action["transition"] =  False
+            self.game.skip_cutscenes = True
+        # self.transition_to_next_state(player_action)
 
 
     def transition_to_next_state(self, player_action):

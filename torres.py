@@ -24,20 +24,25 @@ class Player(pygame.sprite.Sprite):
         self.color = "white"
         self.collide = False
         self.collide_time = 0
-        self.c_time = 0
-        # self.moxie_points = 0
         self.moxie_bool = False
         self.healthpoints = self.game.settings.current_healthpoints
         self.max_health = self.healthpoints
         self.attackpoints = self.game.settings.current_attackpoints
-        self.defensepoints = 10
         self.moxiepoints = 600
         self.speed = self.game.settings.current_speed
         self.lose = False
         self.win = False
-        
+
+        # print("initialize player")
+    
+    # to update the player's stats in each level
+    def attribute_update(self):
+        self.healthpoints = self.game.settings.current_healthpoints
+        self.attackpoints = self.game.settings.current_attackpoints
+        self.speed = self.game.settings.current_speed
 
     def update(self,deltatime,player_action):
+        print(f"current speed:{self.speed}, current attack: {self.attackpoints}, current health: {self.healthpoints}")
         
         if self.game.defeat and not(self.game.win):
             self.lose = True
@@ -57,14 +62,13 @@ class Player(pygame.sprite.Sprite):
             player_action["attack"] = False
             player_action["defend"] = False
 
+        if self.healthpoints > self.game.settings.current_healthpoints:
+            self.healthpoints = self.game.settings.current_healthpoints
+            
         # Get direction from input
         direction_x = player_action["right"] - player_action["left"]
         direction_y = player_action["down"] - player_action["up"]
-
-        # collision with the screen
-        # self.rect.clamp_ip(self.game.screen_rect)
         
-
         # Check for defense button
         if player_action["defend"] == True:
             player_action["attack"] = False
@@ -99,22 +103,11 @@ class Player(pygame.sprite.Sprite):
         self.animate(deltatime, direction_x, direction_y)
 
         # position
-        # if collide_bool == False:
         self.rect.x += self.speed * deltatime * direction_x 
         self.rect.y += (self.speed + 50) * deltatime * direction_y
 
         self.lines = [((self.rect.midbottom), (self.rect.midtop))]
-
-        # print(self.collide_time)
-        # print(self.collide)
-        # print(self.moxie_points)
-        # print(collide_bool)
-
-        
-
-
         self.horiz_line = [((self.rect.midleft), (self.rect.midright))]
-        # self.enemy2_collision = [((self.rect.midleft), (self.rect.midright))]
 
 
     def render(self, display):

@@ -21,7 +21,6 @@ class Sugarcube(pygame.sprite.Sprite):
 
     def collect(self, player):
         self.game.current_currency += self.sugarcube_value
-        print(f"Sugarcubes: {self.game.current_currency}")
         self.kill()   # remove sprite
 
     def render(self, display):

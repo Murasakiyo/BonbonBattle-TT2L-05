@@ -6,6 +6,7 @@ from states.level_choose import *
 from torres import *
 from stanley import *
 from camera import *
+from music import Sounds
 
 class Lounge(State, Dialogue):
     def __init__(self, game):
@@ -25,6 +26,8 @@ class Lounge(State, Dialogue):
         self.button_rect = self.button_e.get_rect()
         self.lvlbtn_rect = self.level_button.get_rect()
         # self.offset = pygame.math.Vector2((0,0))
+        self.sounds = Sounds(self.game)
+        self.sounds.lounge_bgmusic.play(-1)
 
     def update(self, deltatime, player_action):
         player_action["up"], player_action["down"] = False, False
@@ -57,7 +60,8 @@ class Lounge(State, Dialogue):
             rect.x, rect.y = offrect.x + rectx, offrect.y - recty
             if player_action["E"]:
                 player_action["transition"] = True
-                
+                self.sounds.lounge_bgmusic.stop()
+
             if player_action["transition"]:
                 player_action["right"], player_action["left"] = False, False
 
