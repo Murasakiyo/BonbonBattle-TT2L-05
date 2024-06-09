@@ -48,6 +48,7 @@ class Upgrade(State, Dialogue):
         player_action["ultimate"], player_action["attack"], player_action["defend"],= False, False, False
 
         self.player.update(deltatime,player_action)
+        # self.player.upgrade()
 
         # Backspace key, leave room
         if self.attack_up_rect.collidepoint(self.game.mouse):

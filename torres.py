@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.healthpoints = self.game.settings.current_healthpoints
         self.max_health = self.healthpoints
         self.attackpoints = self.game.settings.current_attackpoints
-        self.moxiepoints = 250
+        self.moxiepoints = 600
         self.speed = self.game.settings.current_speed
         self.lose = False
         self.win = False
@@ -42,7 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = self.game.settings.current_speed
 
     def update(self,deltatime,player_action):
-        print(f"current speed:{self.speed}, current attack: {self.attackpoints}, current health: {self.healthpoints}")
+        # print(f"current speed:{self.speed}, current attack: {self.attackpoints}, current health: {self.healthpoints}")
         
         if self.game.defeat and not(self.game.win):
             self.lose = True
@@ -140,8 +140,13 @@ class Player(pygame.sprite.Sprite):
         self.current_frame, self.current_frame_unique, self.last_frame_update = 0,0,0
         self.current_time = 0
         self.cooldown_variable()
+
+    def upgrade(self):
+        self.healthpoints = self.game.settings.current_healthpoints
+        self.max_health = self.healthpoints
+        self.attackpoints = self.game.settings.current_attackpoints
+        self.speed = self.game.settings.current_speed
                 
-        
 
     def animate(self, deltatime, direction_x, direction_y):
 

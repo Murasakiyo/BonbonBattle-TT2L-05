@@ -12,7 +12,8 @@ class SaveDataSystem:
             'attackpoints': self.game.settings.current_attackpoints,
             'speed': self.game.settings.current_speed,
             'skip_cutscenes': self.game.skip_cutscenes,
-            'current_currency': self.game.current_currency
+            'current_currency': self.game.current_currency,
+            'krie_intro': self.game.settings.krie_intro
         }
     
     def default_value(self):
@@ -22,7 +23,8 @@ class SaveDataSystem:
             'attackpoints': 3,
             'speed': 400,
             'skip_cutscenes': False,
-            'current_currency': 0
+            'current_currency': 0,
+            'krie_intro': False
         }
 
     # serialize player_data and save to a file

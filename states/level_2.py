@@ -193,6 +193,10 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
             if not(flies.HP <= 0):
                 self.fly_swarm.render(display)
                 self.groupenemy_health_render(display,self.fly_swarm.flylist.sprites())
+                
+        if self.game.freeze:
+            for flies in self.fly_swarm.flylist.sprites():
+                display.blit(self.game.ice, (flies.rect.x, flies.rect.y + 15))
 
         if not self.fly_swarm.flylist.sprites():
             self.sugarcube_list.draw(display)

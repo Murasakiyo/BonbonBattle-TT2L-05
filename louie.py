@@ -24,7 +24,7 @@ class Louie(pygame.sprite.Sprite, Support):
  
 
  
-    def update(self,deltatime, player, player_action, player_x, player_y, enemy_moxie):
+    def update(self,deltatime, player, player_action, player_x, player_y):
         if self.attack:
             self.slow_down = True
             if (self.attack_cooldown > 0.5):
