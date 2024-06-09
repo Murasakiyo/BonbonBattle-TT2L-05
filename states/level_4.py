@@ -163,7 +163,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             else:
                 if self.game.ult:
                     if self.init_stan:
-                        if not(self.enemy3.ult):
+                        if not(self.enemy3.leech):
+                            self.enemy3.ult = False
                             self.enemy3.moxie = 0
                 self.add_ultimate(deltatime, player_action, self.enemy_group)
 

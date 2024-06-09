@@ -44,14 +44,13 @@ class Enemy3(pygame.sprite.Sprite):
             self.enemy3_movement(player_x, player_y)
 
         if self.attack:
-            self.moxie +=  25 * deltatime
+            self.moxie +=  250 * deltatime
 
         if self.leech:
             self.atk_timer += deltatime
         if not self.leech:
             self.atk_timer = 0
 
-        print(self.atk_timer)
 
 
         self.move_towards_border()
@@ -84,13 +83,14 @@ class Enemy3(pygame.sprite.Sprite):
             self.speed = -4 # -4
             self.attractspeed = 0
 
-
-        self.minion_spawn(deltatime)   
+        if self.moxie < 300:
+            self.minion_spawn(deltatime)   
         self.minionlist.update(deltatime, player_action, player_x, player_y)
         self.enemy3_moxie_function(deltatime)
         self.animate(deltatime, self.direction)
 
-        
+        print(self.ult)
+        # print(self.atk_timer)
 
     def render(self, display):
         # display.blit(self.image, (self.rect.x, self.rect.y))
@@ -121,8 +121,7 @@ class Enemy3(pygame.sprite.Sprite):
                         self.minionlist.add(new_minion)     
                     if i == 4:
                         new_minion = Minions(self.game, self.rect.centerx, self.rect.centery - 100, 1+(i * 1))
-                        self.minionlist.add(new_minion)
-                self.moxie += 1                      
+                        self.minionlist.add(new_minion)                   
                 self.minion_time = 0
 
         # To stop the attacking animation
@@ -140,8 +139,9 @@ class Enemy3(pygame.sprite.Sprite):
 
     def enemy3_moxie_function(self, deltatime):
 
-        if self.moxie >= 300 and not(self.attack):
+        if self.moxie >= 300:
             self.ult = True
+            self.attack = False
 
         if self.moxie < 300 and self.atk_timer > 3:
             self.ult = False
@@ -150,7 +150,7 @@ class Enemy3(pygame.sprite.Sprite):
         if self.moxie <= 0:
             self.moxie = 0
             
-        if self.ult == True:
+        if self.ult == True and len(self.minionlist) == 1:
             self.leech = True
             self.moxie = 0
 
