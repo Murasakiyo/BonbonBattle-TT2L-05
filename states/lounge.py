@@ -6,7 +6,6 @@ from states.level_choose import *
 from torres import *
 from stanley import *
 from camera import *
-from music import Sounds
 
 class Lounge(State, Dialogue):
     def __init__(self, game):
@@ -34,25 +33,15 @@ class Lounge(State, Dialogue):
         self.init_talk = False
         self.finish_talk = False
 
-        self.stan_firstconvo = False
-
         # self.offset = pygame.math.Vector2((0,0))
-        self.sounds = Sounds(self.game)
 
-    def enter_state(self):
-        super().enter_state() 
-        self.sounds.lounge_bgmusic.play(-1)
-
-    # def exit_state(self):
-    #     self.sounds.lounge_bgmusic.stop()
-    #     return super().exit_state(x)
 
     def stop_music(self):
-        self.sounds.lounge_bgmusic.stop()
-       
+        self.game.sounds.lounge_bgmusic.stop()
         
 
     def update(self, deltatime, player_action):
+        self.game.background_music()
         self.player.speed = 400
         # Restrict the players keys 
         player_action["up"], player_action["down"] = False, False
@@ -116,9 +105,6 @@ class Lounge(State, Dialogue):
             rect.x, rect.y = offrect.x + rectx, offrect.y - recty
             if player_action["E"]:
                 player_action["transition"] = True
-                # self.exit_state()
-                self.stop_music()
-                # self.sounds.lounge_bgmusic.stop()
 
             if player_action["transition"]:
                 player_action["right"], player_action["left"] = False, False

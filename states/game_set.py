@@ -43,7 +43,7 @@ class Game_Settings(State):
                 if self.last_warn:
                     print("Insert resets here")
                     self.game.reset_game = True
-                    self.game.first_game = True
+                    # self.game.first_game = True
                     self.exit_state(-1)
             if not pygame.mouse.get_pressed()[0]:
                 self.reset = False

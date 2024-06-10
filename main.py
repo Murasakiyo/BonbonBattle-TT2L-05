@@ -50,13 +50,15 @@ class Game():
         self.load_states()
         self.battle_state()
 
-        self.first_game = False
+        # self.first_game = False
         self.reset_game = False
         self.skip_cutscenes = False
         self.current_currency = 0
         self.current_level = 0
         self.saving_system = SaveDataSystem('player_data.pickle', self)
         self.load_data() # load saved data when start a game
+
+        self.bg_music = " "
         
 
     # Game loop
@@ -67,6 +69,9 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
+            self.background_music()
+
+            
 
 
     # First state/room in the game (can be changed)
@@ -85,6 +90,22 @@ class Game():
         self.open_file.close()
         return text
     
+    def background_music(self):
+        if self.state_stack[-1].__class__.__name__ == "Lounge":
+            if self.bg_music != 'lounge music':
+                self.sounds.lounge_bgmusic.play(-1)
+                self.bg_music = 'lounge music'
+        # elif self.state_stack[-1].__class__.__name__ == "Circus":
+        #     if self.bg_music != 'circus music':
+        #         self.sounds.circus_bgmusic.play(-1)
+        #         self.bg_music = 'circus music'
+        else:
+            if self.bg_music != ' ':   # stop the music when it's not in that state
+                self.sounds.lounge_bgmusic.stop()
+                self.bg_music = ' '
+            # if self.bg_music == 'lounge music':
+            #     self.sounds.lounge_bgmusic.play(-1)
+        
 
     # All key events are here. Receive input from player, display output for player
     def get_events(self):
