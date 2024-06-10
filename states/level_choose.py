@@ -106,6 +106,7 @@ class Level_Options(State):
             player_action["transition"] = True
             if self.game.alpha == 255:
                 self.exit_state(-1)
+                print("go back to lounge")
                 self.index = 0
                 self.back = False
                 player_action["transition"] = False

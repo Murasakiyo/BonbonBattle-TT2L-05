@@ -28,7 +28,6 @@ class Circus(State):
         self.finish = False
 
 
-
     def update(self, deltatime, player_action):
         # self.game.settings.krie_intro = False
         player_action["up"], player_action["down"] = False, False
@@ -49,6 +48,7 @@ class Circus(State):
 
             if self.game.alpha == 255:
                 self.exit_state(-1)
+                print("exit circus")
                 player_action["transition"] = False
 
         # Collide with Krie

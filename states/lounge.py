@@ -34,9 +34,23 @@ class Lounge(State, Dialogue):
         self.init_talk = False
         self.finish_talk = False
 
+        self.stan_firstconvo = False
+
         # self.offset = pygame.math.Vector2((0,0))
         self.sounds = Sounds(self.game)
+
+    def enter_state(self):
+        super().enter_state() 
         self.sounds.lounge_bgmusic.play(-1)
+
+    # def exit_state(self):
+    #     self.sounds.lounge_bgmusic.stop()
+    #     return super().exit_state(x)
+
+    def stop_music(self):
+        self.sounds.lounge_bgmusic.stop()
+       
+        
 
     def update(self, deltatime, player_action):
         self.player.speed = 400
@@ -60,13 +74,16 @@ class Lounge(State, Dialogue):
             for actions in player_action:
                 if not(player_action["next"]) and not(player_action["go"]):
                     player_action[actions] = False
-            if self.conversation.counter == 0:
+
+            if self.game.settings.stan_dialogue_counter == 0:
                 self.conversation.update_firstconvo(deltatime, player_action)
                 self.finish_talk = self.conversation.end_convo(self.conversation.convo)
                 if self.finish_talk:
                     self.init_talk = False
                     self.finish_talk = False
-            if self.conversation.counter > 0:
+            
+
+            if self.game.settings.stan_dialogue_counter > 0:
                 self.finish_talk = self.conversation.update_options(deltatime, player_action)
                 if self.finish_talk:
                     self.init_talk = False
@@ -99,7 +116,9 @@ class Lounge(State, Dialogue):
             rect.x, rect.y = offrect.x + rectx, offrect.y - recty
             if player_action["E"]:
                 player_action["transition"] = True
-                self.sounds.lounge_bgmusic.stop()
+                # self.exit_state()
+                self.stop_music()
+                # self.sounds.lounge_bgmusic.stop()
 
             if player_action["transition"]:
                 player_action["right"], player_action["left"] = False, False
@@ -117,7 +136,6 @@ class Stan_Dialogue():
        self.convo = Dialogue(self.game, "black", 24, intro)
        self.options = Answer(self.game, "I want to reset some part of my stats.", "Tell me about the court's abilities.", "Nevermind")
        self.current_image = self.game.asset["stanley"]["happy"]
-       self.counter = 0
        self.choice = 0
 
 
@@ -149,7 +167,7 @@ class Stan_Dialogue():
         if talk.finish_convo:
             finish =True
         if finish:
-            self.counter += 1
+            self.game.settings.stan_dialogue_counter += 1
             return finish
 
     def render(self, display):
@@ -169,6 +187,6 @@ class Stan_Dialogue():
             display.blit(self.current_image, (0,0))
             self.convo.draw_text(display)
 
-        if self.counter > 0:
+        if self.game.settings.stan_dialogue_counter > 0:
             self.options.render(display)
 

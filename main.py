@@ -5,7 +5,7 @@ from torres import *
 from states.level_4 import Quad_Stage
 from states.pause_menu import Pause
 from states.first_cutscene import Story
-from states.lounge import Lounge
+from states.lounge import Stan_Dialogue
 from states.level_choose import Level_Options
 from states.circus import Circus
 from parent_classes.particleeffect import *
@@ -323,24 +323,26 @@ class Game():
         print(f"Saving data: {player_data}")
 
     def load_data(self):
-        if not self.first_game:
-            loaded_data = self.saving_system.load_data_file()
-            if loaded_data: 
-                if 'current_level' in loaded_data:
-                    self.current_level = loaded_data['current_level']
-                if 'healthpoints' in loaded_data:
-                    self.settings.current_healthpoints = loaded_data['healthpoints']
-                if 'attackpoints' in loaded_data:
-                    self.settings.current_attackpoints = loaded_data['attackpoints']
-                if 'speed' in loaded_data:
-                    self.settings.current_speed = loaded_data['speed']
-                if 'skip_cutscenes' in loaded_data:
-                    self.skip_cutscenes = loaded_data['skip_cutscenes']
-                if 'current_currency' in loaded_data:
-                    self.current_currency = loaded_data['current_currency']
-                if 'krie_intro' in loaded_data:
-                    self.settings.krie_intro = loaded_data['krie_intro']
-        print(f"loaded data: lvl- {self.current_level}, health- {self.settings.current_healthpoints}, attack- {self.settings.current_attackpoints}, speed- {self.settings.current_speed}")
+        # if not self.first_game:
+        loaded_data = self.saving_system.load_data_file()
+        if loaded_data: 
+            if 'current_level' in loaded_data:
+                self.current_level = loaded_data['current_level']
+            if 'healthpoints' in loaded_data:
+                self.settings.current_healthpoints = loaded_data['healthpoints']
+            if 'attackpoints' in loaded_data:
+                self.settings.current_attackpoints = loaded_data['attackpoints']
+            if 'speed' in loaded_data:
+                self.settings.current_speed = loaded_data['speed']
+            if 'skip_cutscenes' in loaded_data:
+                self.skip_cutscenes = loaded_data['skip_cutscenes']
+            if 'current_currency' in loaded_data:
+                self.current_currency = loaded_data['current_currency']
+            if 'krie_intro' in loaded_data:
+                self.settings.krie_intro = loaded_data['krie_intro']
+            if 'stan_dialogue_counter' in loaded_data:
+                self.settings.stan_dialogue_counter = loaded_data['stan_dialogue_counter']
+        print(f"loaded data: lvl- {self.current_level}, health- {self.settings.current_healthpoints}, attack- {self.settings.current_attackpoints}, speed- {self.settings.current_speed}, krie: {self.settings.krie_intro}, stan_counter: {self.settings.stan_dialogue_counter}")
         
 if __name__ == "__main__":
     game = Game()

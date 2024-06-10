@@ -19,7 +19,10 @@ class Settings:
         self.first_win3 = False
         self.first_win4 = False
         self.first_win5 = False
+
+        # Initialize npc's dialogues
         self.krie_intro = False
+        self.stan_dialogue_counter = 0
 
     
     def gamereset_value(self):
@@ -29,6 +32,8 @@ class Settings:
         self.game.settings.current_healthpoints = 250
         self.game.settings.current_attackpoints = 3
         self.game.settings.current_speed = 400
+        self.game.settings.krie_intro = False
+        self.game.settings.stan_dialogue_counter = 0
         
 
 
