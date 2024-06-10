@@ -45,8 +45,6 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
                 # Update player and enemies
                 self.player.update(deltatime, player_action)
-
-
                 self.health_update()
                 self.moxie_update(player_action)
                 # self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
@@ -65,11 +63,9 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
 
     def render(self, display):
-        display.blit(pygame.transform.scale(self.game.forest, (1100,600)), (0,0))
+        display.blit(pygame.transform.scale(self.game.circus_tent, (1100,600)), (0,0))
         self.camera.custom_draw(display)
-
-        display.blit(pygame.transform.scale(self.game.trees, (1200,600)), (-60,0))
-        # self.player.render(display)
+        display.blit(pygame.transform.scale(self.game.circus_asset, (1200,600)), (0,0))
         self.enemy4.render(display)
 
         self.health_render(display)
@@ -84,6 +80,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
+
 
     def get_hit(self, deltatime, player_action):
         if self.player.take_damage == False:
