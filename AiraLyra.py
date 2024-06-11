@@ -10,6 +10,8 @@ class Aira(pygame.sprite.Sprite):
         self.load_sprites()
         self.rect = self.aira.get_rect(width=150, height=200)
         self.rect.x, self.rect.y = self.posx, self.posy
+        self.mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.mask.to_surface()
         self.current_frame, self.current_frame2, self.last_frame_update, self.last_frame_update2 = 0,0,0,0
         self.transition_time, self.dance_time = 0, 0
         self.fps = 0.3
@@ -131,6 +133,8 @@ class Lyra(pygame.sprite.Sprite):
         self.load_sprites()
         self.rect = self.lyra.get_rect(width=150, height=200)
         self.rect.x, self.rect.y = self.posx, self.posy
+        self.mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.mask.to_surface()
         self.current_frame, self.current_frame2, self.last_frame_update, self.last_frame_update2 = 0,0,0,0
         self.transition_time, self.dance_time = 0, 0
         self.fps = 0.3

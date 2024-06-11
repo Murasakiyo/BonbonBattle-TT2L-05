@@ -98,9 +98,9 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
             if player_action["reset_game"] == False:
                 self.exit_state(-1)
 
-        self.game_over(player_action)
+        # self.game_over(player_action)
         self.game_restart(player_action)
-        self.ending_options(deltatime, player_action, 4, 3)
+        # self.ending_options(deltatime, player_action, 4, 3)
 
         if self.game.start == True:
             if self.game.ult == False:
