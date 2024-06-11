@@ -2,7 +2,7 @@ import pygame
 import sys
 from states.menu import MainMenu
 from torres import *
-from states.level_4 import Quad_Stage
+from states.level_5 import Penta_Stage
 from states.pause_menu import Pause
 from states.first_cutscene import Story
 from states.lounge import Lounge
@@ -11,6 +11,7 @@ from states.circus import Circus
 from parent_classes.particleeffect import *
 # from parent_classes.ultimate_action import *
 from settings import Settings
+from music import Sounds
 from savingsystem import *
 from itertools import repeat
 
@@ -18,6 +19,8 @@ class Game():
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Bonbon Battle: Treading Through Cotton Woods")
+        icon = pygame.image.load("sprites/icon.png") 
+        pygame.display.set_icon(icon)
         self.SCREENWIDTH, self.SCREENHEIGHT = 1100, 600
         self.game_canvas = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.shakescreen = pygame.display.set_mode((self.SCREENWIDTH, self.SCREENHEIGHT))
@@ -29,31 +32,32 @@ class Game():
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
         self.start = True
-        self.reset_game = False
         self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
+        self.settings = Settings(self)
+        self.sounds = Sounds(self)
         self.backgrounds()
+        self.dialogue_sprites()
         self.buttons()
-        self.settings = Settings()
 
         # Action dictionary
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
                               "ultimate": False, "transition": False, "go": False, "pause": False, "reset_game":False, "next": False,
                               "E": False} 
+        self.convo_keys = {"up": False, "down": False}
     
         self.cutscene = {"Intro": False}
         self.state_stack = []
         self.load_states()
         self.battle_state()
 
-        # self.player = Player(self, 200, 200)
         self.first_game = False
+        self.reset_game = False
         self.skip_cutscenes = False
         self.current_currency = 0
         self.current_level = 0
         self.saving_system = SaveDataSystem('player_data.pickle', self)
         self.load_data() # load saved data when start a game
         
-        self.particle = ParticleFunctions(self) # Changing all particle functions to have self.game.particle
 
     # Game loop
     def game_loop(self):
@@ -70,7 +74,18 @@ class Game():
         self.title_screen = MainMenu(self)
         self.state_stack.append(self.title_screen)
 
-        
+    def open_txt(self, filename):
+        text = list()
+        self.open_file = open(f"texts/{filename}")
+        text = self.open_file.readlines()
+
+        for x in range(len(text)):
+            text[x] = text[x].strip()
+        text.append(" ")
+        self.open_file.close()
+        return text
+    
+
     # All key events are here. Receive input from player, display output for player
     def get_events(self):
 
@@ -90,8 +105,12 @@ class Game():
                     self.player_action["right"] = True
                 if event.key == pygame.K_w:
                     self.player_action["up"] = True
+                if event.key == pygame.K_w:
+                    self.convo_keys["up"] = True
                 if event.key == pygame.K_s:
                     self.player_action["down"] = True
+                if event.key == pygame.K_s:
+                    self.convo_keys["down"] = True
                 if event.key == pygame.K_j:
                     self.player_action["attack"] = True
                 if event.key == pygame.K_k:
@@ -114,8 +133,12 @@ class Game():
                     self.player_action["right"] = False
                 if event.key == pygame.K_w:
                     self.player_action["up"] = False
+                if event.key == pygame.K_w:
+                    self.convo_keys["up"] = False
                 if event.key == pygame.K_s:
                     self.player_action["down"] = False
+                if event.key == pygame.K_s:
+                    self.convo_keys["down"] = False
                 if event.key == pygame.K_k:
                     self.player_action["defend"] = False
                 if event.key == pygame.K_q:
@@ -214,7 +237,23 @@ class Game():
         if int(self.countdown - self.current_time) == 0:
             self.start = True
             self.current_time = 0
-          
+    
+    def dialogue_sprites(self):
+        self.asset = {
+            "torres": {
+                "talk": pygame.image.load("sprites/dialogue/torres/talk.png").convert_alpha(),
+                "proud": pygame.image.load("sprites/dialogue/torres/proud.png").convert_alpha(),
+                "miffed": pygame.image.load("sprites/dialogue/torres/miffed.png").convert_alpha(),
+                "angry": pygame.image.load("sprites/dialogue/torres/angry.png").convert_alpha()
+            },
+            "stanley": {
+                "talk": pygame.image.load("sprites/dialogue/stanley/talk.png").convert_alpha(),
+                "silly": pygame.image.load("sprites/dialogue/stanley/silly.png").convert_alpha(),
+                "shock": pygame.image.load("sprites/dialogue/stanley/shock.png").convert_alpha(),
+                "happy": pygame.image.load("sprites/dialogue/stanley/happy.png").convert_alpha(),
+                "crazy": pygame.image.load("sprites/dialogue/stanley/crazy.png").convert_alpha()
+            }
+        }
     # Backgrounds ingame
     def backgrounds(self):
         self.forest = pygame.image.load("sprites/backgrounds/bg_earlylvl.bmp").convert()
@@ -224,10 +263,13 @@ class Game():
         self.forest2 = pygame.image.load("sprites/backgrounds/bg_lvl2.bmp").convert()
         self.forest3 = pygame.image.load("sprites/backgrounds/bg_lvl3.bmp").convert()
         self.mountain = pygame.image.load("sprites/backgrounds/bg_lvl4.bmp").convert()
+        self.circus_tent = pygame.image.load("sprites/backgrounds/bg_lvl5.bmp").convert()
+        self.circus_asset = pygame.image.load("sprites/asset_lvl5.png").convert_alpha()
         self.lose_screen = pygame.image.load("sprites/lose_screen.png").convert_alpha()
         self.win_screen = pygame.image.load("sprites/win_screen.png").convert_alpha()
         self.circus = pygame.image.load("sprites/circus.png").convert()
         self.shop = pygame.image.load("sprites/shop.png").convert_alpha()
+        self.ice = pygame.transform.scale(pygame.image.load("sprites/ice.png"),(125,125) ).convert_alpha()
         self.end_screen = self.win_screen
 
         sugarcube_image = pygame.image.load("sprites/sugarcube.png").convert_alpha()
@@ -241,6 +283,7 @@ class Game():
         self.lvl4 = pygame.image.load("sprites/buttons/lvl4.png").convert_alpha()
         self.lvl5 = pygame.image.load("sprites/buttons/lvl5.png").convert_alpha()
         self.exit = pygame.image.load("sprites/buttons/exit.png").convert_alpha()
+        self.button = pygame.image.load("sprites/buttons/button.png").convert_alpha()
         self.resume = pygame.image.load("sprites/buttons/resume.png").convert_alpha()
         self.restart = pygame.image.load("sprites/buttons/restart.png").convert_alpha()
         self.E_button = pygame.image.load("sprites/buttons/E.png").convert_alpha()
@@ -257,9 +300,15 @@ class Game():
         self.lvl4_hover = pygame.image.load("sprites/buttons/lvl4_hover.png").convert_alpha()
         self.lvl5_hover = pygame.image.load("sprites/buttons/lvl5_hover.png").convert_alpha()
         self.exit_hover = pygame.image.load("sprites/buttons/exit_hover.png").convert_alpha()
+        self.button_hover = pygame.image.load("sprites/buttons/button_hover.png").convert_alpha()
         self.resume_hover = pygame.image.load("sprites/buttons/resume_hover.png").convert_alpha()
         self.restart_hover = pygame.image.load("sprites/buttons/restart_hover.png").convert_alpha()
         self.buy_hover = pygame.image.load("sprites/buttons/buy_hover.png").convert_alpha()
+
+        self.lvl2_lock = pygame.image.load("sprites/buttons/lvl2_lock.png").convert_alpha()
+        self.lvl3_lock = pygame.image.load("sprites/buttons/lvl3_lock.png").convert_alpha()
+        self.lvl4_lock = pygame.image.load("sprites/buttons/lvl4_lock.png").convert_alpha()
+        self.lvl5_lock = pygame.image.load("sprites/buttons/lvl5_lock.png").convert_alpha()
 
         self.button1 = self.lvl1.get_rect(width= 100, height=100)
         self.button1.x, self.button1.y = 75,225
@@ -291,6 +340,9 @@ class Game():
                     self.skip_cutscenes = loaded_data['skip_cutscenes']
                 if 'current_currency' in loaded_data:
                     self.current_currency = loaded_data['current_currency']
+                if 'krie_intro' in loaded_data:
+                    self.settings.krie_intro = loaded_data['krie_intro']
+        print(f"loaded data: lvl- {self.current_level}, health- {self.settings.current_healthpoints}, attack- {self.settings.current_attackpoints}, speed- {self.settings.current_speed}")
         
 if __name__ == "__main__":
     game = Game()

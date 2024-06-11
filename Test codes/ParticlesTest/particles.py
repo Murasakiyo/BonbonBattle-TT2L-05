@@ -89,7 +89,6 @@ class Particle(pygame.sprite.Sprite):
         if self.for_stan:
             self.rotate2()
         self.fade(dt)
-        print(self.heal_size)
 
 
 

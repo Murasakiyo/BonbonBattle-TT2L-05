@@ -9,9 +9,9 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
-from currency import Sugarcube
 from parent_classes.particleeffect import *
 from parent_classes.sugarcube import *
+from music import Sounds
 
 
 
@@ -26,9 +26,9 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.enemy3 = Enemy3(self.game, self.camera)
         self.enemy_group = pygame.sprite.Group()
         self.particle_group = pygame.sprite.Group()
+        self.sounds = Sounds(self.game)
         
         self.current_time, self.end_time = 0,0
-        self.enemy_moxie = 0
         self.enemy_defeat = False
         self.snow_value = 1
         self.enemy3_heal = 0
@@ -48,27 +48,28 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.state = "none"
 
         self.ultimates()
-        self.characters()
+        self.characters(200,200)
         self.load_health_bar()
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
         self.enemy_moxie_update(self.enemy3.moxie)
 
+        self.sugarcube_received = 0
+
+    def enter_state(self):
+        super().enter_state()
+        self.player.attribute_update()
         if self.game.current_level == 3:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
             self.current_sugarcube_value = self.game.settings.sugarcube_value
-            
-        self.sugarcube_received = 0
 
 
 
     def update(self, deltatime, player_action):
         
         if player_action["reset_game"]:
-            if not self.game.settings.first_win1:
-                self.game.settings.first_win1 = True
-                self.game.settings.reset_sugarcube_value()
+            if self.game.settings.first_win4:
                 self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.sugarcube_list.empty()
             self.snow_value = 1
@@ -90,7 +91,6 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.end_time = 0
 
         if self.end:
-            # self.game.current_level = 4
             self.button_go()
 
         if self.game.init_reset:
@@ -132,19 +132,21 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                                     self.player.healthpoints -= (self.player.healthpoints * 20/100)
                                     self.enemy3_heal = (self.old_health * 20/100)
                                     self.enemy3.HP += self.enemy3_heal
-
-                        self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
-                        self.enemy_moxie_update(self.enemy3.moxie)
-
-
                         
                         if self.enemy3.HP > 300:
                             self.enemy3.HP = 300
+                    
+                        for enemy in self.enemy_group.sprites():
+                            if enemy.HP <= 0:
+                                self.sounds.enemies_death.play()
+                                enemy.kill()
+                                self.enemy3.minionlist.empty()
+                                self.spawn_exploding_particles(300, enemy)
+                                self.enemy_defeat = True
 
                     self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
                     self.enemy_moxie_update(self.enemy3.moxie)
                        
-
                     self.snow_particles(self.snow_value)
 
                     if self.game.win:
@@ -157,7 +159,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             new_state.enter_state()
                             self.game.start = False 
 
-                    if self.stan.attack:
+                    if self.init_stan:
+                        if self.stan.attack:
                             if not(self.enemy3.ult):
                                 self.enemy3.moxie -= 1
             else:
@@ -222,10 +225,13 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
-
         if self.end:
-            self.game.current_level = max(self.game.current_level, 4)
             self.ending_state(display)
+            if self.game.win:
+                self.game.settings.first_win4 = True
+                self.game.current_level = max(self.game.current_level, 4)
+
+       
 
 
 

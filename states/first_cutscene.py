@@ -18,22 +18,25 @@ class Story(State, Dialogue):
             "5": pygame.image.load("sprites/first_cutscene/5.png").convert()
         }
         self.current_scene = self.scene["0"]
-        self.intro = self.dialogue("intro.txt")
+        self.intro = self.game.open_txt("intro.txt")
         self.variable("black", 24, self.intro)
 
 
     def update(self, deltatime, player_action):
         self.dialogue_update(player_action)
-        self.transition_to_next_state(player_action)
+        if self.finish_convo:
+            player_action["transition"] = True
 
+        if self.game.alpha >= 240:
+            self.game.draw_text(self.game.screen, "Loading...", True, "white", 400, 250, 80)
+        if self.game.alpha == 255:
+            new_state = Lounge(self.game)
+            new_state.enter_state()
+            player_action["transition"] =  False
+            self.game.skip_cutscenes = True
 
-    def transition_to_next_state(self, player_action):
-        if self.activetext >= len(self.text) - 1:
-            if player_action["next"]:
-                self.game.state_stack.pop()
-                player_action["next"] = False
-                self.game.state_stack.append(Lounge(self.game))
-                # self.game.state_stack.append(Level_Options(self.game))
+        self.transtion_end()
+    
                 
 
     def render(self, display):
@@ -49,3 +52,5 @@ class Story(State, Dialogue):
             self.current_scene= self.scene["5"]
         display.blit(self.current_scene, (0,0))
         self.draw_text(display)
+
+        

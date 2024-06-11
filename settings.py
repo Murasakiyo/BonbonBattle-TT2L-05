@@ -1,7 +1,9 @@
 import pygame
 
 class Settings:
-    def __init__(self):
+    def __init__(self, game):
+        self.game = game
+
         # Initialize player stats
         self.current_healthpoints = 250
         self.current_attackpoints = 3
@@ -17,10 +19,16 @@ class Settings:
         self.first_win3 = False
         self.first_win4 = False
         self.first_win5 = False
+        self.krie_intro = False
 
-
-    def reset_sugarcube_value(self):
-        if any([self.first_win1, self.first_win2, self.first_win3, self.first_win4, self.first_win5]):
-            self.sugarcube_value = 10
+    
+    def gamereset_value(self):
+        self.game.current_currency = 0
+        self.game.current_level = 0
+        self.game.skip_cutscenes = False
+        self.game.settings.current_healthpoints = 250
+        self.game.settings.current_attackpoints = 3
+        self.game.settings.current_speed = 400
+        
 
 

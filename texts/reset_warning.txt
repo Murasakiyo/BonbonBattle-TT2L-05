@@ -1,0 +1,5 @@
+By clicking yes, your progress up to 
+this point will be resetted. All 
+upgrades, sugarcubes, interactions, and 
+level unlocks will be reverted and the 
+previous save file will be deleted.

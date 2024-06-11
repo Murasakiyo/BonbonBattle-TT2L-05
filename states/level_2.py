@@ -9,9 +9,9 @@ from parent_classes.health import *
 from parent_classes.collisions import *
 from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
-from currency import Sugarcube
 from parent_classes.particleeffect import *
 from parent_classes.sugarcube import *
+from music import Sounds
 
 
 class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions, SugarcubeSpawn):
@@ -24,16 +24,16 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         self.sugarcube_list = pygame.sprite.Group()
         self.fly_swarm = FlyEnemy(self.game)
         self.pause = Pause(self.game)
+        self.sounds = Sounds(self.game)
 
         self.ultimates()
-        self.characters()
+        self.characters(200,200)
         self.load_health_bar()
         self.load_moxie_bar()
 
 
         self.current_time, self.end_time = 0,0
         self.swarming = True
-        self.enemy_moxie = 0
         self.gacha = 0
         self.slowness_amount = 0
         self.original_speed = 0
@@ -51,21 +51,22 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         self.click = False
         self.state = "none"
 
+        self.sugarcube_received = 0
+
+    def enter_state(self):
+        super().enter_state()
+        self.player.attribute_update()
         if self.game.current_level == 1:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
             self.current_sugarcube_value = self.game.settings.sugarcube_value
-            
-        self.sugarcube_received = 0
 
 
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
-            if not self.game.settings.first_win2:
-                self.game.settings.first_win2 = True
-                self.game.settings.reset_sugarcube_value()
-                self.current_sugarcube_value = self.game.settings.sugarcube_value
+            if self.game.settings.first_win2:
+                self.current_sugarcube_value = self.game.settings.sugarcube_value                
             self.sugarcube_list.empty()
             for flies in self.fly_swarm.flylist.sprites():
                 flies.kill()
@@ -90,7 +91,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.exit_state(-1)
 
         if self.end:
-            # self.game.current_level = 2
             self.button_go()
 
         self.game_over(player_action)
@@ -122,12 +122,13 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                                                 self.player.rect.center[1], self.player.rect, self.player.rect.x, self.louie)
                     
                     for flies in self.fly_swarm.flylist.sprites():
-                        original_speed = flies.moving_speed
-                        self.slowness_amount = int(flies.moving_speed * (50/100))
+                        
                         if not(flies.HP <= 0):
                             self.flies_collisions(player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, flies.damage)
 
                         if flies.HP <= 0:
+                            self.sounds.enemies_death.play()
+                            self.game.offset = self.game.screen_shake(5,20)
                             flies.kill()
                             self.spawn_exploding_particles(100, flies)
                             
@@ -140,9 +141,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                             new_state = self.pause
                             new_state.enter_state()
                             self.game.start = False
-
-
-  
 
                     if self.game.win:
                         self.spawn_particles(200, deltatime)
@@ -194,6 +192,10 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
             if not(flies.HP <= 0):
                 self.fly_swarm.render(display)
                 self.groupenemy_health_render(display,self.fly_swarm.flylist.sprites())
+                
+        if self.game.freeze:
+            for flies in self.fly_swarm.flylist.sprites():
+                display.blit(self.game.ice, (flies.rect.x, flies.rect.y + 15))
 
         if not self.fly_swarm.flylist.sprites():
             self.sugarcube_list.draw(display)
@@ -209,6 +211,8 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
-            self.game.current_level = max(self.game.current_level, 2)
             self.ending_state(display)
+            if self.game.win:
+                self.game.settings.first_win2 = True
+                self.game.current_level = max(self.game.current_level, 2)
 

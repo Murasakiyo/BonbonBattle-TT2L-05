@@ -44,14 +44,12 @@ class Enemy3(pygame.sprite.Sprite):
             self.enemy3_movement(player_x, player_y)
 
         if self.attack:
-            self.moxie +=  250 * deltatime
+            self.moxie +=  150 * deltatime
 
         if self.leech:
             self.atk_timer += deltatime
         if not self.leech:
             self.atk_timer = 0
-
-
 
         self.move_towards_border()
         self.rect.clamp_ip(self.game.screen_rect)
@@ -89,16 +87,9 @@ class Enemy3(pygame.sprite.Sprite):
         self.enemy3_moxie_function(deltatime)
         self.animate(deltatime, self.direction)
 
-        print(self.ult)
-        # print(self.atk_timer)
+       
 
     def render(self, display):
-        # display.blit(self.image, (self.rect.x, self.rect.y))
-        # pygame.draw.rect(display, self.color, self.enemyborder1)
-        # pygame.draw.rect(display, self.color, self.enemyborder2)
-        # pygame.draw.rect(display, self.color, self.enemyborder3)
-        # pygame.draw.rect(display, self.color, self.enemyborder4) #draws the enemy border for reference
-
         for self.minions in self.minionlist.sprites():
             self.minions.render(display)
 
@@ -124,16 +115,7 @@ class Enemy3(pygame.sprite.Sprite):
                         self.minionlist.add(new_minion)                   
                 self.minion_time = 0
 
-        # To stop the attacking animation
-        if self.attack:
-            self.attack_time += deltatime
-            if self.attack_time > 1:
-                self.attack = False
-                if self.direction > 0:
-                    self.current_anim_list = self.right_sprites
-                elif self.direction < 0:
-                    self.current_anim_list = self.left_sprites
-                self.attack_time = 0
+       
                     
 
 
@@ -141,7 +123,7 @@ class Enemy3(pygame.sprite.Sprite):
 
         if self.moxie >= 300:
             self.ult = True
-            self.attack = False
+            
 
         if self.moxie < 300 and self.atk_timer > 3:
             self.ult = False
@@ -151,6 +133,7 @@ class Enemy3(pygame.sprite.Sprite):
             self.moxie = 0
             
         if self.ult == True and len(self.minionlist) == 1:
+            self.attack = False
             self.leech = True
             self.moxie = 0
 
@@ -180,11 +163,31 @@ class Enemy3(pygame.sprite.Sprite):
     def animate(self, deltatime, direction):
         self.last_frame_update += deltatime
 
-        if self.speed == -4 and self.attractspeed == 0 and self.dist > 500 and not(self.attack):
+        if self.speed == -4 and self.attractspeed == 0 and self.dist > 500 and not(self.attack) and not(self.leech):
             self.image = self.current_anim_list[0]
+            if self.current_anim_list == self.ultimate_sprites:
+                self.current_anim_list= self.right_sprites
+                self.image = self.current_anim_list[0]
             return
         
+        if self.leech:
+            self.fps = 0.1
+            self.current_anim_list = self.ultimate_sprites
+            if not self.leech:
+                self.current_anim_list = self.right_sprites
+
+         # To stop the attacking animation
         if self.attack:
+            self.attack_time += deltatime
+            if self.attack_time > 1:
+                self.attack = False
+                if self.direction > 0:
+                    self.current_anim_list = self.right_sprites
+                elif self.direction < 0:
+                    self.current_anim_list = self.left_sprites
+                self.attack_time = 0
+
+        if self.attack and not(self.leech):
             self.fps = 0.1
             if direction > 0:
                 self.current_anim_list = self.attack_right
@@ -194,9 +197,9 @@ class Enemy3(pygame.sprite.Sprite):
         if not self.attack:
             self.fps = 0.07
 
-        if direction > 0 and self.dist < 500 and not(self.attack):
+        if direction > 0 and self.dist < 500 and not(self.attack) and not(self.leech):
             self.current_anim_list = self.right_sprites
-        elif direction < 0 and self.dist < 500 and not(self.attack):
+        elif direction < 0 and self.dist < 500 and not(self.attack) and not(self.leech):
             self.current_anim_list = self.left_sprites
 
         if self.last_frame_update > self.fps:
@@ -207,6 +210,7 @@ class Enemy3(pygame.sprite.Sprite):
     def load_sprites(self):
         self.left_sprites, self.right_sprites = [], []
         self.attack_left, self.attack_right = [], []
+        self.ultimate_sprites = []
         # Load frog sprite
         snake = pygame.image.load("sprites/snake_enemy.png").convert()
         self.snake = pygame.transform.scale(snake, (1250,875)).convert_alpha() 
@@ -221,6 +225,8 @@ class Enemy3(pygame.sprite.Sprite):
             self.attack_right.append(SP.get_sprite(x, 345, 163, 170, (0,0,0)))
         for x in range(5):
             self.attack_left.append(SP.get_sprite(x, 520, 163, 170, (0,0,0)))
+        for x in range(5):
+            self.ultimate_sprites.append(SP.get_sprite(x, 700, 163, 170, (0,0,0)))
 
 
         self.image = self.right_sprites[0]

@@ -13,6 +13,8 @@ class Torres_Ult(pygame.sprite.Sprite):
 
     def update(self, deltatime, player_action):
         self.animate(deltatime)
+        if self.image == self.current_anim_list[2]:
+            self.game.offset = self.game.screen_shake(8,20)
         if self.image == self.current_anim_list[4]:
             self.game.ult_finish = True
             self.game.ult = False

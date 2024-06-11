@@ -52,17 +52,6 @@ class Pause(State):
             self.game.init_reset = True
             player_action["reset_game"] = True
         
-                
-        
-        # if self.exit_game:
-        #     self.exit_state(-2)
-        #     self.exit_game = False
-        #     player_action["transition"] = True
-        #     self.game.reset_game = True
-
-        # if self.game.alpha == 255:
-        #     self.exit_state(-1)
-        #     player_action["transition"] =  False
 
     def render(self, display):
         display.blit(self.black,(0,0))
