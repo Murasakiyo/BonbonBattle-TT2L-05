@@ -4,6 +4,7 @@ import spritesheet
 
 class Aira(pygame.sprite.Sprite):
     def __init__(self, game):
+        super().__init__()
         self.game = game
         self.posx, self.posy = 20, 200
         self.load_sprites()
@@ -37,7 +38,7 @@ class Aira(pygame.sprite.Sprite):
             self.fps = 0.1
             self.current_anim_list = self.transition_sprites
             self.transition_time += deltatime
-            if self.transition_time > 0.4:
+            if self.transition_time > 0.6:
                 self.current_anim_list = self.attack_up
                 self.show_attack = True
 
@@ -124,6 +125,7 @@ class Aira(pygame.sprite.Sprite):
 
 class Lyra(pygame.sprite.Sprite):
     def __init__(self, game):
+        super().__init__()
         self.game = game
         self.posx, self.posy = 920, 200
         self.load_sprites()
@@ -156,7 +158,7 @@ class Lyra(pygame.sprite.Sprite):
             self.fps = 0.1
             self.current_anim_list = self.transition_sprites
             self.transition_time += deltatime
-            if self.transition_time > 0.4:
+            if self.transition_time > 0.6:
                 self.current_anim_list = self.attack_up
                 self.show_attack = True
 

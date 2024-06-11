@@ -47,7 +47,7 @@ class Enemy4(pygame.sprite.Sprite):
         self.stop_normal_atk = False     # To temporarily halt the normal attack in lieu of the ultimate attack
         
         self.atk_speed = 20              # speed for strings
-        self.move_speed = 8              # speed for aira/lyra movements
+        self.move_speed = 0              # speed for aira/lyra movements
         self.spin_speed_lyra = 8         # Lyra's spin is the one moving around the screen
         self.spin_speed_aira = 5         # Aira's spin is the one following the player
         self.movement_timer = 0          # This is for changing their movement speeds for fixing the weird jitters that the movement code causes
@@ -58,16 +58,16 @@ class Enemy4(pygame.sprite.Sprite):
 
 
     def update(self, deltatime, player_action, player_x, player_y):
-        print(self.moxie)
         self.aira.update(deltatime, self.idle, self.norm_attack, self.positional, self.spin)
         self.lyra.update(deltatime, self.idle, self.norm_attack, self.positional, self.spin)
 
+        # For idle ---------------------------------------------------
         # if not self.super_attack and not self.stop_normal_atk:
         #     self.idle = True
         #     self.idle_countdown += deltatime
         #     if self.idle_countdown > 0.2:
         #         self.idle = False
-        #         self.idle_countdown = 0
+        #         self.idle_countdown = 0 ---------------------------
 
         # This code is for setting their speeds to 0 to fix the weird jitters with the sprite movement code
         if not(self.ult_attack):
@@ -76,6 +76,7 @@ class Enemy4(pygame.sprite.Sprite):
                 self.move_speed = 8
             if self.movement_timer > 0.95:
                 self.move_speed = 0
+                
         if self.ult_attack:
             self.move_speed = 16
 

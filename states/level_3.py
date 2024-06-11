@@ -33,7 +33,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.particle_group = pygame.sprite.Group()
 
         self.ultimates()
-        self.characters()
+        self.characters(200,200)
         self.load_health_bar()
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
@@ -44,7 +44,6 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.accept_ult = False
 
         self.current_time, self.end_time = 0,0
-        self.enemy_moxie = 0
         self.swarming = True
         self.swamping = False
         self.enemy_defeat = False
@@ -154,7 +153,6 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             self.enemyflies_defeat = True
                             self.current_enemy = self.body_group
                             self.camera.add(self.enemy1)
-                    print(self.swarming)
 
                     if not(self.swarming):
                         if self.swamping:
