@@ -33,7 +33,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.particle_group = pygame.sprite.Group()
 
         self.ultimates()
-        self.characters()
+        self.characters(200,200)
         self.load_health_bar()
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
@@ -44,7 +44,6 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.accept_ult = False
 
         self.current_time, self.end_time = 0,0
-        self.enemy_moxie = 0
         self.swarming = True
         self.swamping = False
         self.enemy_defeat = False
@@ -124,7 +123,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.update_ultimate(deltatime, player_action)
                 for flies in self.fly_swarm.flylist.sprites():
                     self.player_attacking(deltatime, self.fly_swarm.flylist, flies)
-                self.player_attacking(deltatime, self.body_group, self.enemy1)
+                if self.swamping:
+                    self.player_attacking(deltatime, self.body_group, self.enemy1)
                 self.health_update()
                 self.moxie_update(player_action)
                 self.cooldown_for_attacked(deltatime)
@@ -154,17 +154,17 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             self.current_enemy = self.body_group
                             self.camera.add(self.enemy1)
 
-                    if self.swamping:
-                        if not(self.enemy1.HP <= 0):
-                            if not(self.game.freeze):
-                                self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
-                                                self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
-                                self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
-                                self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
-                                self.enemy_collisions(player_action, self.body_group, self.attack_group, self.enemy1, 
-                                            self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
-                            self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
-
+                    if not(self.swarming):
+                        if self.swamping:
+                            if not(self.enemy1.HP <= 0):
+                                if not(self.game.freeze):
+                                    self.enemy1.update(deltatime, player_action, self.player.rect.center[0], 
+                                                    self.player.rect.center[1], self.player.horiz_line, self.player.rect.x) 
+                                    self.tongue.update(deltatime, player_action, self.enemy1.rect.centerx - 190, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                                    self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
+                                    self.enemy_collisions(player_action, self.body_group, self.attack_group, self.enemy1, 
+                                                self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
+                                self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
                         
                         
                         for enemy in self.body_group.sprites():

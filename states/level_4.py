@@ -29,7 +29,6 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.sounds = Sounds(self.game)
         
         self.current_time, self.end_time = 0,0
-        self.enemy_moxie = 0
         self.enemy_defeat = False
         self.snow_value = 1
         self.enemy3_heal = 0
@@ -49,7 +48,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.state = "none"
 
         self.ultimates()
-        self.characters()
+        self.characters(200,200)
         self.load_health_bar()
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
@@ -226,12 +225,13 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             if self.game.alpha == 0:
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
-
         if self.end:
             self.ending_state(display)
             if self.game.win:
                 self.game.settings.first_win4 = True
                 self.game.current_level = max(self.game.current_level, 4)
+
+       
 
 
 

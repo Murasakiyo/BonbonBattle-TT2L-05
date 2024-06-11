@@ -2,7 +2,7 @@ import pygame
 import sys
 from states.menu import MainMenu
 from torres import *
-from states.level_4 import Quad_Stage
+from states.level_5 import Penta_Stage
 from states.pause_menu import Pause
 from states.first_cutscene import Story
 from states.lounge import Stan_Dialogue
@@ -284,6 +284,8 @@ class Game():
         self.forest2 = pygame.image.load("sprites/backgrounds/bg_lvl2.bmp").convert()
         self.forest3 = pygame.image.load("sprites/backgrounds/bg_lvl3.bmp").convert()
         self.mountain = pygame.image.load("sprites/backgrounds/bg_lvl4.bmp").convert()
+        self.circus_tent = pygame.image.load("sprites/backgrounds/bg_lvl5.bmp").convert()
+        self.circus_asset = pygame.image.load("sprites/asset_lvl5.png").convert_alpha()
         self.lose_screen = pygame.image.load("sprites/lose_screen.png").convert_alpha()
         self.win_screen = pygame.image.load("sprites/win_screen.png").convert_alpha()
         self.circus = pygame.image.load("sprites/circus.png").convert()

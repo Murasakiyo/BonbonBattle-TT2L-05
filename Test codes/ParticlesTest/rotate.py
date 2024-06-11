@@ -38,7 +38,6 @@ while run:
     angle += 1
     if angle > 360:
         angle = 0
-    print(angle)
     #rotate turret
     turret = pygame.transform.rotate(turret_original, angle - 90)
     turret_rect = turret.get_rect(center = (x, y))

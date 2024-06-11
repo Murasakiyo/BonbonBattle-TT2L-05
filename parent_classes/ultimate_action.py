@@ -87,8 +87,8 @@ class Ults():
                 self.torres_ult.render(display)
 
     # Initialize the objects
-    def characters(self):
-        self.player = Player(self.game, 200,200) 
+    def characters(self, x, y):
+        self.player = Player(self.game, x, y) 
         self.louie = Louie(self.game) 
         self.stan = Stanley(self.game) 
         self.krie = Krie(self.game)
