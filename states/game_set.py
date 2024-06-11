@@ -1,10 +1,13 @@
 import pygame
 from parent_classes.state import *
+from settings import Settings
+
 
 class Game_Settings(State):
     def __init__(self, game):
         super().__init__(game)
         self.game = game
+        self.settings = Settings(self.game)
         self.assets = {
             "settings": pygame.image.load("sprites/settings_screen.png").convert_alpha(),
             "bg" : pygame.image.load("sprites/lounge.bmp").convert(),
@@ -41,16 +44,10 @@ class Game_Settings(State):
                 self.reset = True
                 self.click = True
                 if self.last_warn:
-                    print("Insert resets here")
                     self.game.reset_game = True
                     self.game.first_game = True
-                    # self.game.current_currency = 0
-                    # self.game.current_level = 0
-                    # self.game.settings.current_healthpoints = 250
-                    # self.game.settings.current_attackpoints = 3
-                    # self.game.settings.current_speed = 400
-                    # self.game.skip_cutscenes = False
-                    self.game.settings.krie_intro = False
+                    self.settings.krie_intro = False
+                    self.settings.gamereset_value()
                     self.exit_state(-1)
             if not pygame.mouse.get_pressed()[0]:
                 self.reset = False

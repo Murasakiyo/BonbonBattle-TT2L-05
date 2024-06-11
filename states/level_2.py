@@ -27,14 +27,13 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         self.sounds = Sounds(self.game)
 
         self.ultimates()
-        self.characters()
+        self.characters(200,200)
         self.load_health_bar()
         self.load_moxie_bar()
 
 
         self.current_time, self.end_time = 0,0
         self.swarming = True
-        self.enemy_moxie = 0
         self.gacha = 0
         self.slowness_amount = 0
         self.original_speed = 0

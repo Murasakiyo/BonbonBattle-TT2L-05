@@ -34,7 +34,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         # self.effect_time = 0
         # self.confetti = True
         self.ultimates()
-        self.characters()
+        self.characters(200,200)
         self.load_health_bar()
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
@@ -44,7 +44,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.body_group.add(self.enemy1)
 
         self.current_time, self.end_time = 0,0
-        self.enemy_moxie = 0
         self.gacha = 0
         self.accept_ult = False
         self.enemy_defeat = False
