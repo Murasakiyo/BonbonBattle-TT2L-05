@@ -9,6 +9,12 @@ class Settings:
         self.current_attackpoints = 3
         self.current_speed = 400
 
+        # Initialize upgrade level
+        self.current_atk_level = 0
+        self.current_HP_level = 0
+        self.current_spd_level = 0
+
+
         # Initialize sugarcube values
         self.sugarcube_value = 10
         self.first_sugarcube_value = 50
@@ -24,7 +30,7 @@ class Settings:
         self.krie_intro = False
         self.stan_dialogue_counter = 0
 
-    
+
     def gamereset_value(self):
         self.game.current_currency = 0
         self.game.current_level = 0
@@ -34,6 +40,9 @@ class Settings:
         self.game.settings.current_speed = 400
         self.game.settings.krie_intro = False
         self.game.settings.stan_dialogue_counter = 0
+        self.game.settings.current_atk_level = 0
+        self.game.settings.current_HP_level = 0
+        self.game.settings.current_spd_level = 0
         
 
 

@@ -34,16 +34,12 @@ class Lounge(State, Dialogue):
         self.finish_talk = False
 
         # self.offset = pygame.math.Vector2((0,0))
-
-
-    def stop_music(self):
-        self.game.sounds.lounge_bgmusic.stop()
         
 
     def update(self, deltatime, player_action):
-        self.game.background_music()
+        self.game.play_circus_music = True
         self.player.speed = 400
-        # Restrict the players keys 
+        # Restrict the players keys
         player_action["up"], player_action["down"] = False, False
         player_action["ultimate"], player_action["attack"], player_action["defend"],= False, False, False
         self.stan.update_lounge(deltatime, self.player, player_action)

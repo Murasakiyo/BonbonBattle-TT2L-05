@@ -50,7 +50,6 @@ class Game():
         self.load_states()
         self.battle_state()
 
-        # self.first_game = False
         self.reset_game = False
         self.skip_cutscenes = False
         self.current_currency = 0
@@ -58,6 +57,9 @@ class Game():
         self.saving_system = SaveDataSystem('player_data.pickle', self)
         self.load_data() # load saved data when start a game
 
+        self.play_circus_music = False
+        self.play_lvl1_music = False
+    
         self.bg_music = " "
         
 
@@ -69,14 +71,14 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
-            self.background_music()
+            self.play_background_music()
 
             
 
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = MainMenu(self)
+        self.title_screen = Level_Options(self)
         self.state_stack.append(self.title_screen)
 
     def open_txt(self, filename):
@@ -90,23 +92,30 @@ class Game():
         self.open_file.close()
         return text
     
-    def background_music(self):
-        if self.state_stack[-1].__class__.__name__ == "Lounge":
-            if self.bg_music != 'lounge music':
-                self.sounds.lounge_bgmusic.play(-1)
-                self.bg_music = 'lounge music'
-        # elif self.state_stack[-1].__class__.__name__ == "Circus":
-        #     if self.bg_music != 'circus music':
-        #         self.sounds.circus_bgmusic.play(-1)
-        #         self.bg_music = 'circus music'
-        else:
-            if self.bg_music != ' ':   # stop the music when it's not in that state
-                self.sounds.lounge_bgmusic.stop()
-                self.bg_music = ' '
-            # if self.bg_music == 'lounge music':
-            #     self.sounds.lounge_bgmusic.play(-1)
-        
 
+    def play_background_music(self):
+        if self.play_circus_music:  # play music in lounge and circus
+            print(self.bg_music)
+            self.play_circus_music = False
+            if self.bg_music != "circus music":  # make sure the music play once when the transition from circus to lounge
+                print("circus music")
+                self.sounds.circus_bgmusic.play(-1)
+                self.bg_music = "circus music"  
+
+        elif self.play_lvl1_music:
+            print(self.bg_music)
+            self.play_lvl1_music = False
+            print("now in level 1 music")
+            if self.bg_music != "level1 music":
+                self.sounds.lvl1_bgmusic.play(-1)
+                self.bg_music = "level1 music"
+
+        else:
+            self.sounds.circus_bgmusic.stop()
+            print("stop music")  
+            self.bg_music = " "  
+
+        
     # All key events are here. Receive input from player, display output for player
     def get_events(self):
 
@@ -365,7 +374,13 @@ class Game():
                 self.settings.krie_intro = loaded_data['krie_intro']
             if 'stan_dialogue_counter' in loaded_data:
                 self.settings.stan_dialogue_counter = loaded_data['stan_dialogue_counter']
-        print(f"loaded data: lvl- {self.current_level}, health- {self.settings.current_healthpoints}, attack- {self.settings.current_attackpoints}, speed- {self.settings.current_speed}, krie: {self.settings.krie_intro}, stan_counter: {self.settings.stan_dialogue_counter}")
+            if 'upgrade_atk_lvl' in loaded_data:
+                self.settings.current_atk_level = loaded_data['upgrade_atk_lvl']
+            if 'upgrade_HP_lvl' in loaded_data:
+                self.settings.current_HP_level = loaded_data['upgrade_HP_lvl']
+            if 'upgrade_spd_lvl' in loaded_data:
+                self.settings.current_spd_level = loaded_data['upgrade_spd_lvl']
+        print(f"loaded data: atk lvl = {self.settings.current_atk_level}, HP lvl = {self.settings.current_HP_level}, spd lvl = {self.settings.current_spd_level}")
         
 if __name__ == "__main__":
     game = Game()

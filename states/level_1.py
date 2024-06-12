@@ -74,6 +74,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
     def update(self, deltatime, player_action):
 
+        self.game.play_lvl1_music = True
+
         if player_action["reset_game"]:
             if self.game.settings.first_win1:
                 self.current_sugarcube_value = self.game.settings.sugarcube_value
@@ -210,9 +212,11 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         if self.end:
             self.ending_state(display)
+            self.game.sounds.lvl1_bgmusic.stop()
             if self.game.win:
                 self.game.settings.first_win1 = True
                 self.game.current_level = max(self.game.current_level, 1)
+                
             
         
 

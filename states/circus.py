@@ -30,6 +30,7 @@ class Circus(State):
 
     def update(self, deltatime, player_action):
         # self.game.settings.krie_intro = False
+        self.game.play_circus_music = True
         player_action["up"], player_action["down"] = False, False
         player_action["ultimate"], player_action["attack"], player_action["defend"],= False, False, False
         if not(self.init_talk):

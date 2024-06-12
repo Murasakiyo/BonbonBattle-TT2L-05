@@ -14,20 +14,26 @@ class SaveDataSystem:
             'skip_cutscenes': self.game.skip_cutscenes,
             'current_currency': self.game.current_currency,
             'krie_intro': self.game.settings.krie_intro,
-            'stan_dialogue_counter': self.game.settings.stan_dialogue_counter
+            'stan_dialogue_counter': self.game.settings.stan_dialogue_counter,
+            'upgrade_atk_lvl': self.game.settings.current_atk_level,
+            'upgrade_HP_lvl': self.game.settings.current_HP_level,
+            'upgrade_spd_lvl': self.game.settings.current_spd_level
         }
     
-    def default_value(self):
-        return {
-            'current_level': 0,
-            'healthpoints': 250,
-            'attackpoints': 3,
-            'speed': 400,
-            'skip_cutscenes': False,
-            'current_currency': 0,
-            'krie_intro': False,
-            'stan_dialogue_counter': 0
-        }
+    # def default_value(self):
+    #     return {
+    #         'current_level': 0,
+    #         'healthpoints': 250,
+    #         'attackpoints': 3,
+    #         'speed': 400,
+    #         'skip_cutscenes': False,
+    #         'current_currency': 0,
+    #         'krie_intro': False,
+    #         'stan_dialogue_counter': 0,
+    #         'upgrade_atk_lvl': 0,
+    #         'upgrade_HP_lvl': 0,
+    #         'upgrade_spd_lvl': 0
+        # }
 
     # serialize player_data and save to a file
     def save_data_file(self):
@@ -37,12 +43,12 @@ class SaveDataSystem:
 
     # deserialize player_data and load from the file
     def load_data_file(self):
-        try:
-            with open(self.file_name, 'rb') as file:
-                return pickle.load(file)
-        except FileNotFoundError: 
-            return self.default_value()
-            # print("no file found")
+        # try:
+        with open(self.file_name, 'rb') as file:
+            return pickle.load(file)
+        # except FileNotFoundError: 
+        #     return self.default_value()
+        #     # print("no file found")
         
 
 
