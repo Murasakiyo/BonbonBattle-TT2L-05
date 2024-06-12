@@ -142,7 +142,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                     for enemy in self.body_group.sprites():
                         if enemy.HP <= 0:
                             self.sounds.enemies_death.play()
-                            self.game.offset = self.game.screen_shake(5,20)
+                            self.game.offset = self.game.screen_shake(3,5,20)
                             enemy.kill()
                             self.spawn_exploding_particles(100, enemy)
                             self.tongue.kill()

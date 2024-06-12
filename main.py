@@ -59,6 +59,7 @@ class Game():
         self.load_data() # load saved data when start a game
         
 
+        
     # Game loop
     def game_loop(self):
         while self.play:
@@ -67,11 +68,12 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
+            
 
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = MainMenu(self)
+        self.title_screen = Penta_Stage(self)
         self.state_stack.append(self.title_screen)
 
     def open_txt(self, filename):
@@ -220,9 +222,9 @@ class Game():
         pygame.display.flip()
 
     # Screen shake
-    def screen_shake(self, intensity, amplitude):
+    def screen_shake(self, num, intensity, amplitude):
         s = -1
-        for i in range(0,3):
+        for i in range(0,num):
             for x in range(0, amplitude, intensity):
                 yield x * s, 0
             for x in range(0, amplitude, intensity):
