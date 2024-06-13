@@ -2,7 +2,7 @@ import pygame
 import sys
 from states.menu import MainMenu
 from torres import *
-from states.level_5 import Penta_Stage
+from states.level_1 import First_Stage
 from states.pause_menu import Pause
 from states.first_cutscene import Story
 from states.lounge import Lounge
@@ -31,7 +31,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = True
+        self.start = False
         self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
         self.settings = Settings(self)
         self.sounds = Sounds(self)
@@ -43,7 +43,7 @@ class Game():
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
                               "ultimate": False, "transition": False, "go": False, "pause": False, "reset_game":False, "next": False,
                               "E": False} 
-        self.convo_keys = {"up": False, "down": False}
+        self.convo_keys = {"up": False, "down": False, "all_key": False}
     
         self.cutscene = {"Intro": False}
         self.state_stack = []
@@ -73,7 +73,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = Penta_Stage(self)
+        self.title_screen = Level_Options(self)
         self.state_stack.append(self.title_screen)
 
     def open_txt(self, filename):
@@ -100,7 +100,9 @@ class Game():
 
             self.mouse = pygame.mouse.get_pos()
 
+                
             if event.type == pygame.KEYDOWN:
+                self.convo_keys["all_key"] = True
                 if event.key == pygame.K_a:
                     self.player_action["left"] = True
                 if event.key == pygame.K_d:
@@ -129,6 +131,7 @@ class Game():
                     self.player_action["E"] = True
 
             if event.type == pygame.KEYUP:
+                self.convo_keys["all_key"] = False
                 if event.key == pygame.K_a:
                     self.player_action["left"] = False
                 if event.key == pygame.K_d:
@@ -200,6 +203,8 @@ class Game():
         self.defeat = False
         self.win = False
         self.init_reset = False
+        self.tutorial = True
+        self.tutorial_counter = 0
     
     # Louie's freeze ultimate
     def frozen(self):
@@ -241,6 +246,7 @@ class Game():
             self.current_time = 0
     
     def dialogue_sprites(self):
+
         self.asset = {
             "torres": {
                 "talk": pygame.image.load("sprites/dialogue/torres/talk.png").convert_alpha(),
@@ -256,6 +262,7 @@ class Game():
                 "crazy": pygame.image.load("sprites/dialogue/stanley/crazy.png").convert_alpha()
             }
         }
+    
     # Backgrounds ingame
     def backgrounds(self):
         self.forest = pygame.image.load("sprites/backgrounds/bg_earlylvl.bmp").convert()

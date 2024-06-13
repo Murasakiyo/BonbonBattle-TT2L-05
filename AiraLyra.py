@@ -30,18 +30,15 @@ class Aira(pygame.sprite.Sprite):
 
     def animate(self, deltatime, idle, attack, run, spin):
         self.last_frame_update += deltatime
-        
-
         if idle:
             self.fps = 0.3
             self.current_anim_list = self.idle_sprites
 
         if attack:
-            self.fps = 0.3
+            self.fps = 0.1
             self.current_anim_list = self.transition_sprites
             self.transition_time += deltatime
             if self.transition_time > 0.6:
-                self.fps = 0.1
                 self.current_anim_list = self.attack_up
                 self.show_attack = True
 
