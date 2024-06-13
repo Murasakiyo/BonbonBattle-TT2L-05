@@ -16,8 +16,8 @@ class Settings:
 
 
         # Initialize sugarcube values
-        self.sugarcube_value = 10
-        self.first_sugarcube_value = 50
+        self.sugarcube_value = 30
+        self.first_sugarcube_value = 100
 
         # Initialize first win flags
         self.first_win1 = False
