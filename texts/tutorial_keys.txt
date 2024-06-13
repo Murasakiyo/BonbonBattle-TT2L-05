@@ -1,0 +1,35 @@
+Press [WASD] to 
+move around
+
+Press [J] to attack
+the enemy
+
+Press [K] to defend
+Torres
+
+Once your MOXIE is full,
+press [Q] to initiate your
+ultimate attack!
+
+Grab a confection to
+summon a Support 
+Doll
+
+Support dolls assists 
+Torres through battles 
+with their normal attacks 
+and ultimates
+
+If a doll is present 
+when you press [Q], the 
+support doll's ultimate 
+will be initiated instead
+
+Each support doll has
+their own unique abilities
+that will help you 
+immensely!
+
+Once an enemy is defeated,
+don't forget to collect 
+their sugarcubes!

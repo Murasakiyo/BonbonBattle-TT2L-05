@@ -3,6 +3,7 @@ from parent_classes.state import *
 from torres import *
 from enemy1 import *
 from states.pause_menu import *
+from states.tutorial import *
 from confection import *
 from parent_classes.ultimate_action import *
 from parent_classes.health import *
@@ -31,8 +32,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.tongue2 = Tongue2(self.game)
         self.pause = Pause(self.game)
         self.sounds = Sounds(self.game)
-        # self.effect_time = 0
-        # self.confetti = True
         self.ultimates()
         self.characters(200,200)
         self.load_health_bar()
@@ -43,11 +42,13 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.attack_group.add(self.tongue, self.tongue2)
         self.body_group.add(self.enemy1)
 
+        # Variables for ultimate
         self.current_time, self.end_time = 0,0
         self.gacha = 0
         self.accept_ult = False
         self.enemy_defeat = False
 
+        # Variables for particles
         self.allow_effect_for_krie = False
         self.allow_effect_for_stan = False
         self.effect_time = 0
@@ -61,6 +62,18 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.state = "none"
                     
         self.sugarcube_received = 0
+
+        # Variables for tutorial
+        self.tuto_time = 0
+        self.tuto1_done = False
+        self.tuto2_done = False
+        self.tuto3_done = False
+        self.tuto4_done = False
+        self.tuto5_done = False
+        self.tuto6_done = False
+        self.show_moxie = False
+        self.overlay = pygame.image.load("sprites/moxie_show.png").convert_alpha()
+
 
     # method overriding
     def enter_state(self):
@@ -107,19 +120,21 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.game_over(player_action)
         self.game_restart(player_action)
         self.ending_options(deltatime, player_action, 2, 1)
+        
 
         if self.game.start == True:
             if not(self.game.ult):
-
                 # Update player
                 self.player.update(deltatime, player_action)
                 self.player_attacking(deltatime, self.body_group, self.enemy1)
-                self.update_ultimate(deltatime, player_action)
+                if self.tuto4_done:
+                    self.update_ultimate(deltatime, player_action)
                 self.cooldown_for_attacked(deltatime)
                 self.health_update()
                 self.moxie_update(player_action)
                 self.game.frozen()
 
+                self.tutorial_game(deltatime)
 
                 # Update enemies
                 if not(self.game.defeat):
@@ -142,7 +157,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                     for enemy in self.body_group.sprites():
                         if enemy.HP <= 0:
                             self.sounds.enemies_death.play()
-                            self.game.offset = self.game.screen_shake(5,20)
+                            self.game.offset = self.game.screen_shake(3,5,20)
                             enemy.kill()
                             self.spawn_exploding_particles(100, enemy)
                             self.tongue.kill()
@@ -154,6 +169,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                             new_state = self.pause
                             new_state.enter_state()
                             self.game.start = False
+                            
             else:
                 self.add_ultimate(deltatime, player_action, self.body_group)
 
@@ -203,6 +219,9 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.particle_group.draw(display)
         self.ultimate_display(display)
 
+        if self.show_moxie:
+            display.blit(self.overlay, (0,0))
+
         if self.game.start == False:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
             if self.game.alpha == 0:
@@ -213,8 +232,60 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
             if self.game.win:
                 self.game.settings.first_win1 = True
                 self.game.current_level = max(self.game.current_level, 1)
-            
-        
+    
+    def tutorial_game(self, deltatime):
+        if self.game.tutorial_counter == 1:
+            self.tuto1_done = True
+        if self.game.tutorial_counter == 2:
+            self.tuto2_done = True
+        if self.game.tutorial_counter == 3:
+            self.tuto3_done = True
+        if self.game.tutorial_counter == 4:
+            self.tuto4_done = True
+            self.show_moxie = False
+        if self.game.tutorial_counter == 5:
+            self.tuto5_done = True
+        if self.game.tutorial_counter == 6:
+            self.tuto6_done = True
+
+        if self.game.tutorial:
+            new_state = Tutorial(self.game, self.player.rect.centerx, self.player.rect.centery)
+            if not self.tuto1_done:
+                self.tuto_time += deltatime
+                if self.tuto_time > 0.4:
+                    new_state.enter_state()
+                    self.tuto_time = 0
+            if self.tuto1_done and not(self.tuto2_done):
+                self.tuto_time += deltatime
+                if self.tuto_time > 1:
+                    new_state.enter_state()
+                    self.tuto_time = 0
+            if self.tuto2_done and not(self.tuto3_done):
+                self.tuto_time += deltatime
+                if self.tuto_time > 1:
+                    new_state.enter_state()
+                    self.tuto_time = 0
+            if self.tuto3_done and not(self.tuto4_done):
+                self.tuto_time += deltatime
+                if self.tuto_time > 2.8:
+                    self.show_moxie = True
+                if self.tuto_time > 3:
+                    new_state.enter_state()
+                    self.tuto_time = 0
+            if self.tuto4_done and not(self.tuto5_done):
+                if self.confection_ult.sprites():
+                    self.tuto_time += deltatime
+                    if self.tuto_time > 1:
+                        new_state.enter_state()
+                        self.tuto_time = 0
+            if self.tuto5_done and not(self.tuto6_done):
+                if self.support_dolls.sprites():
+                    self.tuto_time += deltatime
+                    if self.tuto_time > 1:
+                        new_state.enter_state()
+                        self.tuto_time = 0
+            if self.tuto6_done and not self.body_group.sprites():
+                new_state.enter_state()
 
 
 
