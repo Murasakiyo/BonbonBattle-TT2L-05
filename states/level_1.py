@@ -120,73 +120,21 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.game_over(player_action)
         self.game_restart(player_action)
         self.ending_options(deltatime, player_action, 2, 1)
+        
 
         if self.game.start == True:
             if not(self.game.ult):
                 # Update player
                 self.player.update(deltatime, player_action)
                 self.player_attacking(deltatime, self.body_group, self.enemy1)
-                self.update_ultimate(deltatime, player_action)
+                if self.tuto4_done:
+                    self.update_ultimate(deltatime, player_action)
                 self.cooldown_for_attacked(deltatime)
                 self.health_update()
                 self.moxie_update(player_action)
                 self.game.frozen()
 
-                if self.game.tutorial_counter == 1:
-                    self.tuto1_done = True
-                if self.game.tutorial_counter == 2:
-                    self.tuto2_done = True
-                if self.game.tutorial_counter == 3:
-                    self.tuto3_done = True
-                if self.game.tutorial_counter == 4:
-                    self.tuto4_done = True
-                    self.show_moxie = False
-                if self.game.tutorial_counter == 5:
-                    self.tuto5_done = True
-                if self.game.tutorial_counter == 6:
-                    self.tuto6_done = True
-
-                if not self.tuto4_done:
-                    self.gacha = 0
-                    self.support_dolls.empty()
-
-                if self.game.tutorial:
-                    new_state = Tutorial(self.game, self.player.rect.centerx, self.player.rect.centery)
-                    if not self.tuto1_done:
-                        self.tuto_time += deltatime
-                        if self.tuto_time > 0.4:
-                            new_state.enter_state()
-                            self.tuto_time = 0
-                    if self.tuto1_done and not(self.tuto2_done):
-                        self.tuto_time += deltatime
-                        if self.tuto_time > 1:
-                            new_state.enter_state()
-                            self.tuto_time = 0
-                    if self.tuto2_done and not(self.tuto3_done):
-                        self.tuto_time += deltatime
-                        if self.tuto_time > 1:
-                            new_state.enter_state()
-                            self.tuto_time = 0
-                    if self.tuto3_done and not(self.tuto4_done):
-                        self.tuto_time += deltatime
-                        if self.tuto_time > 2.8:
-                            self.show_moxie = True
-                        if self.tuto_time > 3:
-                            new_state.enter_state()
-                            self.tuto_time = 0
-                    if self.tuto4_done and not(self.tuto5_done):
-                        if self.confection_ult.sprites():
-                            self.tuto_time += deltatime
-                            if self.tuto_time > 1:
-                                new_state.enter_state()
-                                self.tuto_time = 0
-                    if self.tuto5_done and not(self.tuto6_done):
-                        if self.support_dolls.sprites():
-                            self.tuto_time += deltatime
-                            if self.tuto_time > 1:
-                                new_state.enter_state()
-                                self.tuto_time = 0
-
+                self.tutorial_game(deltatime)
 
                 # Update enemies
                 if not(self.game.defeat):
@@ -284,8 +232,60 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
             if self.game.win:
                 self.game.settings.first_win1 = True
                 self.game.current_level = max(self.game.current_level, 1)
-            
-        
+    
+    def tutorial_game(self, deltatime):
+        if self.game.tutorial_counter == 1:
+            self.tuto1_done = True
+        if self.game.tutorial_counter == 2:
+            self.tuto2_done = True
+        if self.game.tutorial_counter == 3:
+            self.tuto3_done = True
+        if self.game.tutorial_counter == 4:
+            self.tuto4_done = True
+            self.show_moxie = False
+        if self.game.tutorial_counter == 5:
+            self.tuto5_done = True
+        if self.game.tutorial_counter == 6:
+            self.tuto6_done = True
+
+        if self.game.tutorial:
+            new_state = Tutorial(self.game, self.player.rect.centerx, self.player.rect.centery)
+            if not self.tuto1_done:
+                self.tuto_time += deltatime
+                if self.tuto_time > 0.4:
+                    new_state.enter_state()
+                    self.tuto_time = 0
+            if self.tuto1_done and not(self.tuto2_done):
+                self.tuto_time += deltatime
+                if self.tuto_time > 1:
+                    new_state.enter_state()
+                    self.tuto_time = 0
+            if self.tuto2_done and not(self.tuto3_done):
+                self.tuto_time += deltatime
+                if self.tuto_time > 1:
+                    new_state.enter_state()
+                    self.tuto_time = 0
+            if self.tuto3_done and not(self.tuto4_done):
+                self.tuto_time += deltatime
+                if self.tuto_time > 2.8:
+                    self.show_moxie = True
+                if self.tuto_time > 3:
+                    new_state.enter_state()
+                    self.tuto_time = 0
+            if self.tuto4_done and not(self.tuto5_done):
+                if self.confection_ult.sprites():
+                    self.tuto_time += deltatime
+                    if self.tuto_time > 1:
+                        new_state.enter_state()
+                        self.tuto_time = 0
+            if self.tuto5_done and not(self.tuto6_done):
+                if self.support_dolls.sprites():
+                    self.tuto_time += deltatime
+                    if self.tuto_time > 1:
+                        new_state.enter_state()
+                        self.tuto_time = 0
+            if self.tuto6_done and not self.body_group.sprites():
+                new_state.enter_state()
 
 
 

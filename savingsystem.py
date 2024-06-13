@@ -13,7 +13,8 @@ class SaveDataSystem:
             'speed': self.game.settings.current_speed,
             'skip_cutscenes': self.game.skip_cutscenes,
             'current_currency': self.game.current_currency,
-            'krie_intro': self.game.settings.krie_intro
+            'krie_intro': self.game.settings.krie_intro,
+            'tutorial': self.game.tutorial
         }
     
     def default_value(self):
@@ -24,7 +25,8 @@ class SaveDataSystem:
             'speed': 400,
             'skip_cutscenes': False,
             'current_currency': 0,
-            'krie_intro': False
+            'krie_intro': False,
+            'tutorial': True
         }
 
     # serialize player_data and save to a file

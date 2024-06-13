@@ -30,6 +30,7 @@ class Settings:
         self.game.settings.current_attackpoints = 3
         self.game.settings.current_speed = 400
         self.krie_intro = False
+        self.game.tutorial = True
         
 
 

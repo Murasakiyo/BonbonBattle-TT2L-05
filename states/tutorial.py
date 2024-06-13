@@ -19,7 +19,6 @@ class Tutorial(State):
 
 
     def update(self, deltatime, player_action):
-        print(int(self.tuto_time))
 
         # WASD Keys
         if self.game.tutorial_counter == 0:
@@ -80,11 +79,21 @@ class Tutorial(State):
                         self.game.tutorial_counter += 1
                         self.long_tuto_time = 0
                         self.game.convo_keys["all_key"] = False
+        
+        if self.game.tutorial_counter == 6:
+            self.tuto_time += deltatime
+            if self.tuto_time > 1:
+                if self.game.convo_keys["all_key"]:
+                    self.exit_state(-1)
+                    self.game.tutorial_counter += 1
+                    self.game.tutorial = False
+                    self.game.save_data()
+                    self.tuto_time = 0
 
     def render(self, display):
-        if self.game.tutorial_counter == 0 or self.game.tutorial_counter == 1 or self.game.tutorial_counter == 2 or self.game.tutorial_counter == 4:
+        if self.game.tutorial_counter == 0 or self.game.tutorial_counter == 1 or self.game.tutorial_counter == 2 or self.game.tutorial_counter == 4 :
             display.blit(self.textbox, self.rect)
-        if self.game.tutorial_counter == 3:
+        if self.game.tutorial_counter == 3 or self.game.tutorial_counter == 6:
             display.blit(self.big_txtbox, self.bigrect)
         # WASD Keys
         if self.game.tutorial_counter == 0:
@@ -100,6 +109,7 @@ class Tutorial(State):
                 self.game.draw_text(display, self.tutokeys[i], True, self.color, self.x + 15, self.y + 20 + ((i-6) * 30), 17)
         # Ultimate Key
         if self.game.tutorial_counter == 3:
+            display.blit(self.big_txtbox, self.bigrect)
             for i in range(9,12):
                 self.game.draw_text(display, self.tutokeys[i], True, self.color, self.x + 15, self.y + 20 + ((i-9) * 30), 17)
         # Grab confection 
@@ -108,15 +118,21 @@ class Tutorial(State):
                 self.game.draw_text(display, self.tutokeys[i], True, self.color, self.x + 15, self.y + 20 + ((i-13) * 25), 17)
         # Support Dolls explanation
         if self.game.tutorial_counter == 5:
+            self.bigrect.x, self.bigrect.y = 300, 200
+            self.x, self.y = self.bigrect.topleft
+            display.blit(self.big_txtbox, self.bigrect)
             if self.tuto5_counter == 0:
-                display.blit(self.big_txtbox, self.rect)
+                display.blit(self.big_txtbox, self.bigrect)
                 for i in range(17,21):
                     self.game.draw_text(display, self.tutokeys[i], True, self.color, self.x + 15, self.y + 20 + ((i-17) * 30), 17)
             if self.tuto5_counter == 1:
-                display.blit(self.big_txtbox, self.rect)
+                display.blit(self.big_txtbox, self.bigrect)
                 for i in range(22,26):
                     self.game.draw_text(display, self.tutokeys[i], True, self.color, self.x + 15, self.y + 20 + ((i-22) * 30), 17)
             if self.tuto5_counter == 2:
-                display.blit(self.big_txtbox, self.rect)
+                display.blit(self.big_txtbox, self.bigrect)
                 for i in range(27,32):
                     self.game.draw_text(display, self.tutokeys[i], True, self.color, self.x + 15, self.y + 20 + ((i-27) * 30), 17)
+        if self.game.tutorial_counter == 6:
+            for i in range(32,35):
+                self.game.draw_text(display, self.tutokeys[i], True, self.color, self.x + 15, self.y + 20 + ((i-32) * 25), 17)
