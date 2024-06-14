@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.moxie_bool = False
         self.healthpoints = self.game.settings.current_healthpoints
         self.max_health = self.game.settings.current_healthpoints
-        self.attackpoints = self.game.settings.current_attackpoints
+        self.attackpoints = 100
         self.moxiepoints = 600
         self.speed = self.game.settings.current_speed
         self.lose = False
