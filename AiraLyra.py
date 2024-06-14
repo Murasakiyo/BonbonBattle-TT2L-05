@@ -6,7 +6,7 @@ class Aira(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.posx, self.posy = 20, 200
+        self.posx, self.posy = 30, 200
         self.load_sprites()
         self.rect = self.aira.get_rect(width=150, height=200)
         self.rect.x, self.rect.y = self.posx, self.posy
@@ -30,8 +30,6 @@ class Aira(pygame.sprite.Sprite):
 
     def animate(self, deltatime, idle, attack, run, spin):
         self.last_frame_update += deltatime
-        
-
         if idle:
             self.fps = 0.3
             self.current_anim_list = self.idle_sprites
@@ -54,11 +52,11 @@ class Aira(pygame.sprite.Sprite):
             self.last_frame_update2 += deltatime
             self.current_hand_list = self.hand
 
-        if run == 1 and not(spin):
+        if run == 1 :
             self.fps = 0.05
             self.current_anim_list = self.run_sprites
             self.dance_time += deltatime
-            if self.dance_time > 0.8:
+            if self.dance_time > 0.6:
                 self.fps = 0.1
                 self.current_anim_list = self.dance_sprites
 
@@ -122,14 +120,11 @@ class Aira(pygame.sprite.Sprite):
         self.current_hand_list = self.hand
 
 
-
-
-
 class Lyra(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.posx, self.posy = 920, 200
+        self.posx, self.posy = 930, 200
         self.load_sprites()
         self.rect = self.lyra.get_rect(width=150, height=200)
         self.rect.x, self.rect.y = self.posx, self.posy
@@ -176,11 +171,11 @@ class Lyra(pygame.sprite.Sprite):
             self.last_frame_update2 += deltatime
             self.current_hand_list = self.hand
 
-        if run == 1 and not(spin):
+        if run == 1:
             self.fps = 0.05
             self.current_anim_list = self.run_sprites
             self.dance_time += deltatime
-            if self.dance_time > 0.8:
+            if self.dance_time > 0.6:
                 self.fps = 0.1
                 self.current_anim_list = self.dance_sprites
 
@@ -244,3 +239,136 @@ class Lyra(pygame.sprite.Sprite):
         self.hand_image = self.hand[0]
         self.current_hand_list = self.hand
 
+
+class Twin_ult(pygame.sprite.Sprite):
+    def __init__(self, game):
+        super().__init__()
+        self.game = game
+        self.load_sprites()
+        self.rect = self.ultimate_sprites[0].get_rect(x=0, y=0)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.mask.to_surface()
+        self.current_frame, self.last_frame_update = 0,0
+        self.fps = 0.083
+
+    def update(self, deltatime, ult):
+        self.animate(deltatime)
+        
+    
+    def anim_reset(self, ult):
+        if not ult:
+            self.current_frame = 0
+            self.current_image = self.ultimate_sprites[0]
+            self.last_frame_update = 0
+            self.fps = 0.083
+
+    
+    def render(self, display):
+        display.blit(self.image, (self.rect.x, self.rect.y))
+
+    def animate(self, deltatime):
+        self.last_frame_update += deltatime
+
+        if self.current_frame == 2:
+            self.game.offset = self.game.screen_shake(3,8,30)
+
+        if self.current_frame == 9:
+            self.game.offset = self.game.screen_shake(3,8,30)
+
+        if self.last_frame_update > self.fps:
+            if self.current_frame != 29:
+                self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
+                self.image = self.current_anim_list[self.current_frame]
+                self.last_frame_update = 0
+            else:
+                self.image = self.current_anim_list[29]
+                self.last_frame_update = 0
+
+    def load_sprites(self):
+        self.ultimate_sprites = []
+        for x in range(10):
+            self.ultimate_sprites.append(pygame.image.load(f"sprites/ult_anim/twins_ult/00{x}.png").convert_alpha())
+        for x in range(6):
+            self.ultimate_sprites.append(pygame.image.load(f"sprites/ult_anim/twins_ult/01{x}.png").convert_alpha())
+        for x in range(1,6):
+            self.ultimate_sprites.append(pygame.image.load(f"sprites/ult_anim/twins_ult/01{x}.png").convert_alpha())
+        for x in range(1,6):
+            self.ultimate_sprites.append(pygame.image.load(f"sprites/ult_anim/twins_ult/01{x}.png").convert_alpha())
+        self.ultimate_sprites.append(pygame.image.load(f"sprites/ult_anim/twins_ult/011.png").convert_alpha())
+        self.ultimate_sprites.append(pygame.image.load(f"sprites/ult_anim/twins_ult/012.png").convert_alpha())
+        self.ultimate_sprites.append(pygame.image.load(f"sprites/ult_anim/twins_ult/001.png").convert_alpha())
+        self.ultimate_sprites.append(pygame.image.load(f"sprites/ult_anim/twins_ult/000.png").convert_alpha())
+
+        self.image = self.ultimate_sprites[0]
+        self.current_anim_list = self.ultimate_sprites
+
+class Horiz_hand(pygame.sprite.Sprite):
+    def __init__(self, game, player_y):
+        super().__init__()
+        self.game = game
+        self.load_sprites()
+        self.rect = self.atk_sprites[0].get_rect(x = self.game.screen_rect.midleft[0] - 1100 - 25, y = player_y - 25)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.mask.to_surface()
+        self.current_frame, self.last_frame_update = 0,0
+        self.fps = 0.1
+
+    def update(self):
+        pass
+
+    def render(self, display):
+        display.blit(self.image, (self.rect.x, self.rect.y))
+
+    def animate(self, deltatime):
+        self.last_frame_update += deltatime
+
+        if self.last_frame_update > self.fps:
+            self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
+            self.image = self.current_anim_list[self.current_frame]
+            self.last_frame_update = 0
+    
+
+    def load_sprites(self):
+        self.atk_sprites = []
+        for x in range(3):
+            self.atk_sprites.append(pygame.image.load(f"sprites/twins_attack/horizontal_atk/00{x}.png").convert_alpha())
+
+        self.image = self.atk_sprites[0]
+        self.current_anim_list = self.atk_sprites
+    
+class Vert_hand(pygame.sprite.Sprite):
+    def __init__(self, game, player_x):
+        super().__init__()
+        self.game = game
+        self.load_sprites()
+        self.rect = self.atk_sprites[0].get_rect(x = player_x - 25, y= self.game.screen_rect.midtop[1] - 600)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.mask.to_surface()
+        self.current_frame, self.last_frame_update = 0,0
+        self.fps = 0.1
+
+    def update(self):
+        pass
+
+    def render(self, display):
+        display.blit(self.image, (self.rect.x, self.rect.y))
+
+    def animate(self, deltatime):
+        self.last_frame_update += deltatime
+
+        if self.last_frame_update > self.fps:
+            self.current_frame = (self.current_frame + 1) % len(self.current_anim_list)
+            self.image = self.current_anim_list[self.current_frame]
+            self.last_frame_update = 0
+    
+
+    def load_sprites(self):
+        self.atk_sprites = []
+        for x in range(3):
+            self.atk_sprites.append(pygame.image.load(f"sprites/twins_attack/vert_atk/00{x}.png").convert_alpha())
+
+        self.image = self.atk_sprites[0]
+        self.current_anim_list = self.atk_sprites
+
+
+       

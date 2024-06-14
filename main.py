@@ -2,7 +2,7 @@ import pygame
 import sys
 from states.menu import MainMenu
 from torres import *
-from states.level_5 import Penta_Stage
+from states.level_1 import First_Stage
 from states.pause_menu import Pause
 from states.first_cutscene import Story
 from states.lounge import Lounge
@@ -31,7 +31,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.black_surface = pygame.Surface((self.SCREENWIDTH, self.SCREENHEIGHT), pygame.SRCALPHA)
         self.alpha = 0
-        self.start = True
+        self.start = False
         self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
         self.settings = Settings(self)
         self.sounds = Sounds(self)
@@ -43,7 +43,7 @@ class Game():
         self.player_action = {"left":False, "right": False, "up": False, "down": False, "attack": False, "defend": False, 
                               "ultimate": False, "transition": False, "go": False, "pause": False, "reset_game":False, "next": False,
                               "E": False} 
-        self.convo_keys = {"up": False, "down": False}
+        self.convo_keys = {"up": False, "down": False, "all_key": False}
     
         self.cutscene = {"Intro": False}
         self.state_stack = []
@@ -59,6 +59,7 @@ class Game():
         self.load_data() # load saved data when start a game
         
 
+        
     # Game loop
     def game_loop(self):
         while self.play:
@@ -67,6 +68,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
+            
 
 
     # First state/room in the game (can be changed)
@@ -98,7 +100,9 @@ class Game():
 
             self.mouse = pygame.mouse.get_pos()
 
+                
             if event.type == pygame.KEYDOWN:
+                self.convo_keys["all_key"] = True
                 if event.key == pygame.K_a:
                     self.player_action["left"] = True
                 if event.key == pygame.K_d:
@@ -127,6 +131,7 @@ class Game():
                     self.player_action["E"] = True
 
             if event.type == pygame.KEYUP:
+                self.convo_keys["all_key"] = False
                 if event.key == pygame.K_a:
                     self.player_action["left"] = False
                 if event.key == pygame.K_d:
@@ -198,6 +203,8 @@ class Game():
         self.defeat = False
         self.win = False
         self.init_reset = False
+        self.tutorial = True
+        self.tutorial_counter = 0
     
     # Louie's freeze ultimate
     def frozen(self):
@@ -220,9 +227,9 @@ class Game():
         pygame.display.flip()
 
     # Screen shake
-    def screen_shake(self, intensity, amplitude):
+    def screen_shake(self, num, intensity, amplitude):
         s = -1
-        for i in range(0,3):
+        for i in range(0,num):
             for x in range(0, amplitude, intensity):
                 yield x * s, 0
             for x in range(0, amplitude, intensity):
@@ -239,6 +246,7 @@ class Game():
             self.current_time = 0
     
     def dialogue_sprites(self):
+
         self.asset = {
             "torres": {
                 "talk": pygame.image.load("sprites/dialogue/torres/talk.png").convert_alpha(),
@@ -254,6 +262,7 @@ class Game():
                 "crazy": pygame.image.load("sprites/dialogue/stanley/crazy.png").convert_alpha()
             }
         }
+    
     # Backgrounds ingame
     def backgrounds(self):
         self.forest = pygame.image.load("sprites/backgrounds/bg_earlylvl.bmp").convert()
@@ -342,6 +351,8 @@ class Game():
                     self.current_currency = loaded_data['current_currency']
                 if 'krie_intro' in loaded_data:
                     self.settings.krie_intro = loaded_data['krie_intro']
+                # if 'tutorial' in loaded_data:
+                #     self.tutorial = loaded_data['tutorial']
         print(f"loaded data: lvl- {self.current_level}, health- {self.settings.current_healthpoints}, attack- {self.settings.current_attackpoints}, speed- {self.settings.current_speed}")
         
 if __name__ == "__main__":

@@ -143,7 +143,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             self.flies_collisions(player_action, self.fly_swarm.flylist, self.fly_swarm.flylist, flies, flies.damage)
                         if flies.HP <= 0:
                             self.sounds.enemies_death.play()
-                            self.game.offset = self.game.screen_shake(5,20)
+                            self.game.offset = self.game.screen_shake(3,5,20)
                             flies.kill()
                             self.spawn_exploding_particles(100, flies)
 
@@ -170,7 +170,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                         for enemy in self.body_group.sprites():
                             if enemy.HP <= 0:
                                 self.sounds.enemies_death.play()
-                                self.game.offset = self.game.screen_shake(5,20)
+                                self.game.offset = self.game.screen_shake(3,5,20)
                                 enemy.kill()
                                 self.spawn_exploding_particles(100, enemy)
                                 self.tongue.kill()
@@ -239,7 +239,16 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             if not(flies.HP <= 0):
                 self.fly_swarm.render(display)
                 self.groupenemy_health_render(display,self.fly_swarm.flylist.sprites())
-                
+
+        if self.game.freeze:
+            for flies in self.fly_swarm.flylist.sprites():
+                display.blit(self.game.ice, (flies.rect.x, flies.rect.y + 15))
+        
+        if self.swamping == True:
+            if self.game.freeze:
+                for frogs in self.body_group.sprites():
+                    display.blit(self.game.ice, (frogs.rect.x + 5, frogs.rect.y + 40))
+
         if self.swamping == True:
             if not(self.enemy1.HP <= 0):
                 if self.enemy1.current_anim_list == self.enemy1.attack_left:

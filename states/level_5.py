@@ -115,7 +115,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.update_ultimate(deltatime, player_action)
 
 
-                self.get_hit(deltatime, player_action)  
+                # self.get_hit(deltatime, player_action)  
                 if not(self.end):
                         if player_action["pause"]:
                             new_state = self.pause
@@ -198,11 +198,11 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.player.healthpoints -= 20
                 self.player.take_damage = True
 
-        if self.player.take_damage == False:
-            if any(self.enemy4.vert_string.clipline(*line) for line in self.player.lines):
-                self.player.healthpoints -= 10
-                # self.enemy4.moxie += 20
-                self.player.take_damage = True
+        # if self.player.take_damage == False:
+        #     if any(self.enemy4.vert_string.clipline(*line) for line in self.player.lines):
+        #         self.player.healthpoints -= 10
+        #         # self.enemy4.moxie += 20
+        #         self.player.take_damage = True
 
         if self.player.take_damage == False:
             if any(self.enemy4.horiz_string.clipline(*line) for line in self.player.lines):

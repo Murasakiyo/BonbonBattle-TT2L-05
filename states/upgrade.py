@@ -110,9 +110,6 @@ class Upgrade(State, Dialogue):
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
 
-
-
-
         if self.upgrade_rect.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click:
                 self.sounds.upgrade_clicked.play()

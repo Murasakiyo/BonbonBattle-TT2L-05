@@ -207,6 +207,9 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
         self.camera.custom_draw(display)
         self.enemy3.render(display)
+        if self.game.freeze:
+            for enemy in self.enemy_group.sprites():
+                display.blit(self.game.ice, (enemy.rect.x + 15, enemy.rect.y + 25))
         display.blit(pygame.transform.scale(self.game.mount_asset, (1200,600)), (-60,0))
 
         self.health_render(display)
