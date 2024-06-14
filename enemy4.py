@@ -26,13 +26,6 @@ class Enemy4(pygame.sprite.Sprite):
         self.extend_vert = False         # extend bools here are for telling whether the strings are supposed to extend/retract or track player position
         self.extend_horiz = False        # They're used to tell the strings to stop following the player_pos as this happens when its retracted outside of the game screen
  
-        # New variables for animation
-        self.idle = False
-        self.idle_countdown = 0
-        self.norm_attack = False
-        self.spin = False
-
-
         self.super_attack = False        # This is when the super attack is starting to initiate (Aira/Lyra getting ready in positions)
         self.super_count = 0             # A pointer system to count up towards the super attack initiation
         self.super_timer = 0             # A timer for the duration of the super attack
@@ -47,7 +40,7 @@ class Enemy4(pygame.sprite.Sprite):
         self.stop_normal_atk = False     # To temporarily halt the normal attack in lieu of the ultimate attack
         
         self.atk_speed = 20              # speed for strings
-        self.move_speed = 0              # speed for aira/lyra movements
+        self.move_speed = 8              # speed for aira/lyra movements
         self.spin_speed_lyra = 8         # Lyra's spin is the one moving around the screen
         self.spin_speed_aira = 5         # Aira's spin is the one following the player
         self.movement_timer = 0          # This is for changing their movement speeds for fixing the weird jitters that the movement code causes
@@ -58,38 +51,27 @@ class Enemy4(pygame.sprite.Sprite):
 
 
     def update(self, deltatime, player_action, player_x, player_y):
-        self.aira.update(deltatime, self.idle, self.norm_attack, self.positional, self.spin)
-        self.lyra.update(deltatime, self.idle, self.norm_attack, self.positional, self.spin)
+       
+        direction_x = player_action["right"] - player_action["left"]
+        direction_y = player_action["down"] - player_action["up"]
 
-        # For idle ---------------------------------------------------
-        # if not self.super_attack and not self.stop_normal_atk:
-        #     self.idle = True
-        #     self.idle_countdown += deltatime
-        #     if self.idle_countdown > 0.2:
-        #         self.idle = False
-        #         self.idle_countdown = 0 ---------------------------
 
         # This code is for setting their speeds to 0 to fix the weird jitters with the sprite movement code
         if not(self.ult_attack):
             self.movement_timer += deltatime
             if self.movement_timer < 1.5:
                 self.move_speed = 8
-            if self.movement_timer > 0.95:
+            if self.movement_timer > 1.5:
                 self.move_speed = 0
-                
         if self.ult_attack:
             self.move_speed = 16
 
         if not self.super_attack and not self.stop_normal_atk:
-            self.norm_attack = True
-
-        if self.norm_attack:
             self.normal_attack(deltatime, player_x, player_y)
             self.super_timer = 0
 
         # Resetting string positions during a special atk phase
         if self.stop_normal_atk or self.super_attack:
-            self.norm_attack = False
             self.vert_string.y = -601
             self.horiz_string.x = -1101
 
@@ -99,33 +81,27 @@ class Enemy4(pygame.sprite.Sprite):
         if not self.start_super_atk:
             self.move_towards_position(self.lyra_posx, self.lyra_posy, self.aira_posx, self.aira_posy)
 
-
-        # Before spin attack, can use for animation
         if self.super_count > 4:
             self.move_speed = 8
             self.spin_speed_aira = 8
-            self.norm_attack = False
             self.super_attack = True
-        
-        # Initiate Super movement
+                    
         if self.super_attack and not self.stop_super_atk:
             self.super_movement(player_x, player_y, deltatime)
-        else: 
-            self.spin = False
 
     
         # Ultimate Attack Codes
         if not self.ult_attack and not self.super_attack:
             self.moxie += deltatime * 5
 
-        if self.moxie >= 150:
+        if self.moxie >= 250:
             self.super_count = 0
             self.stop_super_atk = True
 
-        if self.moxie >= 198:
+        if self.moxie >= 298:
             self.stop_normal_atk = True
 
-        if self.moxie >= 200:
+        if self.moxie >= 300:
             self.ult_attack = True
             self.moxie = 0
 
@@ -136,7 +112,7 @@ class Enemy4(pygame.sprite.Sprite):
         # print(self.start_super_atk)
         # print(self.super_attack)
         # print(self.super_count)
-        # print(self.moxie)
+        print(self.moxie)
         # print(pygame.mouse.get_pos())
         # print(self.spin_positional)
         # print(self.movement_timer)
@@ -144,29 +120,31 @@ class Enemy4(pygame.sprite.Sprite):
 
 
     def render(self, display):
-        if not(self.start_ult_atk):
-            self.aira.render(display)
-            self.lyra.render(display)
-
         if not self.super_attack:
-            pygame.draw.rect(display, (255,248, 218), self.vert_string)
-            pygame.draw.rect(display, (255,248, 218), self.horiz_string)
+            pygame.draw.rect(display, "violet", self.vert_string)
+            pygame.draw.rect(display, "violet", self.horiz_string)
+
+
+
+        if not(self.start_ult_atk):
+            pygame.draw.rect(display, "pink", self.aira.rect)
+            pygame.draw.rect(display, "violet", self.lyra.rect)
 
         if self.start_ult_atk:
             pygame.Surface.blit(display, self.ultimate_image, (0, 0))
 
 
-    def normal_attack(self, deltatime, player_x, player_y):
 
-         # Once the timer for player tracking ends, the strings will extend and retract following these codes
-        if self.extend_vert == True: # This code is for the extension of the strings
+
+    def normal_attack(self, deltatime, player_x, player_y):
+        if self.extend_vert == True:
             if self.attack_bool == False:
                 if self.vert_string.y <= 0:
                     self.vert_string.y += 1 * self.atk_speed
                 if self.vert_string.y >= 0:
                     self.attack_bool = True
 
-            if self.attack_bool == True: # This code is for the retraction of the strings
+            if self.attack_bool == True:
                 self.vert_string.y -= 1 * self.atk_speed
                 if self.vert_string.y <= -600:
                     self.attack_bool = False
@@ -174,8 +152,6 @@ class Enemy4(pygame.sprite.Sprite):
 
                     self.super_count += 1
             
-
-        # This patch of code is for the strings to track the player pos once it fully retracts from the game screen
         if self.extend_vert == False:
             self.extend_count += deltatime
             self.vert_string.x = player_x - 25
@@ -184,23 +160,22 @@ class Enemy4(pygame.sprite.Sprite):
                 self.extend_count = 0
 
 #####
-        # Once the timer for player tracking ends, the strings will extend and retract following these codes
-        if self.extend_horiz == True: # This code is for the extension of the strings
+
+        if self.extend_horiz == True:
             if self.attack_bool2 == False:
                 if self.horiz_string.x <= 0:
                     self.horiz_string.x += 1 * self.atk_speed
                 if self.horiz_string.x >= 0:
                     self.attack_bool2 = True
 
-            if self.attack_bool2 == True: # This code is for the retraction of the strings 
+            if self.attack_bool2 == True:
                 self.horiz_string.x -= 1 * self.atk_speed
                 if self.horiz_string.x <= -1100:
                     self.attack_bool2 = False
                     self.extend_horiz = False
 
                     self.super_count += 1
-        
-        # This patch of code is for the strings to track the player pos once it fully retracts from the game screen
+            
         if self.extend_horiz == False:
             self.extend_count2 += deltatime
             self.horiz_string.y = player_y - 25
@@ -214,7 +189,7 @@ class Enemy4(pygame.sprite.Sprite):
 
     def ultimate_attack(self, deltatime):
 
-        if self.lyra.rect.centerx < 551:
+        if self.lyra.rect.x < 551:
             self.stop_moving = True
 
         if self.stop_moving:
@@ -235,17 +210,15 @@ class Enemy4(pygame.sprite.Sprite):
 
     def move_towards_position(self, lyrapos_x, lyrapos_y, airapos_x, airapos_y):
         #  (Lyra's position)
-        dx_lyra, dy_lyra = lyrapos_x - self.lyra.rect.centerx, lyrapos_y - self.lyra.rect.centery
+        dx_lyra, dy_lyra = lyrapos_x - self.lyra.rect.x, lyrapos_y - self.lyra.rect.y
         dist = math.hypot(dx_lyra, dy_lyra)
         dx_lyra, dy_lyra = dx_lyra / (dist + 0.01), dy_lyra / (dist + 0.01)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
         self.lyra.rect.x += dx_lyra * self.move_speed
         self.lyra.rect.y += dy_lyra * self.move_speed
 
-
-
         #  (Aira's Position)
-        dx_aira, dy_aira = airapos_x - self.aira.rect.centerx, airapos_y - self.aira.rect.centery
+        dx_aira, dy_aira = airapos_x - self.aira.rect.x, airapos_y - self.aira.rect.y
         dist = math.hypot(dx_aira, dy_aira)
         dx_aira, dy_aira = dx_aira / (dist + 0.01), dy_aira / (dist + 0.01)  # Normalize.
         # Move along this normalized vector towards the player at current speed.
@@ -259,15 +232,14 @@ class Enemy4(pygame.sprite.Sprite):
         if self.start_super_atk:
             pos_x = player_x
             pos_y = player_y 
-            dx, dy = pos_x - self.aira.rect.centerx, pos_y - self.aira.rect.centery
-            dx2, dy2 = self.lyraspin_posx - self.lyra.rect.centerx, self.lyraspin_posy - self.lyra.rect.centery
-            self.spin = True
+            dx, dy = pos_x - self.aira.rect.x, pos_y - self.aira.rect.y
+            dx2, dy2 = self.lyraspin_posx - self.lyra.rect.x, self.lyraspin_posy - self.lyra.rect.y
 
         if not self.start_super_atk:
             pos_x = self.game.screen_rect.centerx
             pos_y = self.game.screen_rect.centery
-            dx, dy = pos_x - self.aira.rect.centerx, pos_y - self.aira.rect.centery
-            dx2, dy2 = pos_x - self.lyra.rect.centerx, pos_y - self.lyra.rect.centery
+            dx, dy = pos_x - self.aira.rect.x, pos_y - self.aira.rect.y
+            dx2, dy2 = pos_x - self.lyra.rect.x, pos_y - self.lyra.rect.y
 
         dist = math.hypot(dx, dy)
         dist2 = math.hypot(dx2, dy2)
@@ -281,7 +253,7 @@ class Enemy4(pygame.sprite.Sprite):
         self.lyra.rect.y += dy2 * self.spin_speed_lyra
 
 
-        if self.lyra.rect.centerx < 551: # To determine the rect position is already at center
+        if self.lyra.rect.x < 551: # To determine the rect position is already at center
             self.stop_moving = True
             self.spin_speed_aira = 5
             self.super_count = 1
@@ -299,6 +271,8 @@ class Enemy4(pygame.sprite.Sprite):
                 self.super_attack = False
                 self.stop_moving = False
             
+
+
 
     def placement(self, deltatime):
 
@@ -335,7 +309,6 @@ class Enemy4(pygame.sprite.Sprite):
             self.positional = 1
 
 
-        # Call the positional variable
         if self.positional == 6:
             self.lyra_posx, self.lyra_posy = 1050, 300 # default position
             self.aira_posx, self.aira_posy = 50, 300
