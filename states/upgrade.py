@@ -154,7 +154,7 @@ class Upgrade(State, Dialogue):
             self.add_spd_level = 0
             self.add_HP_level = 0
             self.sugar_price = 0
-
+        print(pygame.mouse.get_pos())
 
     def render(self, display):
         display.blit(self.assets["menu"], (self.menu_rect))
@@ -164,7 +164,7 @@ class Upgrade(State, Dialogue):
         self.game.draw_text(display, f"Attack: {int(self.game.settings.current_attackpoints)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 320, 25)
         self.game.draw_text(display, f"Health: {int(self.game.settings.current_healthpoints)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 350, 25)
         self.game.draw_text(display, f"Speed: {int(self.game.settings.current_speed)}", False, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 380, 25)
-        self.game.draw_text(display, f"Total:{int(self.sugar_price)}", False, (0, 0, 14), self.menu_rect.x + 185, self.menu_rect.y + 380, 25)
+        self.game.draw_text(display, f"- {int(self.sugar_price)}", False, (255, 0, 0), 385, 85, 25)
         self.game.draw_text(display, "Torres Ganache", True, (0,0,14), self.menu_rect.x + 30, self.menu_rect.y + 280, 30)
         self.hover_button(display, self.upgrade_rect, self.current_upgrade, self.assets["upgrade"], self.assets["upg_hover"])
 
