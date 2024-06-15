@@ -86,7 +86,7 @@ class Tutorial(State):
                 if self.game.convo_keys["all_key"]:
                     self.exit_state(-1)
                     self.game.tutorial_counter += 1
-                    self.game.tutorial = False
+                    self.game.settings.tutorial = False
                     self.game.save_data()
                     self.tuto_time = 0
 

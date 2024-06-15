@@ -59,7 +59,7 @@ class Upgrade(State, Dialogue):
             if pygame.mouse.get_pressed()[0] and not self.click and not self.add_atk_level >= (7 - self.game.settings.current_atk_level):
                 self.add_atk_level += 1 
                 self.add_atk += 1
-                self.sugar_price += 125
+                self.sugar_price += 250
                 self.click = True
 
             if not pygame.mouse.get_pressed()[0]:
@@ -67,7 +67,7 @@ class Upgrade(State, Dialogue):
 
         if self.attk_down_rect.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click and not self.add_atk <= 0:
-                self.sugar_price -= 125
+                self.sugar_price -= 250
                 self.add_atk_level -= 1
                 self.add_atk -= 1
                 self.click = True
@@ -135,9 +135,6 @@ class Upgrade(State, Dialogue):
                 self.click = False            
 
         if self.apply_upgrades and self.game.current_currency >= self.sugar_price:
-            self.game.settings.current_atk_level += self.atk_level
-            self.game.settings.current_HP_level += self.HP_level
-            self.game.settings.current_spd_level += self.spd_level
             self.game.settings.current_attackpoints += self.add_atk
             self.game.settings.current_healthpoints += self.add_HP
             self.game.settings.current_speed += self.add_spd

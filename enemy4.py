@@ -188,6 +188,7 @@ class Enemy4(pygame.sprite.Sprite):
                         self.vert_string.rect.y += 1 * self.atk_speed
                     if self.vert_string.rect.y >= 0:
                         self.game.offset = self.game.screen_shake(1,10,30)
+                        self.game.sounds.screen_shake.play()
                         self.attack_bool = True
 
                 if self.attack_bool == True: # This code is for the retraction of the strings

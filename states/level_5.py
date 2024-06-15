@@ -83,7 +83,6 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
 
     def update(self, deltatime, player_action):
-        print(self.countdown)
         if player_action["reset_game"]:
             if self.game.settings.first_win5:
                 self.current_sugarcube_value = self.game.settings.sugarcube_value

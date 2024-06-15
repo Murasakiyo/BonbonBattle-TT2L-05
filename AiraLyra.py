@@ -289,9 +289,13 @@ class Twin_ult(pygame.sprite.Sprite):
 
         if self.current_frame == 2:
             self.game.offset = self.game.screen_shake(3,8,30)
+            self.game.sounds.screen_shake.play()
+
 
         if self.current_frame == 9:
             self.game.offset = self.game.screen_shake(3,8,30)
+            self.game.sounds.screen_shake.play()
+
 
         if self.last_frame_update > self.fps:
             if self.current_frame != 29:

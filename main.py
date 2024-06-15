@@ -207,7 +207,6 @@ class Game():
         self.defeat = False
         self.win = False
         self.init_reset = False
-        self.tutorial = True
         self.tutorial_counter = 0
     
     # Louie's freeze ultimate
@@ -232,7 +231,6 @@ class Game():
 
     # Screen shake
     def screen_shake(self, num, intensity, amplitude):
-        self.sounds.screen_shake.play()
         s = -1
         for i in range(0,num):
             for x in range(0, amplitude, intensity):
@@ -354,6 +352,8 @@ class Game():
                 self.skip_cutscenes = loaded_data['skip_cutscenes']
             if 'current_currency' in loaded_data:
                 self.current_currency = loaded_data['current_currency']
+            if 'tutorial' in loaded_data:
+                self.settings.tutorial = loaded_data['tutorial']
             if 'krie_intro' in loaded_data:
                 self.settings.krie_intro = loaded_data['krie_intro']
             if 'stan_dialogue_counter' in loaded_data:

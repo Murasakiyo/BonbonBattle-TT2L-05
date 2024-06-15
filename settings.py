@@ -29,6 +29,8 @@ class Settings:
         # Initialize npc's dialogues
         self.krie_intro = False
         self.stan_dialogue_counter = 0
+        self.tutorial = True
+
 
 
     def gamereset_value(self):
@@ -38,7 +40,7 @@ class Settings:
         self.game.settings.current_healthpoints = 250
         self.game.settings.current_attackpoints = 3
         self.game.settings.current_speed = 400
-        self.game.tutorial = True
+        self.game.settings.tutorial = True
         self.game.settings.krie_intro = False
         self.game.settings.stan_dialogue_counter = 0
         self.game.settings.current_atk_level = 0
