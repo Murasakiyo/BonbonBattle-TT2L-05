@@ -33,7 +33,6 @@ class Player(pygame.sprite.Sprite):
         self.lose = False
         self.win = False
 
-        # print("initialize player")
     
     # to update the player's stats in each level
     def attribute_update(self):

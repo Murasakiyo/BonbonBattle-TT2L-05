@@ -12,6 +12,7 @@ class Level_Options(State):
         self.game = game
         self.enter = pygame.transform.scale(pygame.image.load("sprites/buttons/enter.png"), (100, 44) ).convert_alpha()
         self.backgrounds()
+        
         self.current_time = 0
         self.first_level = First_Stage(self.game)
         self.second_level = Sec_Stage(self.game)
@@ -31,12 +32,14 @@ class Level_Options(State):
         self.index = 0
         self.back = False
 
-        self.text_color = (30, 30, 30)        
+        self.text_color = (30, 30, 30)   
+
+        
         
 
 
     def update(self, deltatime, player_action):
-
+        self.game.stop_bg_music()
         self.show_bg = self.current_background
         self.bg_transition(player_action)
         self.update_keys(player_action, deltatime)
@@ -105,6 +108,7 @@ class Level_Options(State):
         else:
             player_action["transition"] = True
             if self.game.alpha == 255:
+                self.game.play_bg_music(self.game.sounds.circus_bgmusic)
                 self.exit_state(-1)
                 self.index = 0
                 self.back = False
