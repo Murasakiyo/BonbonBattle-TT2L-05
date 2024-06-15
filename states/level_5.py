@@ -127,9 +127,11 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                     self.sounds.enemies_death.play()
                     self.enemy_defeat = True
                     
-                if self.enemy4.aira.rect.centerx >= 549 and self.enemy_defeat:
-                    self.body_group.remove(self.enemy4.lyra)
+                # if self.enemy4.aira.rect.centerx == 550 and self.enemy_defeat:
+                #     self.body_group.remove(self.enemy4.lyra)
 
+                if not self.enemy4.aira.rect.centerx <= 540 and not self.enemy4.aira.rect.centerx >= 560 and self.enemy_defeat:
+                    self.body_group.remove(self.enemy4.lyra)
 
                 if not(self.game.defeat):
                     if not(self.enemy4.HP <= 0):
