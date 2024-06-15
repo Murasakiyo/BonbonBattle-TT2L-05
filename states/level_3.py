@@ -23,7 +23,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.sugarcube_list = pygame.sprite.Group()
         self.fly_swarm = FlyEnemy(self.game)
         self.pause = Pause(self.game)
-        self.sounds = Sounds(self.game)
+        self.sounds = self.game.sounds
 
         self.enemy1 = FrogEnemy(self.game)
         self.tongue = Tongue(self.game)
@@ -36,7 +36,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.characters(200,200)
         self.load_health_bar()
         self.load_moxie_bar()
-        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP, self.enemy1.max_HP)
 
         self.attack_group.add(self.tongue, self.tongue2)
         self.body_group.add(self.enemy1)
@@ -64,9 +64,12 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             
         self.sugarcube_received = 0
 
+        self.end_prev = False
+
     def enter_state(self):
         super().enter_state()
         self.player.attribute_update()
+        self.game.play_bg_music(self.game.sounds.lvl3_bgmusic)
         if self.game.current_level == 2:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
@@ -77,6 +80,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
+            self.game.play_bg_music(self.game.sounds.lvl3_bgmusic)
             if self.game.settings.first_win3:
                 self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.sugarcube_list.empty()
@@ -85,12 +89,12 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             self.enemy1.enemy_reset()
             self.player.reset_player(200,200)
             self.ultimate_reset()
-            self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+            self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP, self.enemy1.max_HP)
             self.load_health_bar()
             self.load_moxie_bar()
             for flies in self.fly_swarm.flylist.sprites():
                 flies.kill()
-                self.enemy_health_update(flies.rect.x,flies.rect.y, flies.HP)
+                self.enemy_health_update(flies.rect.x,flies.rect.y, flies.HP, flies.max_HP)
             if self.enemy_defeat:
                 self.attack_group.add(self.tongue, self.tongue2)
                 self.body_group.add(self.enemy1)
@@ -164,7 +168,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                                     self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
                                     self.enemy_collisions(player_action, self.body_group, self.attack_group, self.enemy1, 
                                                 self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
-                                self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+                                self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP, self.enemy1.max_HP)
                         
                         
                         for enemy in self.body_group.sprites():
@@ -251,7 +255,12 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
+            if self.end_prev == False:
+                self.game.stop_bg_music()
+                self.end_prev = True
             self.ending_state(display)
             if self.game.win:
                 self.game.settings.first_win3 = True
                 self.game.current_level = max(self.game.current_level, 3)
+        else:
+            self.end_prev = False

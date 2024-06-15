@@ -13,6 +13,7 @@ class SaveDataSystem:
             'speed': self.game.settings.current_speed,
             'skip_cutscenes': self.game.skip_cutscenes,
             'current_currency': self.game.current_currency,
+            'stan_dialogue_counter': self.game.settings.stan_dialogue_counter,
             'krie_intro': self.game.settings.krie_intro,
             'tutorial': self.game.tutorial
         }
@@ -26,8 +27,13 @@ class SaveDataSystem:
             'skip_cutscenes': False,
             'current_currency': 0,
             'krie_intro': False,
-            'tutorial': True
+            'tutorial': True,
+            'stan_dialogue_counter': self.game.settings.stan_dialogue_counter,
+            'upgrade_atk_lvl': self.game.settings.current_atk_level,
+            'upgrade_HP_lvl': self.game.settings.current_HP_level,
+            'upgrade_spd_lvl': self.game.settings.current_spd_level
         }
+    
 
     # serialize player_data and save to a file
     def save_data_file(self):
@@ -37,11 +43,9 @@ class SaveDataSystem:
 
     # deserialize player_data and load from the file
     def load_data_file(self):
-        try:
-            with open(self.file_name, 'rb') as file:
-                return pickle.load(file)
-        except FileNotFoundError: 
-            return self.default_value()
+        # try:
+        with open(self.file_name, 'rb') as file:
+            return pickle.load(file)
         
 
 

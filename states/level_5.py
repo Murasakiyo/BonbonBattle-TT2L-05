@@ -25,19 +25,15 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.support_dolls = pygame.sprite.Group()
         self.sugarcube_list = pygame.sprite.Group()
         self.particle_group = pygame.sprite.Group()
-        self.sounds = Sounds(self.game)
 
         self.ultimates()
         self.characters(450, 200)
         self.enemy4 = Enemy4(self.game, self.player.rect.centerx, self.player.rect.centery)
         self.load_health_bar()
         self.load_moxie_bar()
-        self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP)
+        self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP, self.enemy4.max_HP)
         self.enemy_moxie_update(self.enemy4.moxie, self.enemy4.max_moxie)
         self.freeze_screen = pygame.image.load("sprites/frozen_screen.png").convert_alpha()
-
-
-
 
         self.body_group = pygame.sprite.Group()
         self.attack_group = pygame.sprite.Group()
@@ -77,10 +73,13 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
     def enter_state(self):
         super().enter_state()
         self.player.attribute_update()
+        self.game.play_bg_music(self.game.sounds.lvl5_bgmusic)
         if self.game.current_level == 4:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
             self.current_sugarcube_value = self.game.settings.sugarcube_value
+        self.end_prev = False
+
 
     def update(self, deltatime, player_action):
         print(self.player.attackpoints)
@@ -88,9 +87,10 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
             if self.game.settings.first_win5:
                 self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.player.reset_player(450, 200)
+            self.game.play_bg_music(self.game.sounds.lvl5_bgmusic)
             self.enemy4.enemy_reset()
             self.ultimate_reset()
-            self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP)
+            self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP, self.enemy4.max_HP)
             self.enemy_moxie_update(self.enemy4.moxie, self.enemy4.max_moxie)
             self.load_health_bar()
             self.load_moxie_bar()
@@ -124,7 +124,6 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 # Update player and enemies
                 self.player.update(deltatime, player_action)
                 self.player_attacking_airalyra(deltatime, self.body_group, self.enemy4, self.enemy4.aira, self.enemy4.lyra)
-                self.cooldown_for_attacking(deltatime)
                 self.health_update()
                 self.moxie_update(player_action)
                 self.cooldown_for_attacked(deltatime)
@@ -136,9 +135,11 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                     self.sounds.enemies_death.play()
                     self.enemy_defeat = True
                     
-                if self.enemy4.aira.rect.centerx >= 549 and self.enemy_defeat:
-                    self.body_group.remove(self.enemy4.lyra)
+                # if self.enemy4.aira.rect.centerx == 550 and self.enemy_defeat:
+                #     self.body_group.remove(self.enemy4.lyra)
 
+                if not self.enemy4.aira.rect.centerx <= 540 and not self.enemy4.aira.rect.centerx >= 560 and self.enemy_defeat:
+                    self.body_group.remove(self.enemy4.lyra)
 
                 if not(self.game.defeat):
                     if not(self.enemy4.HP <= 0):
@@ -154,7 +155,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                         #     self.body_group.remove(self.enemy4.lyra)
                         #     self.enemy_defeat = True
 
-                    self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP)
+                    self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP, self.enemy4.max_HP)
                     self.enemy_moxie_update(self.enemy4.moxie, self.enemy4.max_moxie)
                        
                     if self.game.win:
@@ -251,10 +252,15 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
         
         if self.end:
+            if self.end_prev == False:
+                self.game.stop_bg_music()
+                self.end_prev = True
             self.ending_state(display)
             if self.game.win:
                 self.game.settings.first_win4 = True
                 self.game.current_level = max(self.game.current_level, 5)
+        else:
+            self.end_prev = False
 
 
 

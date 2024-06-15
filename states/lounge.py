@@ -6,7 +6,6 @@ from states.level_choose import *
 from torres import *
 from stanley import *
 from camera import *
-from music import Sounds
 
 class Lounge(State, Dialogue):
     def __init__(self, game):
@@ -33,16 +32,15 @@ class Lounge(State, Dialogue):
         self.lvlbtn_rect = self.level_button.get_rect()
         self.init_talk = False
         self.finish_talk = False
-
         self.interact_timer = 0
+        self.game.play_bg_music(self.game.sounds.circus_bgmusic)
 
-        # self.offset = pygame.math.Vector2((0,0))
-        self.sounds = Sounds(self.game)
-        self.sounds.lounge_bgmusic.play(-1)
 
     def update(self, deltatime, player_action):
+        self.game.play_circus_music = True
         self.player.speed = 400
-        # Restrict the players keys 
+
+        # Restrict the players keys
         player_action["up"], player_action["down"] = False, False
         player_action["ultimate"], player_action["attack"], player_action["defend"],= False, False, False
         self.stan.update_lounge(deltatime, self.player, player_action)
@@ -62,13 +60,15 @@ class Lounge(State, Dialogue):
             for actions in player_action:
                 if not(player_action["next"]) and not(player_action["go"]):
                     player_action[actions] = False
-            if self.conversation.counter == 0:
+
+            if self.game.settings.stan_dialogue_counter == 0:
                 self.conversation.update_firstconvo(deltatime, player_action)
                 self.finish_talk = self.conversation.end_convo(self.conversation.convo)
                 if self.finish_talk:
                     self.init_talk = False
                     self.finish_talk = False
-            if self.conversation.counter > 0:
+
+            if self.game.settings.stan_dialogue_counter > 0:
                 self.finish_talk = self.conversation.update_options(deltatime, player_action, self.player)
                 if self.finish_talk:
                     self.init_talk = False
@@ -112,7 +112,6 @@ class Lounge(State, Dialogue):
             rect.x, rect.y = offrect.x + rectx, offrect.y - recty
             if player_action["E"]:
                 player_action["transition"] = True
-                self.sounds.lounge_bgmusic.stop()
 
             if player_action["transition"]:
                 player_action["right"], player_action["left"] = False, False
@@ -141,7 +140,6 @@ class Stan_Dialogue():
        warn_reset = ["Through this reset, your stats will go back to", "its default value.", "But! it will be compensated with a little", "bit of sugarcube.", 
               "Are you sure you want to go through","with this?", " "]
        cheeky = ["Alright~ But don't say I didn't warn you so~", " "]
-
        self.choose_reset = Dialogue(self.game, "black", 24, ask)
        self.ask_for_reset = Dialogue(self.game, "black", 24, warn_reset)
        self.reset_confirm = Dialogue(self.game, "black", 24, cheeky)
@@ -206,7 +204,6 @@ class Stan_Dialogue():
             else:
                 self.reset_counter = 3
 
-        # LATER HAVE TO CHANGE FOLLOWING FLO'S PULL REQUEST
         if self.reset_counter == 3:
             if not self.thi_choice == 1 and not self.thi_choice == 2:
                 self.confirm.update(deltatime, player_action)
@@ -214,19 +211,19 @@ class Stan_Dialogue():
             if self.thi_choice == 1:
                 self.stan_attack_anim = True
                 if self.attack:
-                    current_set = self.game.settings.current_attackpoints
+                    current_set = self.game.settings.current_atk_level
                     self.game.settings.current_attackpoints = 3
                     player.attribute_update()
                     self.attack = False
                     self.reset_counter = 4
                 if self.health:
-                    current_set = self.game.settings.current_healthpoints
+                    current_set = self.game.settings.current_HP_level
                     self.game.settings.current_healthpoints = 250
                     player.attribute_update()
                     self.health = False
                     self.reset_counter = 4
                 if self.speed:
-                    current_set = self.game.settings.current_speed
+                    current_set = self.game.settings.current_spd_level
                     self.game.settings.current_speed = 400
                     player.attribute_update()
                     self.speed = False
@@ -240,8 +237,7 @@ class Stan_Dialogue():
                     self.reset_confirm.dialogue_update(player_action)
                     self.reset_confirm.finish()
                 else:
-                    # for x in range(2):
-                    self.game.current_currency += current_set + (3* 50)
+                    self.game.current_currency += (current_set * 50)
                     self.finish = True
                     return self.finish
 
@@ -299,7 +295,6 @@ class Stan_Dialogue():
                     self.finish = True
                     return self.finish
                     
-
                 
     def reset_stats_reset(self):
         self.choose_reset.reset_dialogue()
@@ -330,11 +325,12 @@ class Stan_Dialogue():
         if talk.finish_convo:
             finish =True
         if finish:
-            self.counter += 1
+            self.game.settings.stan_dialogue_counter += 1
             return finish
 
     def render(self, display):
-        if self.counter < 0:
+
+        if self.game.settings.stan_dialogue_counter == 0:
             if not(self.convo.finish_convo):
                 if self.convo.activetext == 1:
                     self.current_image = self.game.asset["stanley"]["happy"]
@@ -351,7 +347,7 @@ class Stan_Dialogue():
                 display.blit(self.current_image, (0,0))
                 self.convo.draw_text(display)
 
-        if self.counter > 0:
+        if self.game.settings.stan_dialogue_counter > 0:
             self.options.render(display)
             if self.choice == 1:
                 if self.reset_counter == 4:

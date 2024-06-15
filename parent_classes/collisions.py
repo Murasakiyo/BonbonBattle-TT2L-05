@@ -115,7 +115,7 @@ class Collisions():
 
 
     def player_attacking_airalyra(self, deltatime, body_group, enemy, aira, lyra):
-        
+        self.cooldown_for_attacking(deltatime)
         if self.player.attack == True and not self.player.deal_damage:
             if pygame.sprite.spritecollide(self.player, body_group, False): #first check: rectangular collision
                 if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask):

@@ -5,7 +5,7 @@ from torres import *
 from states.level_1 import First_Stage
 from states.pause_menu import Pause
 from states.first_cutscene import Story
-from states.lounge import Lounge
+from states.lounge import Stan_Dialogue
 from states.level_choose import Level_Options
 from states.circus import Circus
 from parent_classes.particleeffect import *
@@ -16,6 +16,10 @@ from savingsystem import *
 from itertools import repeat
 
 class Game():
+    # Create just one instance of a class (Singleton Pattern)
+    sounds = Sounds()
+    current_bgmusic = ""
+
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Bonbon Battle: Treading Through Cotton Woods")
@@ -34,7 +38,7 @@ class Game():
         self.start = False
         self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
         self.settings = Settings(self)
-        self.sounds = Sounds(self)
+        self.sounds = Game.sounds
         self.backgrounds()
         self.dialogue_sprites()
         self.buttons()
@@ -50,16 +54,15 @@ class Game():
         self.load_states()
         self.battle_state()
 
-        self.first_game = False
         self.reset_game = False
         self.skip_cutscenes = False
         self.current_currency = 0
         self.current_level = 0
         self.saving_system = SaveDataSystem('player_data.pickle', self)
         self.load_data() # load saved data when start a game
-        
 
         
+    
     # Game loop
     def game_loop(self):
         while self.play:
@@ -69,7 +72,6 @@ class Game():
             self.render() # render to screen
             self.clock.tick((60))
             
-
 
     # First state/room in the game (can be changed)
     def load_states(self):
@@ -87,8 +89,17 @@ class Game():
         self.open_file.close()
         return text
     
+    # handle bg music without including PAUSE MENU
+    def play_bg_music(self, bg_music):
+        Game.current_bgmusic = bg_music
+        self.sounds.play_bg(bg_music)
 
-    # All key events are here. Receive input from player, display output for player
+    def stop_bg_music(self):
+        Game.current_bgmusic = None
+        self.sounds.stop_bg()
+
+        
+    # All key events are here. Receive input from_ player, display output for player
     def get_events(self):
 
         for event in pygame.event.get():
@@ -334,26 +345,32 @@ class Game():
         print(f"Saving data: {player_data}")
 
     def load_data(self):
-        if not self.first_game:
-            loaded_data = self.saving_system.load_data_file()
-            if loaded_data: 
-                if 'current_level' in loaded_data:
-                    self.current_level = loaded_data['current_level']
-                if 'healthpoints' in loaded_data:
-                    self.settings.current_healthpoints = loaded_data['healthpoints']
-                if 'attackpoints' in loaded_data:
-                    self.settings.current_attackpoints = loaded_data['attackpoints']
-                if 'speed' in loaded_data:
-                    self.settings.current_speed = loaded_data['speed']
-                if 'skip_cutscenes' in loaded_data:
-                    self.skip_cutscenes = loaded_data['skip_cutscenes']
-                if 'current_currency' in loaded_data:
-                    self.current_currency = loaded_data['current_currency']
-                if 'krie_intro' in loaded_data:
-                    self.settings.krie_intro = loaded_data['krie_intro']
-                if 'tutorial' in loaded_data:
-                    self.tutorial = loaded_data['tutorial']
-        print(f"loaded data: lvl- {self.current_level}, health- {self.settings.current_healthpoints}, attack- {self.settings.current_attackpoints}, speed- {self.settings.current_speed}")
+
+        # if not self.first_game:
+        loaded_data = self.saving_system.load_data_file()
+        if loaded_data: 
+            if 'current_level' in loaded_data:
+                self.current_level = loaded_data['current_level']
+            if 'healthpoints' in loaded_data:
+                self.settings.current_healthpoints = loaded_data['healthpoints']
+            if 'attackpoints' in loaded_data:
+                self.settings.current_attackpoints = loaded_data['attackpoints']
+            if 'speed' in loaded_data:
+                self.settings.current_speed = loaded_data['speed']
+            if 'skip_cutscenes' in loaded_data:
+                self.skip_cutscenes = loaded_data['skip_cutscenes']
+            if 'current_currency' in loaded_data:
+                self.current_currency = loaded_data['current_currency']
+            if 'krie_intro' in loaded_data:
+                self.settings.krie_intro = loaded_data['krie_intro']
+            if 'stan_dialogue_counter' in loaded_data:
+                self.settings.stan_dialogue_counter = loaded_data['stan_dialogue_counter']
+            if 'upgrade_atk_lvl' in loaded_data:
+                self.settings.current_atk_level = loaded_data['upgrade_atk_lvl']
+            if 'upgrade_HP_lvl' in loaded_data:
+                self.settings.current_HP_level = loaded_data['upgrade_HP_lvl']
+            if 'upgrade_spd_lvl' in loaded_data:
+                self.settings.current_spd_level = loaded_data['upgrade_spd_lvl']
         
 if __name__ == "__main__":
     game = Game()
