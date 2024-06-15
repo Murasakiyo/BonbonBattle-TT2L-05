@@ -45,7 +45,6 @@ class Game_Settings(State):
                 self.click = True
                 if self.last_warn:
                     self.game.reset_game = True
-                    self.game.first_game = True
                     self.settings.gamereset_value()
                     self.exit_state(-1)
             if not pygame.mouse.get_pressed()[0]:

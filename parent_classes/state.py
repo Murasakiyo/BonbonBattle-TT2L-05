@@ -12,6 +12,9 @@ class State():
     def render(self,surface):
         pass
 
+    def runsonce_when_end(self):
+        pass
+
     def enter_state(self):
         if len(self.game.state_stack) > 1:
             self.prev_state = self.game.state_stack[-1]
@@ -120,6 +123,8 @@ class State():
                 if self.current_time > 1:
                     self.end = True
                     self.current_time = 0
+        
+
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self, game):

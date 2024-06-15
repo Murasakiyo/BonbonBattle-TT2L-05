@@ -26,4 +26,3 @@ class SugarcubeSpawn():
                 self.sounds.collect_sugarcube.play()
                 sugarcube.collect(self.player)
                 self.sugarcube_received += 1
-                # print(f"Remaining sugarcubes: {len(self.sugarcube_list)}")

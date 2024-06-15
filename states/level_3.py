@@ -23,7 +23,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.sugarcube_list = pygame.sprite.Group()
         self.fly_swarm = FlyEnemy(self.game)
         self.pause = Pause(self.game)
-        self.sounds = Sounds(self.game)
+        self.sounds = self.game.sounds
 
         self.enemy1 = FrogEnemy(self.game)
         self.tongue = Tongue(self.game)
@@ -64,9 +64,12 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             
         self.sugarcube_received = 0
 
+        self.end_prev = False
+
     def enter_state(self):
         super().enter_state()
         self.player.attribute_update()
+        self.game.play_bg_music(self.game.sounds.lvl3_bgmusic)
         if self.game.current_level == 2:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
@@ -77,6 +80,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
     def update(self, deltatime, player_action):
 
         if player_action["reset_game"]:
+            self.game.play_bg_music(self.game.sounds.lvl3_bgmusic)
             if self.game.settings.first_win3:
                 self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.sugarcube_list.empty()
@@ -272,7 +276,12 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
+            if self.end_prev == False:
+                self.game.stop_bg_music()
+                self.end_prev = True
             self.ending_state(display)
             if self.game.win:
                 self.game.settings.first_win3 = True
                 self.game.current_level = max(self.game.current_level, 3)
+        else:
+            self.end_prev = False

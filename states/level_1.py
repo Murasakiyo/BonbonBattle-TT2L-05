@@ -31,7 +31,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.tongue = Tongue(self.game)
         self.tongue2 = Tongue2(self.game)
         self.pause = Pause(self.game)
-        self.sounds = Sounds(self.game)
+        self.sounds = self.game.sounds
+
         self.ultimates()
         self.characters(200,200)
         self.load_health_bar()
@@ -73,11 +74,13 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.tuto6_done = False
         self.show_moxie = False
         self.overlay = pygame.image.load("sprites/moxie_show.png").convert_alpha()
+        self.end_prev = False
 
 
     # method overriding
     def enter_state(self):
-        super().enter_state()  # Call parent class's method (enter_state method from the State class)
+        super().enter_state()  # Call parent class's method (to update the level)
+        self.game.play_bg_music(self.game.sounds.lvl1_bgmusic)
         self.player.attribute_update()
         if self.game.current_level == 0:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
@@ -86,8 +89,8 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
 
     def update(self, deltatime, player_action):
-
         if player_action["reset_game"]:
+            self.game.play_bg_music(self.game.sounds.lvl1_bgmusic)
             if self.game.settings.first_win1:
                 self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.enemy1.enemy_reset()
@@ -115,7 +118,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.exit_state(-1)
 
         if self.end:
-            self.button_go()
+            self.button_go()  
 
         self.game_over(player_action)
         self.game_restart(player_action)
@@ -228,6 +231,9 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
+            if self.end_prev == False:
+                self.game.stop_bg_music()
+                self.end_prev = True
             self.ending_state(display)
             if self.game.win:
                 self.game.settings.first_win1 = True
@@ -286,6 +292,9 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                         self.tuto_time = 0
             if self.tuto6_done and not self.body_group.sprites():
                 new_state.enter_state()
+        else:
+            self.end_prev = False
+            
 
 
 
