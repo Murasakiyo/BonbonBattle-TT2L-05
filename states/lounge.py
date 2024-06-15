@@ -238,6 +238,10 @@ class Stan_Dialogue():
                     self.reset_confirm.finish()
                 else:
                     self.game.current_currency += (current_set * 50)
+                    self.game.settings.current_spd_level = 0
+                    self.game.settings.current_HP_level = 0
+                    self.game.settings.current_atk_level = 0
+                    self.game.save_data()
                     self.finish = True
                     return self.finish
 

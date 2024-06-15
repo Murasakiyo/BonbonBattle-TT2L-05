@@ -71,7 +71,7 @@ class Aira(pygame.sprite.Sprite):
             self.fps = 0.3
             self.show_attack = False
             self.defeat_time += deltatime
-            if self.defeat_time > 1:
+            if self.defeat_time > 0.8:
                 self.current_anim_list = self.death_sprites
 
         
@@ -193,6 +193,7 @@ class Lyra(pygame.sprite.Sprite):
                 self.fps = 0.1
                 self.dance_time = 0
                 self.current_anim_list = self.spin_sprites
+                
         if death:
             self.current_anim_list = self.run_sprites
             self.fps = 0.1

@@ -1,15 +1,7 @@
 import pygame
 import sys
 from states.menu import MainMenu
-from torres import *
-from states.level_1 import First_Stage
-from states.pause_menu import Pause
-from states.first_cutscene import Story
-from states.lounge import Stan_Dialogue
-from states.level_choose import Level_Options
-from states.circus import Circus
 from parent_classes.particleeffect import *
-# from parent_classes.ultimate_action import *
 from settings import Settings
 from music import Sounds
 from savingsystem import *
@@ -343,11 +335,10 @@ class Game():
     def save_data(self):
         self.saving_system.save_data_file()
         player_data = self.saving_system.get_save_data()
-        print(f"Saving data: {player_data}")
+        # print(f"Saving data: {player_data}")
 
     def load_data(self):
 
-        # if not self.first_game:
         loaded_data = self.saving_system.load_data_file()
         if loaded_data: 
             if 'current_level' in loaded_data:

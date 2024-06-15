@@ -1,6 +1,5 @@
 import pygame
 import spritesheet
-import copy
 
 
 class Player(pygame.sprite.Sprite):
@@ -28,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.healthpoints = self.game.settings.current_healthpoints
         self.max_health = self.game.settings.current_healthpoints
         self.attackpoints = 3
-        self.moxiepoints = 500
+        self.moxiepoints = 0
         self.speed = self.game.settings.current_speed
         self.lose = False
         self.win = False
@@ -41,7 +40,6 @@ class Player(pygame.sprite.Sprite):
         self.speed = self.game.settings.current_speed
 
     def update(self,deltatime,player_action):
-        # print(f"current speed:{self.speed}, current attack: {self.attackpoints}, current health: {self.healthpoints}")
         
         if self.game.defeat and not(self.game.win):
             self.lose = True
@@ -128,7 +126,7 @@ class Player(pygame.sprite.Sprite):
 
     def reset_player(self, position_x, position_y):
         self.healthpoints = self.game.settings.current_healthpoints
-        self.moxiepoints = 500
+        self.moxiepoints = 0
         self.rect.x, self.rect.y = position_x, position_y
         self.image = self.right_sprites[0]
         self.win = False
@@ -247,7 +245,7 @@ class Player(pygame.sprite.Sprite):
         self.attack_right, self.attack_left = [], []
         self.defend_sprites = []
         self.lose_sprites, self.win_sprites = [], []
-        torres = pygame.image.load("sprites/torres_sp1.png").convert()
+        torres = pygame.image.load("sprites/torres_sp.png").convert()
         self.torres_walk = pygame.transform.scale(torres, (1038,1200)).convert_alpha()
         SP = spritesheet.Spritesheet(self.torres_walk)
 

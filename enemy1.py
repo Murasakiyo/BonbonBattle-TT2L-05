@@ -126,7 +126,6 @@ class FrogEnemy(pygame.sprite.Sprite):
 
         self.rect.centerx += self.dx * self.speed
         self.rect.centery += self.dy * self.speed
-        # print(self.dx)
 
 
     def load_sprites(self):

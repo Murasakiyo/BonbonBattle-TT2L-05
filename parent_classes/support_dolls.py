@@ -36,7 +36,6 @@ class Support():
         self.step_distance = 0
         self.min_distance = 400
         self.max_distance = 500
-        # print(self.follower_vector)
 
 
         # distance_to returns the pythagorean distance between two points

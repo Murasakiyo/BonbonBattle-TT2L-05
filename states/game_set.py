@@ -36,7 +36,6 @@ class Game_Settings(State):
         self.init_transition = False
 
     def update(self, deltatime, player_action):
-        # print(len(self.warn_list))
         self.bg_transition(player_action)
 
         if self.reset_rect.collidepoint(self.game.mouse):

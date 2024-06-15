@@ -2,17 +2,8 @@ import pygame
 from parent_classes.state import State
 from states.first_cutscene import Story
 from states.game_set import Game_Settings
-from states.level_choose import Level_Options
 from states.lounge import Lounge
-from states.level_1 import First_Stage
-from states.level_2 import Sec_Stage
-from states.level_3 import Trio_Stage
-from states.level_4 import Quad_Stage
-from states.level_5 import Penta_Stage
-from states.level_1 import First_Stage
-from states.level_2 import Sec_Stage
 from settings import Settings
-from music import Sounds
 
 
 class MainMenu(State):

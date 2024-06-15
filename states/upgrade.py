@@ -3,7 +3,6 @@ from parent_classes.state import *
 from parent_classes.dialogue import *
 from torres import *
 from krie import *
-from music import Sounds
 
 class Upgrade(State, Dialogue):
     def __init__(self, game):
@@ -44,7 +43,7 @@ class Upgrade(State, Dialogue):
 
 
     def update(self, deltatime, player_action):
-        print(f"atk:{self.game.settings.current_atk_level}, HP:{self.game.settings.current_HP_level}, spd:{self.game.settings.current_spd_level}, current_atk:{self.add_atk_level}, current_spd:{self.add_spd_level}, current_hp:{self.add_HP_level}")
+        # print(f"atk:{self.game.settings.current_atk_level}, HP:{self.game.settings.current_HP_level}, spd:{self.game.settings.current_spd_level}, current_atk:{self.add_atk_level}, current_spd:{self.add_spd_level}, current_hp:{self.add_HP_level}")
 
         self.game.play_circus_music = True
 
