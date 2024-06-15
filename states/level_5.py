@@ -15,7 +15,7 @@ from music import Sounds
 
 
 
-class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions):
+class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, ParticleFunctions, SugarcubeSpawn):
     def __init__(self, game):
         super().__init__(game)
         self.camera = CameraGroup(self.game)
@@ -25,6 +25,16 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.support_dolls = pygame.sprite.Group()
         self.sugarcube_list = pygame.sprite.Group()
         self.particle_group = pygame.sprite.Group()
+        self.sounds = Sounds(self.game)
+
+        self.ultimates()
+        self.characters(450, 200)
+        self.enemy4 = Enemy4(self.game, self.player.rect.centerx, self.player.rect.centery)
+        self.load_health_bar()
+        self.load_moxie_bar()
+        self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP)
+        self.enemy_moxie_update(self.enemy4.moxie, self.enemy4.max_moxie)
+
 
 
 
@@ -32,12 +42,9 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.attack_group = pygame.sprite.Group()
         self.enemy_group = pygame.sprite.Group()
 
-        self.ultimates()
-        self.characters(450, 200)
-        self.load_health_bar()
-        self.load_moxie_bar()
-        self.enemy4 = Enemy4(self.game, self.player.rect.centerx, self.player.rect.centery)
-        # self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
+        self.body_group.add(self.enemy4.aira, self.enemy4.lyra)
+        self.attack_group.add(self.enemy4.horiz_string, self.enemy4.vert_string, self.enemy4.twin_ult)
+        
 
 
         self.deal_damage = True
@@ -73,14 +80,15 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
             # if self.game.settings.first_win1:
             #     self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.player.reset_player(200,200)
+            self.enemy4.enemy_reset()
             self.ultimate_reset()
-            # self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+            self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP)
+            self.enemy_moxie_update(self.enemy4.moxie, self.enemy4.max_moxie)
             self.load_health_bar()
             self.load_moxie_bar()
             if self.enemy_defeat:
-                # self.attack_group.add(self.tongue, self.tongue2)
-                # self.body_group.add(self.enemy1)
-                # self.camera.add(self.enemy1)
+                self.body_group.add(self.enemy4.aira, self.enemy4.lyra)
+                self.attack_group.add(self.enemy4.horiz_string, self.enemy4.vert_string, self.enemy4.twin_ult)
                 self.enemy_defeat = False
             self.sugarcube_list.empty()
             self.game.start = False
@@ -98,30 +106,69 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
             if player_action["reset_game"] == False:
                 self.exit_state(-1)
 
-        # self.game_over(player_action)
+        self.game_over(player_action)
         self.game_restart(player_action)
         # self.ending_options(deltatime, player_action, 4, 3)
 
         if self.game.start == True:
-            if self.game.ult == False:
+            if not(self.game.ult):
 
                 # Update player and enemies
                 self.player.update(deltatime, player_action)
+                self.player_attacking_airalyra(deltatime, self.body_group, self.enemy4, self.enemy4.aira, self.enemy4.lyra)
                 self.health_update()
                 self.moxie_update(player_action)
-                # self.enemy_health_update(self.enemy4.rect.x, self.enemy4.rect.y, self.enemy4.HP)
-
-                self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery)
+                self.cooldown_for_attacked(deltatime)
                 self.update_ultimate(deltatime, player_action)
+                self.game.frozen()
+
+                # for enemy in self.body_group.sprites():
+                if self.enemy4.HP <= 0 and not(self.enemy_defeat):
+                    self.sounds.enemies_death.play()
+                    self.enemy_defeat = True
+                    
+                if self.enemy4.aira.rect.centerx >= 549 and self.enemy_defeat:
+                    self.body_group.remove(self.enemy4.lyra)
 
 
-                # self.get_hit(deltatime, player_action)  
+                if not(self.game.defeat):
+                    if not(self.enemy4.HP <= 0):
+                        if not(self.game.freeze):
+                            self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery)
+                            self.AiraLyra_collisions(player_action, self.body_group, self.attack_group, self.enemy4.vert_string, self.enemy4.horiz_string, self.enemy4.string_damage,
+                                                    self.enemy4.body_damage, self.enemy4.ult_damage, self.enemy4.twin_ult, self.enemy4, self.enemy4.aira, self.enemy4.lyra)
+
+                    
+                        # for enemy in self.body_group.sprites():
+                        # if self.enemy4.HP <= 0 and not(self.enemy_defeat):
+                        #     self.sounds.enemies_death.play()
+                        #     self.body_group.remove(self.enemy4.lyra)
+                        #     self.enemy_defeat = True
+
+                    self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP)
+                    self.enemy_moxie_update(self.enemy4.moxie, self.enemy4.max_moxie)
+                       
+ 
+
+                    if self.game.win:
+                        self.snow_value = 0
+                        self.spawn_particles(200, deltatime)
+
+
+                if self.enemy4.HP <= 0:
+                    self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery)
+
+
                 if not(self.end):
-                        if player_action["pause"]:
-                            new_state = self.pause
-                            new_state.enter_state()
-                            self.game.start = False 
+                    if player_action["pause"]:
+                        new_state = self.pause
+                        new_state.enter_state()
+                        self.game.start = False 
 
+                    if self.init_stan:
+                        if self.stan.attack:
+                            if not(self.enemy4.ult_attack):
+                                self.enemy4.moxie -= 1
             else:
                 # if self.game.ult:
                 #     if self.init_stan:
@@ -164,18 +211,26 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         if self.game.defeat:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
         self.camera.custom_draw(display)
+
+        if not self.enemy4.HP <= 0:
+            self.enemy4.render(display)
+
+        if not(self.enemy4.start_ult_atk):
+            for enemies in self.body_group:
+                if self.body_group.sprites():
+                    enemies.render(display)
+
         display.blit(pygame.transform.scale(self.game.circus_asset, (1200,600)), (0,0))
-        self.enemy4.render(display)
 
         self.health_render(display)
         self.moxie_render(display)
-
         if self.game.start:
-            # self.boss_health_render(display)
+            self.boss_health_render(display)
             self.sugarcube_list.draw(display)
         
         if self.game.ult:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
+        self.particle_group.draw(display)
         self.ultimate_display(display)
     
         if self.game.start == False:
@@ -191,37 +246,3 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
 
 
-
-    def get_hit(self, deltatime, player_action):
-        if self.player.take_damage == False:
-            if any(self.enemy4.aira.rect.clipline(*line) for line in self.player.lines):
-                self.player.healthpoints -= 20
-                self.player.take_damage = True
-
-        # if self.player.take_damage == False:
-        #     if any(self.enemy4.vert_string.clipline(*line) for line in self.player.lines):
-        #         self.player.healthpoints -= 10
-        #         # self.enemy4.moxie += 20
-        #         self.player.take_damage = True
-
-        if self.player.take_damage == False:
-            if any(self.enemy4.horiz_string.clipline(*line) for line in self.player.lines):
-                self.player.healthpoints -= 10
-                # self.enemy4.moxie += 20
-                self.player.take_damage = True
-
-        if self.player.take_damage:
-            self.countdown += deltatime
-            if self.countdown > 2:
-                self.player.take_damage = False
-                self.countdown = 0
-
-        if self.deal_damage:
-            if player_action["attack"]:
-                self.enemy4.HP -= 150
-                self.deal_damage = False
-        if not self.deal_damage:
-            self.attack_cooldown += deltatime
-            if self.attack_cooldown > 2:
-                self.deal_damage = True
-                self.attack_cooldown = 0

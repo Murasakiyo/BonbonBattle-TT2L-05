@@ -6,11 +6,11 @@ class EnemyHealthBar():
 
     def enemy_health_update(self, enemyrectx, enemyrecty, HP):
         self.enemy_health = pygame.Rect(enemyrectx, enemyrecty, HP, 10)
-        self.boss_health = pygame.Rect(self.game.screen_rect.x + 600, self.game.screen_rect.y + 10, HP, 40)
+        self.boss_health = pygame.Rect(self.game.screen_rect.x + 750, self.game.screen_rect.y + 10, (300 - HP), 40)
 
-    def enemy_moxie_update(self, moxie):
+    def enemy_moxie_update(self, moxie, max_moxie):
         self.enemy_moxie_rect = pygame.Rect(1060, 150, 30, 250)
-        self.enemy_moxie_bar = pygame.Rect(1060, 150, 30, 250 - ((moxie/300) * 250))
+        self.enemy_moxie_bar = pygame.Rect(1060, 150, 30, 250 - ((moxie/max_moxie) * 250))
         
 
     def enemy_health_render(self, display, enemyrectx, enemyrecty):
@@ -18,8 +18,8 @@ class EnemyHealthBar():
         pygame.draw.rect(display, "green", self.enemy_health)
     
     def boss_health_render(self, display):
-        pygame.draw.rect(display, "black", (self.game.screen_rect.x + 600, self.game.screen_rect.y + 10, 300, 40))
-        pygame.draw.rect(display, "red", self.boss_health)
+        pygame.draw.rect(display, "red", (self.game.screen_rect.x + 750, self.game.screen_rect.y + 10, 300, 40))
+        pygame.draw.rect(display, "black", self.boss_health)
         pygame.draw.rect(display, "purple", self.enemy_moxie_rect)
         pygame.draw.rect(display, "black", self.enemy_moxie_bar)
 
