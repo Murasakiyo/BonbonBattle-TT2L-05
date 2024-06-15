@@ -15,20 +15,8 @@ class SaveDataSystem:
             'current_currency': self.game.current_currency,
             'stan_dialogue_counter': self.game.settings.stan_dialogue_counter,
             'krie_intro': self.game.settings.krie_intro,
-            'tutorial': self.game.tutorial
-        }
-    
-    def default_value(self):
-        return {
-            'current_level': 0,
-            'healthpoints': 250,
-            'attackpoints': 3,
-            'speed': 400,
-            'skip_cutscenes': False,
-            'current_currency': 0,
-            'krie_intro': False,
-            'tutorial': True,
-            'stan_dialogue_counter': self.game.settings.stan_dialogue_counter,
+            'tutorial': self.game.tutorial,
+            'end_level': self.game.settings.first_win5,
             'upgrade_atk_lvl': self.game.settings.current_atk_level,
             'upgrade_HP_lvl': self.game.settings.current_HP_level,
             'upgrade_spd_lvl': self.game.settings.current_spd_level

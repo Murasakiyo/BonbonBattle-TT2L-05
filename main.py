@@ -71,6 +71,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
+
             
 
     # First state/room in the game (can be changed)
@@ -371,6 +372,8 @@ class Game():
                 self.settings.current_HP_level = loaded_data['upgrade_HP_lvl']
             if 'upgrade_spd_lvl' in loaded_data:
                 self.settings.current_spd_level = loaded_data['upgrade_spd_lvl']
+            if 'end_level' in loaded_data:
+                self.settings.first_win5 = loaded_data['end_level']
         
 if __name__ == "__main__":
     game = Game()

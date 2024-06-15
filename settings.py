@@ -16,8 +16,8 @@ class Settings:
 
 
         # Initialize sugarcube values
-        self.sugarcube_value = 30
-        self.first_sugarcube_value = 100
+        self.sugarcube_value = 15
+        self.first_sugarcube_value = 50
 
         # Initialize first win flags
         self.first_win1 = False
@@ -44,6 +44,7 @@ class Settings:
         self.game.settings.current_atk_level = 0
         self.game.settings.current_HP_level = 0
         self.game.settings.current_spd_level = 0
+        self.game.settings.first_win5 = False
         
 
 
