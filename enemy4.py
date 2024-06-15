@@ -437,7 +437,7 @@ class Enemy4(pygame.sprite.Sprite):
         self.aira.image = self.aira.idle_sprites[0]
         self.lyra.image = self.lyra.idle_sprites[0]
 
-        self.HP = 300
+        self.HP = 1500
         self.moxie = 0
 
         self.aira.rect.x, self.aira.rect.y = 30, 200
