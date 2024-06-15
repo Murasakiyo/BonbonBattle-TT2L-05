@@ -61,7 +61,6 @@ class Collisions():
 
     def snake_attacked(self, deltatime, player_action, body_group, enemy, enemy_damage):
         self.cooldown_for_attacking(deltatime)
-
         if self.player.take_damage == False and not player_action["defend"]:
             if pygame.sprite.spritecollide(self.player, body_group, False): #first check: rectangular collision
                 if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask): #second check: mask collision
@@ -69,14 +68,6 @@ class Collisions():
                         self.player.healthpoints -= enemy_damage
                         self.player.take_damage = True
 
-        if self.player.attack == True and not self.player.deal_damage:
-            if pygame.sprite.spritecollide(self.player, body_group, False): #first check: rectangular collision
-                if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask):
-                    if any(enemy.rect.clipline(*line) for line in self.player.horiz_line):
-                        self.player.moxiepoints += 25
-                        enemy.HP -= self.player.attackpoints
-                        self.player.deal_damage = True
-                        self.gacha = random.randint(0, 10)
 
 
     def minion_collisions(self,deltatime, player_action, body_group, attack_group, enemy,  enemy_damage):
@@ -93,14 +84,13 @@ class Collisions():
         if self.player.attack == True and not self.player.deal_damage:
             if pygame.sprite.spritecollide(self.player, body_group, False): #first check: rectangular collision
                 if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask):
-                    if any(enemy.rect.clipline(*line) for line in self.player.horiz_line):
-                        self.player.moxiepoints += 10
-                        self.enemy3.minionlist.remove(self.enemy3.minions)
-                        self.enemy3.moxie_activate = True
-                        self.player.deal_damage = True
-                        self.gacha = random.randint(0, 10)
+                    self.player.moxiepoints += 10
+                    self.enemy3.minionlist.remove(self.enemy3.minions)
+                    self.enemy3.moxie_activate = True
+                    self.player.deal_damage = True
+                    self.gacha = random.randint(0, 10)
 
-    def AiraLyra_collisions(self, player_action, body_group, attack_group, vert_string, horiz_string, normal_damage, super_damage, ult_damage, ult, enemy, aira, lyra):
+    def AiraLyra_collisions(self, deltatime, player_action, body_group, attack_group, vert_string, horiz_string, normal_damage, super_damage, ult_damage, ult, enemy, aira, lyra):
 
         if self.player.take_damage == False and not player_action["defend"]:
             if pygame.sprite.spritecollide(self.player, attack_group, False):
@@ -116,7 +106,6 @@ class Collisions():
                             self.player.healthpoints -= super_damage
                             self.player.take_damage = True
 
-
             if enemy.ult_attack:
                 if pygame.sprite.spritecollide(self.player, attack_group, False):
                     if pygame.sprite.spritecollide(self.player, attack_group, False, pygame.sprite.collide_mask):
@@ -127,7 +116,6 @@ class Collisions():
 
     def player_attacking_airalyra(self, deltatime, body_group, enemy, aira, lyra):
         self.cooldown_for_attacking(deltatime)
-
         if self.player.attack == True and not self.player.deal_damage:
             if pygame.sprite.spritecollide(self.player, body_group, False): #first check: rectangular collision
                 if pygame.sprite.spritecollide(self.player, body_group, False, pygame.sprite.collide_mask):

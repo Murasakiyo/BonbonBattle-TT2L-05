@@ -106,7 +106,7 @@ class Enemy4(pygame.sprite.Sprite):
         # print(self.super_count)
         # print(self.moxie)
         # print(pygame.mouse.get_pos())
-        print(self.spin_positional)
+        # print(self.spin_positional)
 
 
     def render(self, display):

@@ -13,6 +13,7 @@ class SaveDataSystem:
             'speed': self.game.settings.current_speed,
             'skip_cutscenes': self.game.skip_cutscenes,
             'current_currency': self.game.current_currency,
+            'stan_dialogue_counter': self.game.settings.stan_dialogue_counter,
             'krie_intro': self.game.settings.krie_intro,
             'tutorial': self.game.tutorial
         }

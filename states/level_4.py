@@ -28,7 +28,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.particle_group = pygame.sprite.Group()
         self.sounds = self.game.sounds
         
-        self.current_time, self.end_time = 0,0
+        self.current_time, self.end_time, self.leech_timer = 0,0,0
         self.enemy_defeat = False
         self.snow_value = 1
         self.enemy3_heal = 0
@@ -103,7 +103,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
         self.game_over(player_action)
         self.game_restart(player_action)
-        self.ending_options(deltatime, player_action, 4, 3)
+        self.ending_options(deltatime, player_action, 5, 4)
 
         if self.game.start == True:
             if self.game.ult == False:
@@ -131,22 +131,24 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             self.snake_attacked(deltatime, player_action, self.enemy_group, self.enemy3, self.enemy3.body_damage)
                             for minions in self.enemy3.minionlist.sprites():
                                 self.minion_collisions(deltatime, player_action, self.enemy3.minionlist, self.enemy3.minionlist, minions, minions.damage)
+                            
                             if self.enemy3.HP < 300:
                                 if self.enemy3.leech == True:
                                     self.old_health = self.player.healthpoints
-                                    self.player.healthpoints -= (self.player.healthpoints * 20/100)
-                                    self.enemy3_heal = (self.old_health * 20/100)
-                                    self.enemy3.HP += self.enemy3_heal
-                        
+                                    self.leech_timer += deltatime
+                                    if not(self.leech_timer > 0.15):
+                                        self.player.healthpoints -= (self.player.healthpoints * 0.05)
+                                        self.enemy3_heal = (self.old_health * 0.05)
+                                        self.enemy3.HP += self.enemy3_heal
+                                else:
+                                    self.leech_timer = 0
+
+                        if self.louie.slow_down:
+                            self.enemy3.speed = self.enemy3.speed * (50/100)
+                            
                         if self.enemy3.HP > 300:
                             self.enemy3.HP = 300
                     
-                        # for enemy in self.enemy_group.sprites():
-                        #     if enemy.HP <= 0:
-                        #         enemy.kill()
-                        #         self.enemy3.minionlist.empty()
-                        #         self.spawn_exploding_particles(300, enemy)
-                        #         self.enemy_defeat = True
 
                     self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP, self.enemy3.max_HP)
                     self.enemy_moxie_update(self.enemy3.moxie, self.enemy3.max_moxie)
@@ -167,38 +169,25 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                         if self.stan.attack:
                             if not(self.enemy3.ult):
                                 self.enemy3.moxie -= 1
+                    else:
+                        self.player.attackpoints = self.game.settings.current_attackpoints
+
             else:
                 if self.game.ult:
                     if self.init_stan:
                         if not(self.enemy3.leech):
                             self.enemy3.ult = False
                             self.enemy3.moxie = 0
+                    if self.init_louie:
+                        if self.enemy3.leech == True:
+                            self.enemy3.leech = False
+                            self.leech_timer = 0
+
+
                 self.add_ultimate(deltatime, player_action, self.enemy_group)
 
             self.particle_group.update(deltatime)
-
-            # Character Ultimate VFX
-            if self.game.ult and self.init_louie:
-                self.louie_particles(4)
-
-
-            if self.game.ult and self.init_krie:
-                self.allow_effect_for_krie = True
-
-            if self.allow_effect_for_krie and not self.init_krie:
-                self.heal_particles(75)
-                self.allow_effect_for_krie = False
-
-
-            if self.game.ult and self.init_stan:
-                self.allow_effect_for_stan = True
-
-            if self.allow_effect_for_stan and not self.init_stan:
-                self.effect_time += deltatime
-                self.confetti_fireworks(50, self.effect_time)
-                if self.effect_time > 0.4:
-                    self.effect_time = 0
-                    self.allow_effect_for_stan = False  
+            self.ult_VFX(deltatime)  
 
         else:
             self.game.start_timer()
@@ -206,6 +195,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.mountain, (1100,600)), (0,0))
+        if self.enemy3.leech == True:
+            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
         self.confection_display(display)
         if self.game.defeat:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))

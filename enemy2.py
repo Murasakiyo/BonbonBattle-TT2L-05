@@ -71,6 +71,7 @@ class Fly(pygame.sprite.Sprite):
         self.teleport_x = None
         self.teleport_y = None
         self.HP = 150
+        self.max_HP = self.HP
         self.damage = 10
 
 

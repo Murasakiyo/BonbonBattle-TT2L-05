@@ -52,6 +52,8 @@ class Pause(State):
         if self.exit_game:
             # self.exit_game = False
             player_action["transition"] = True
+            self.game.freeze = False
+            self.game.freeze_time = 0
             self.game.defeat, self.game.win = False, False
             
         if self.game.alpha == 255:

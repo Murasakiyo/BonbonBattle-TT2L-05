@@ -25,7 +25,6 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.support_dolls = pygame.sprite.Group()
         self.sugarcube_list = pygame.sprite.Group()
         self.particle_group = pygame.sprite.Group()
-        self.sounds = Sounds(self.game)
 
         self.ultimates()
         self.characters(450, 200)
@@ -34,9 +33,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP, self.enemy4.max_HP)
         self.enemy_moxie_update(self.enemy4.moxie, self.enemy4.max_moxie)
-
-
-
+        self.freeze_screen = pygame.image.load("sprites/frozen_screen.png").convert_alpha()
 
         self.body_group = pygame.sprite.Group()
         self.attack_group = pygame.sprite.Group()
@@ -46,12 +43,12 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.attack_group.add(self.enemy4.horiz_string, self.enemy4.vert_string, self.enemy4.twin_ult)
         
 
-
         self.deal_damage = True
         self.attack_cooldown = 0
         self.countdown = 0
         self.gacha = 0
         self.accept_ult = False
+        self.old_atk_speed = self.enemy4.atk_speed
 
         self.sugarcube_received = 0
         self.current_time, self.end_time = 0,0
@@ -73,25 +70,24 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                     
         self.sugarcube_received = 0
 
-        self.end_prev = False
-
     def enter_state(self):
-        super().enter_state()  
+        super().enter_state()
+        self.player.attribute_update()
         self.game.play_bg_music(self.game.sounds.lvl5_bgmusic)
-        # self.player.attribute_update()
-        if self.game.current_level == 0:
+        if self.game.current_level == 4:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
             self.current_sugarcube_value = self.game.settings.sugarcube_value
+        self.end_prev = False
 
 
     def update(self, deltatime, player_action):
-
+        print(self.player.attackpoints)
         if player_action["reset_game"]:
+            if self.game.settings.first_win5:
+                self.current_sugarcube_value = self.game.settings.sugarcube_value
+            self.player.reset_player(450, 200)
             self.game.play_bg_music(self.game.sounds.lvl5_bgmusic)
-            # if self.game.settings.first_win1:
-            #     self.current_sugarcube_value = self.game.settings.sugarcube_value
-            self.player.reset_player(200,200)
             self.enemy4.enemy_reset()
             self.ultimate_reset()
             self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP, self.enemy4.max_HP)
@@ -105,7 +101,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
             self.sugarcube_list.empty()
             self.game.start = False
             self.current_time = 0
-            self.sugarcube_received = 0
+            self.sugarcube_received, self.countdown = 0, 0
             self.end_time += deltatime
             if self.end_time > 0.5:
                 player_action["reset_game"] = False
@@ -120,7 +116,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
         self.game_over(player_action)
         self.game_restart(player_action)
-        # self.ending_options(deltatime, player_action, 4, 3)
+        self.ending_options(deltatime, player_action, 6, 5)
 
         if self.game.start == True:
             if not(self.game.ult):
@@ -148,8 +144,8 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 if not(self.game.defeat):
                     if not(self.enemy4.HP <= 0):
                         if not(self.game.freeze):
-                            self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery)
-                            self.AiraLyra_collisions(player_action, self.body_group, self.attack_group, self.enemy4.vert_string, self.enemy4.horiz_string, self.enemy4.string_damage,
+                            self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery, self.enemy_defeat)
+                            self.AiraLyra_collisions(deltatime, player_action, self.body_group, self.attack_group, self.enemy4.vert_string, self.enemy4.horiz_string, self.enemy4.string_damage,
                                                     self.enemy4.body_damage, self.enemy4.ult_damage, self.enemy4.twin_ult, self.enemy4, self.enemy4.aira, self.enemy4.lyra)
 
                     
@@ -162,15 +158,12 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                     self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP, self.enemy4.max_HP)
                     self.enemy_moxie_update(self.enemy4.moxie, self.enemy4.max_moxie)
                        
- 
-
                     if self.game.win:
-                        self.snow_value = 0
                         self.spawn_particles(200, deltatime)
 
 
                 if self.enemy4.HP <= 0:
-                    self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery)
+                    self.enemy4.update(deltatime, player_action, self.player.rect.centerx, self.player.rect.centery, self.enemy_defeat)
 
 
                 if not(self.end):
@@ -182,49 +175,47 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                     if self.init_stan:
                         if self.stan.attack:
                             if not(self.enemy4.ult_attack):
-                                self.enemy4.moxie -= 1
+                                self.enemy4.moxie -= 0.2
+                    else:
+                        self.player.attackpoints = self.game.settings.current_attackpoints
+
+                    if self.louie.slow_down:
+                        self.enemy4.atk_speed = self.enemy4.atk_speed * (50/100)
+                        self.enemy4.spin_speed_lyra = 4
+                        self.enemy4.spin_speed_aira = 2
+                    else:
+                        self.enemy4.atk_speed = self.old_atk_speed
+                        self.enemy4.spin_speed_lyra = 8 
+                        self.enemy4.spin_speed_aira = 5 
             else:
-                # if self.game.ult:
-                #     if self.init_stan:
-                #         if not(self.enemy3.leech):
-                #             self.enemy3.ult = False
-                #             self.enemy3.moxie = 0
+                if self.game.ult:
+                    if self.init_stan:
+                        self.enemy4.ult_attack = False
+                        self.enemy4.moxie = 0
+                        if self.stan_ult.image == self.stan_ult.current_anim_list[12]:
+                            self.countdown += deltatime
+                            if self.countdown < 0.03:
+                                self.enemy4.HP -= 50
+                else:
+                    self.countdown = 0
+                                
+
                 self.add_ultimate(deltatime, player_action, self.enemy_group)
 
             self.particle_group.update(deltatime)
-
-            # Character Ultimate VFX
-            if self.game.ult and self.init_louie:
-                self.louie_particles(4)
-
-
-            if self.game.ult and self.init_krie:
-                self.allow_effect_for_krie = True
-
-            if self.allow_effect_for_krie and not self.init_krie:
-                self.heal_particles(75)
-                self.allow_effect_for_krie = False
-
-
-            if self.game.ult and self.init_stan:
-                self.allow_effect_for_stan = True
-
-            if self.allow_effect_for_stan and not self.init_stan:
-                self.effect_time += deltatime
-                self.confetti_fireworks(50, self.effect_time)
-                if self.effect_time > 0.4:
-                    self.effect_time = 0
-                    self.allow_effect_for_stan = False  
+            self.ult_VFX(deltatime)  
         else:
             self.game.start_timer()
 
 
     def render(self, display):
+
         display.blit(pygame.transform.scale(self.game.circus_tent, (1100,600)), (0,0))
         self.confection_display(display)
         if self.game.defeat:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
-        self.camera.custom_draw(display)
+        if not self.game.freeze and not self.enemy_defeat:
+            self.camera.custom_draw(display)
 
         if not self.enemy4.HP <= 0:
             self.enemy4.render(display)
@@ -233,6 +224,13 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
             for enemies in self.body_group:
                 if self.body_group.sprites():
                     enemies.render(display)
+        
+        if self.game.freeze:
+            display.blit(self.freeze_screen, (0,0))
+            self.camera.custom_draw(display)
+
+        if self.enemy_defeat:
+            self.camera.custom_draw(display)
 
         display.blit(pygame.transform.scale(self.game.circus_asset, (1200,600)), (0,0))
 
@@ -241,7 +239,8 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         if self.game.start:
             self.boss_health_render(display)
             self.sugarcube_list.draw(display)
-        
+
+
         if self.game.ult:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
         self.particle_group.draw(display)

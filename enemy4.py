@@ -66,10 +66,10 @@ class Enemy4(pygame.sprite.Sprite):
         self.heal = False
 
 
-    def update(self, deltatime, player_action, player_x, player_y):
+    def update(self, deltatime, player_action, player_x, player_y, death):
         # print(f"screen airax:{self.aira.rect.centerx}")
-        self.aira.update(deltatime, self.idle, self.norm_attack, self.positional, self.start_super_atk)
-        self.lyra.update(deltatime, self.idle, self.norm_attack, self.positional, self.start_super_atk)
+        self.aira.update(deltatime, self.idle, self.norm_attack, self.positional, self.start_super_atk, death)
+        self.lyra.update(deltatime, self.idle, self.norm_attack, self.positional, self.start_super_atk, death)
         self.horiz_string.animate(deltatime)
         self.vert_string.animate(deltatime)
 
@@ -109,10 +109,7 @@ class Enemy4(pygame.sprite.Sprite):
         if self.ult_attack:
             self.move_speed = 16
 
-
         # print(f"self.norm_attack:{self.norm_attack}, self.super_attack:{self.super_attack}, move_speed:{self.move_speed}, self.position:{self.positional}, self.stop_moving:{self.stop_moving}, self.moxie:{self.moxie}")
-        
-        
         
         if not self.super_attack and not self.stop_normal_atk:
             self.norm_attack = True
@@ -169,20 +166,6 @@ class Enemy4(pygame.sprite.Sprite):
 
             if self.ult_attack:
                 self.ultimate_attack(deltatime)
-
-        # print(self.super_timer)
-        # print(self.start_super_atk)
-        # print(self.super_attack)
-        # print(self.super_count)
-        # print(self.moxie)
-        # print(pygame.mouse.get_pos())
-        # print(self.spin_positional)
-        # print(self.movement_timer)
-        print(self.move_speed)
-        # print(self.go_middle)
-        # print(self.HP)
-        # print(self.positional)
-        # print(self.aira.rect.centerx)
 
 
     def render(self, display):
@@ -469,6 +452,8 @@ class Enemy4(pygame.sprite.Sprite):
 
         self.extend_vert = False   
         self.extend_horiz = False     
+        self.horiz_string.rect.x, self.horiz_string.rect.y = self.game.screen_rect.midleft[0] - 1100 - 25, 200 - 25
+        self.vert_string.rect.x, self.vert_string.rect.y = (450 - 25), self.game.screen_rect.midtop[1] - 600
 
         self.idle = False
         self.idle_countdown = 0

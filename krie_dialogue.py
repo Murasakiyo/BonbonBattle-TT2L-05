@@ -7,7 +7,7 @@ class Krie_Dialogue():
        self.game = game
        question_1 = ["Why if it isn't the Ganache Knight!","How're the battles?", " " ]
        self.convo = Dialogue(self.game, "black", 24, question_1)
-       self.answer1 = Answer(self.game, "It was alright.", "Your highness, I require your assistance..!", "I haven't battled yet.")
+       self.answer1 = Answer(self.game, "It was alright.", "Your highness, I require your assistance..!", "I haven't battled yet.", " ", True, False)
        self.asset = {
             "happy": pygame.image.load("sprites/dialogue/krie/happy.png").convert_alpha(),
             "miffed": pygame.image.load("sprites/dialogue/krie/miffed.png").convert_alpha(),

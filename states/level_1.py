@@ -37,7 +37,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.characters(200,200)
         self.load_health_bar()
         self.load_moxie_bar()
-        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP, self.enemy1.max_HP)
 
         self.camera.add(self.enemy1)
         self.attack_group.add(self.tongue, self.tongue2)
@@ -96,7 +96,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
             self.enemy1.enemy_reset()
             self.player.reset_player(200,200)
             self.ultimate_reset()
-            self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+            self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP, self.enemy1.max_HP)
             self.load_health_bar()
             self.load_moxie_bar()
             if self.enemy_defeat:
@@ -123,6 +123,9 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.game_over(player_action)
         self.game_restart(player_action)
         self.ending_options(deltatime, player_action, 2, 1)
+
+        if not(self.game.tutorial):
+            self.tuto4_done = True
         
 
         if self.game.start == True:
@@ -150,10 +153,11 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                             # Check collision of enemies and players
                             self.enemy_collisions(player_action, self.body_group, self.attack_group, self.enemy1, 
                                             self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
-                        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+                        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP, self.enemy1.max_HP)
                         
                     if self.louie.slow_down:
                         self.enemy1.speed = self.enemy1.speed * (50/100)
+                        
                     if self.game.win:
                         self.spawn_particles(200, deltatime)
 

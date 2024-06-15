@@ -22,6 +22,7 @@ class FrogEnemy(pygame.sprite.Sprite):
         self.stop = False
         self.collision = False
         self.HP = 150
+        self.max_HP = self.HP
         self.body_damage = 15
         self.tongue_damage = 35
         

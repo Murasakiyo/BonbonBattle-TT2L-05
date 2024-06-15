@@ -65,7 +65,7 @@ class Ults():
         if pygame.sprite.spritecollide(support, enemies, False): #first check: rectangular collision
                 if pygame.sprite.spritecollide(support, enemies, False, pygame.sprite.collide_mask):
                     for enemy in enemies:
-                        enemy.HP -= 2
+                        enemy.HP -= (self.game.settings.current_attackpoints - 1)
                         
 
     # Display confection
@@ -182,6 +182,8 @@ class Ults():
 
             if self.game.ult and self.init_stan:
                 self.allow_effect_for_stan = True
+                self.player.attackpoints = self.game.settings.current_attackpoints
+
 
             if self.allow_effect_for_stan and not self.init_stan:
                 self.effect_time += deltatime

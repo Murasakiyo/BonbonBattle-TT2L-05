@@ -122,6 +122,7 @@ class Louie_Ult(pygame.sprite.Sprite):
     def update(self, deltatime, player_action):
         self.animate(deltatime)
         if self.image == self.current_anim_list[18]:
+            self.game.freeze_time = 0
             self.game.freeze = True
             self.game.ult_finish = True
             self.game.ult = False
@@ -180,7 +181,7 @@ class Krie_Ult(pygame.sprite.Sprite):
     def update(self, deltatime, player_action, target):
         self.animate(deltatime)
         if self.image == self.current_anim_list[10]:
-            target.healthpoints += 100
+            target.healthpoints += (self.game.settings.current_healthpoints * 0.4)
             self.game.ult_finish = True
             self.game.ult = False
             self.image = self.current_anim_list[0]

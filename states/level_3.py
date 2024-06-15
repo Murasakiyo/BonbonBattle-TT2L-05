@@ -36,7 +36,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.characters(200,200)
         self.load_health_bar()
         self.load_moxie_bar()
-        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+        self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP, self.enemy1.max_HP)
 
         self.attack_group.add(self.tongue, self.tongue2)
         self.body_group.add(self.enemy1)
@@ -89,12 +89,12 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             self.enemy1.enemy_reset()
             self.player.reset_player(200,200)
             self.ultimate_reset()
-            self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+            self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP, self.enemy1.max_HP)
             self.load_health_bar()
             self.load_moxie_bar()
             for flies in self.fly_swarm.flylist.sprites():
                 flies.kill()
-                self.enemy_health_update(flies.rect.x,flies.rect.y, flies.HP)
+                self.enemy_health_update(flies.rect.x,flies.rect.y, flies.HP, flies.max_HP)
             if self.enemy_defeat:
                 self.attack_group.add(self.tongue, self.tongue2)
                 self.body_group.add(self.enemy1)
@@ -168,7 +168,7 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                                     self.tongue2.update(deltatime, player_action, self.enemy1.rect.centerx -10, self.enemy1.rect.centery - 5, self.enemy1.attack)
                                     self.enemy_collisions(player_action, self.body_group, self.attack_group, self.enemy1, 
                                                 self.enemy1.tongue_damage, self.enemy1.body_damage, self.tongue, self.tongue2)
-                                self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP)
+                                self.enemy_health_update(self.enemy1.rect.x, self.enemy1.rect.y, self.enemy1.HP, self.enemy1.max_HP)
                         
                         
                         for enemy in self.body_group.sprites():
@@ -200,29 +200,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.add_ultimate(deltatime, player_action, self.current_enemy)
 
             self.particle_group.update(deltatime)
+            self.ult_VFX(deltatime)
 
-            # Character Ultimate VFX
-            if self.game.ult and self.init_louie:
-                self.louie_particles(4)
-
-
-            if self.game.ult and self.init_krie:
-                self.allow_effect_for_krie = True
-
-            if self.allow_effect_for_krie and not self.init_krie:
-                self.heal_particles(75)
-                self.allow_effect_for_krie = False
-
-
-            if self.game.ult and self.init_stan:
-                self.allow_effect_for_stan = True
-
-            if self.allow_effect_for_stan and not self.init_stan:
-                self.effect_time += deltatime
-                self.confetti_fireworks(50, self.effect_time)
-                if self.effect_time > 0.4:
-                    self.effect_time = 0
-                    self.allow_effect_for_stan = False  
         else:
             self.game.start_timer()
 
