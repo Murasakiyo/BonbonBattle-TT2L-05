@@ -196,29 +196,8 @@ class Trio_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 self.add_ultimate(deltatime, player_action, self.current_enemy)
 
             self.particle_group.update(deltatime)
+            self.ult_VFX(deltatime)
 
-            # Character Ultimate VFX
-            if self.game.ult and self.init_louie:
-                self.louie_particles(4)
-
-
-            if self.game.ult and self.init_krie:
-                self.allow_effect_for_krie = True
-
-            if self.allow_effect_for_krie and not self.init_krie:
-                self.heal_particles(75)
-                self.allow_effect_for_krie = False
-
-
-            if self.game.ult and self.init_stan:
-                self.allow_effect_for_stan = True
-
-            if self.allow_effect_for_stan and not self.init_stan:
-                self.effect_time += deltatime
-                self.confetti_fireworks(50, self.effect_time)
-                if self.effect_time > 0.4:
-                    self.effect_time = 0
-                    self.allow_effect_for_stan = False  
         else:
             self.game.start_timer()
 

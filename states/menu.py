@@ -40,11 +40,11 @@ class MainMenu(State):
         if self.rect_START.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click:
                 self.sounds.start_game.play()
-                if self.game.reset_game:
-                    print("reset")
-                    self.settings.gamereset_value()
-                else:
-                    print("no reset")
+                # if self.game.reset_game:
+                #     print("reset")
+                #     self.settings.gamereset_value()
+                # else:
+                #     print("no reset")
                 self.next = True
                 self.click = True
                 player_action["start"] = True
@@ -67,7 +67,7 @@ class MainMenu(State):
             self.game.draw_text(self.game.screen, "Loading...", True, "white", 400, 250, 80)
         if self.game.alpha == 255:
             if self.game.skip_cutscenes:
-                new_state = Penta_Stage(self.game)
+                new_state = Lounge(self.game)
             else:
                 new_state = Story(self.game)
             new_state.enter_state()

@@ -181,7 +181,6 @@ class Krie_Ult(pygame.sprite.Sprite):
     def update(self, deltatime, player_action, target):
         self.animate(deltatime)
         if self.image == self.current_anim_list[10]:
-            print(target.healthpoints)
             target.healthpoints += (self.game.settings.current_healthpoints * 0.4)
             self.game.ult_finish = True
             self.game.ult = False

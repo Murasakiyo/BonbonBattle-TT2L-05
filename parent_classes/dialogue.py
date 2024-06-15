@@ -38,9 +38,6 @@ class Dialogue():
         self.pos = self.box_rect
 
 
-
-
-
     def dialogue_update(self, player_action):
         if not(self.activetext >= len(self.text) - 1):
             self.message2 = self.text[self.activetext + 1]

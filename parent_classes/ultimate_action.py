@@ -182,6 +182,8 @@ class Ults():
 
             if self.game.ult and self.init_stan:
                 self.allow_effect_for_stan = True
+                self.player.attackpoints = self.game.settings.current_attackpoints
+
 
             if self.allow_effect_for_stan and not self.init_stan:
                 self.effect_time += deltatime

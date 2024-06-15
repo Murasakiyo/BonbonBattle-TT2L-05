@@ -87,7 +87,6 @@ class Lounge(State, Dialogue):
                     self.interact_timer = 0
                     self.conversation.stan_attack_anim = False
 
-        print(self.game.current_currency)
             
     def render(self, display):
         self.camera.custom_draw(display, self.player)        

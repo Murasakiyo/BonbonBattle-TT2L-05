@@ -154,6 +154,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                         
                     if self.louie.slow_down:
                         self.enemy1.speed = self.enemy1.speed * (50/100)
+                        
                     if self.game.win:
                         self.spawn_particles(200, deltatime)
 

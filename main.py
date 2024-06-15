@@ -73,7 +73,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = Lounge(self)
+        self.title_screen = MainMenu(self)
         self.state_stack.append(self.title_screen)
 
     def open_txt(self, filename):

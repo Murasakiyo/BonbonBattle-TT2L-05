@@ -13,58 +13,67 @@ class Aira(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.mask.to_surface()
         self.current_frame, self.current_frame2, self.last_frame_update, self.last_frame_update2 = 0,0,0,0
-        self.transition_time, self.dance_time = 0, 0
+        self.transition_time, self.dance_time, self.defeat_time = 0, 0, 0
         self.fps = 0.3
         self.hand_fps = 0.05
         self.show_attack = False
 
-    def update(self, deltatime, idle, attack, run, spin):
-        self.animate(deltatime, idle, attack, run, spin)
+    def update(self, deltatime, idle, attack, run, spin, death):
+        self.animate(deltatime, idle, attack, run, spin, death)
 
     def render(self, display):
         display.blit(self.image, (self.rect.x, self.rect.y))
-        if self.show_attack:
+        if self.show_attack :
             display.blit(self.hand_image, (self.rect.x + 20, self.rect.y - 300))
         # pygame.draw.rect(display, (255,255,255), self.rect, 2)
 
 
-    def animate(self, deltatime, idle, attack, run, spin):
+    def animate(self, deltatime, idle, attack, run, spin, death):
         self.last_frame_update += deltatime
-        if idle:
-            self.fps = 0.3
-            self.current_anim_list = self.idle_sprites
+        if not death:
+            if idle:
+                self.fps = 0.3
+                self.current_anim_list = self.idle_sprites
 
-        if attack:
-            self.fps = 0.1
-            self.current_anim_list = self.transition_sprites
-            self.transition_time += deltatime
-            if self.transition_time > 0.6:
-                self.current_anim_list = self.attack_up
-                self.show_attack = True
-
-        if not(attack):
-            self.transition_time = 0
-            self.current_frame2 = 0
-            self.show_attack = False
-            self.last_frame_update2 = 0
-
-        if self.show_attack:
-            self.last_frame_update2 += deltatime
-            self.current_hand_list = self.hand
-
-        if run == 1 :
-            self.fps = 0.05
-            self.current_anim_list = self.run_sprites
-            self.dance_time += deltatime
-            if self.dance_time > 0.6:
+            if attack:
                 self.fps = 0.1
-                self.current_anim_list = self.dance_sprites
+                self.current_anim_list = self.transition_sprites
+                self.transition_time += deltatime
+                if self.transition_time > 0.6:
+                    self.current_anim_list = self.attack_up
+                    self.show_attack = True
 
-        if spin:
-            self.fps = 0.1
-            self.dance_time = 0
-            self.current_anim_list = self.spin_sprites
-            
+            if not(attack):
+                self.transition_time = 0
+                self.current_frame2 = 0
+                self.show_attack = False
+                self.last_frame_update2 = 0
+
+            if self.show_attack:
+                self.last_frame_update2 += deltatime
+                self.current_hand_list = self.hand
+
+            if run == 1 :
+                self.fps = 0.05
+                self.current_anim_list = self.run_sprites
+                self.dance_time += deltatime
+                if self.dance_time > 0.6:
+                    self.fps = 0.1
+                    self.current_anim_list = self.dance_sprites
+
+            if spin:
+                self.fps = 0.1
+                self.dance_time = 0
+                self.current_anim_list = self.spin_sprites
+
+        if death:
+            self.current_anim_list = self.run_sprites
+            self.fps = 0.3
+            self.show_attack = False
+            self.defeat_time += deltatime
+            if self.defeat_time > 1:
+                self.current_anim_list = self.death_sprites
+
         
          # Updating frames
         if self.last_frame_update > self.fps:
@@ -86,7 +95,7 @@ class Aira(pygame.sprite.Sprite):
     def load_sprites(self):
         self.idle_sprites, self.attack_up = [], []
         self.dance_sprites, self.spin_sprites = [], []
-        self.run_sprites = []
+        self.run_sprites, self.death_sprites = [], []
         self.hand = []
         self.transition_sprites= []
         aira = pygame.image.load("sprites/aira_sp.png").convert()
@@ -107,11 +116,12 @@ class Aira(pygame.sprite.Sprite):
         for x in range(3):
             self.spin_sprites.append(SP.get_sprite(x, 800, 150, 200, (0,0,0)))
 
+        for x in range(4):
+            self.hand.append(pygame.transform.scale(pygame.image.load(f"sprites/twins_attack/attack_up/00{x}.png"), (113,400)).convert_alpha())
+        
+        for x in range(2):
+            self.death_sprites.append(pygame.transform.scale(pygame.image.load(f"sprites/twins_attack/twin_defeat/0{x}.png"), (238,180)).convert_alpha())
 
-        self.hand.append(pygame.transform.scale(pygame.image.load("sprites/twins_attack/attack_up/000.png"), (113,400)).convert_alpha())
-        self.hand.append(pygame.transform.scale(pygame.image.load("sprites/twins_attack/attack_up/001.png"), (113,400)).convert_alpha())
-        self.hand.append(pygame.transform.scale(pygame.image.load("sprites/twins_attack/attack_up/002.png"), (113,400)).convert_alpha())
-        self.hand.append(pygame.transform.scale(pygame.image.load("sprites/twins_attack/attack_up/003.png"), (113,400)).convert_alpha())
 
         self.image = self.idle_sprites[0]
         self.current_anim_list = self.idle_sprites
@@ -136,8 +146,8 @@ class Lyra(pygame.sprite.Sprite):
         self.hand_fps = 0.05
         self.show_attack = False
 
-    def update(self, deltatime, idle, attack, run, spin):
-        self.animate(deltatime, idle, attack, run, spin)
+    def update(self, deltatime, idle, attack, run, spin, death):
+        self.animate(deltatime, idle, attack, run, spin, death)
 
     def render(self, display):
         display.blit(self.image, (self.rect.x, self.rect.y))
@@ -146,43 +156,48 @@ class Lyra(pygame.sprite.Sprite):
         # pygame.draw.rect(display, (255,255,255), self.rect, 2)
 
 
-    def animate(self, deltatime, idle, attack, run, spin):
+    def animate(self, deltatime, idle, attack, run, spin, death):
         self.last_frame_update += deltatime
+        if not death:
+            if idle:
+                self.fps = 0.3
+                self.current_anim_list = self.idle_sprites
 
-        if idle:
-            self.fps = 0.3
-            self.current_anim_list = self.idle_sprites
-
-        if attack:
-            self.fps = 0.1
-            self.current_anim_list = self.transition_sprites
-            self.transition_time += deltatime
-            if self.transition_time > 0.6:
-                self.current_anim_list = self.attack_up
-                self.show_attack = True
-
-        if not(attack):
-            self.transition_time = 0
-            self.current_frame2 = 0
-            self.show_attack = False
-            self.last_frame_update2 = 0
-
-        if self.show_attack:
-            self.last_frame_update2 += deltatime
-            self.current_hand_list = self.hand
-
-        if run == 1:
-            self.fps = 0.05
-            self.current_anim_list = self.run_sprites
-            self.dance_time += deltatime
-            if self.dance_time > 0.6:
+            if attack:
                 self.fps = 0.1
-                self.current_anim_list = self.dance_sprites
+                self.current_anim_list = self.transition_sprites
+                self.transition_time += deltatime
+                if self.transition_time > 0.6:
+                    self.current_anim_list = self.attack_up
+                    self.show_attack = True
 
-        if spin:
+            if not(attack):
+                self.transition_time = 0
+                self.current_frame2 = 0
+                self.show_attack = False
+                self.last_frame_update2 = 0
+
+            if self.show_attack:
+                self.last_frame_update2 += deltatime
+                self.current_hand_list = self.hand
+
+            if run == 1:
+                self.fps = 0.05
+                self.current_anim_list = self.run_sprites
+                self.dance_time += deltatime
+                if self.dance_time > 0.6:
+                    self.fps = 0.1
+                    self.current_anim_list = self.dance_sprites
+
+            if spin:
+                self.fps = 0.1
+                self.dance_time = 0
+                self.current_anim_list = self.spin_sprites
+        if death:
+            self.current_anim_list = self.run_sprites
             self.fps = 0.1
-            self.dance_time = 0
-            self.current_anim_list = self.spin_sprites
+            self.show_attack = False
+
         
          # Updating frames
         if self.last_frame_update > self.fps:
