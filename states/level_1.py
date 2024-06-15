@@ -12,7 +12,6 @@ from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
 from parent_classes.particleeffect import *
 from parent_classes.sugarcube import *
-from music import Sounds
 
 
 
