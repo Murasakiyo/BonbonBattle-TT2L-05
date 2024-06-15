@@ -32,9 +32,9 @@ class Settings:
 
 
     def gamereset_value(self):
-        self.game.current_currency = 1000
+        self.game.current_currency = 0
         self.game.current_level = 0
-        self.game.skip_cutscenes = True
+        self.game.skip_cutscenes = False
         self.game.settings.current_healthpoints = 250
         self.game.settings.current_attackpoints = 3
         self.game.settings.current_speed = 400

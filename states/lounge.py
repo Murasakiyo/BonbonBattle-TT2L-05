@@ -179,6 +179,7 @@ class Stan_Dialogue():
         
     def stat_reset(self, deltatime, player_action, player):
         if not(self.choose_reset.finish_convo):
+            self.current_image = self.game.asset["stanley"]["talk"]
             self.choose_reset.dialogue_update(player_action)
             self.choose_reset.finish()
         else:
@@ -263,6 +264,7 @@ class Stan_Dialogue():
                 self.current_image = pygame.image.load("sprites/dialogue/krie/happy.png").convert_alpha()
                 self.krie_info = True
             if self.info_choice == 3:
+                self.current_image = pygame.image.load("sprites/dialogue/louie/idle.png").convert_alpha()
                 self.louie_info = True
             if self.info_choice == 4:
                 self.finish = True
@@ -358,7 +360,6 @@ class Stan_Dialogue():
                     display.blit(self.game.black, (0,0))
                 display.blit(self.current_image, (0,0))
                 if self.reset_counter == 0:
-                    self.current_image = self.game.asset["stanley"]["talk"]
                     self.choose_reset.draw_text(display)
                 if self.reset_counter == 1:
                     self.current_image = self.game.asset["torres"]["talk"]
@@ -374,6 +375,8 @@ class Stan_Dialogue():
             
             if self.choice == 2:
                 if self.info_counter == 0:
+                    self.current_image = self.game.asset["stanley"]["shock"]
+                    display.blit(self.current_image, (0,0))
                     self.ask_support.draw_text(display)
                 if self.info_counter == 1:
                     self.choose_info.render(display)
