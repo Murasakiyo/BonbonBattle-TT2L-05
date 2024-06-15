@@ -35,13 +35,17 @@ class Upgrade(State, Dialogue):
         self.add_atk = 0
         self.add_HP = 0
         self.add_spd = 0
-        self.atk_level = 0
-        self.HP_level = 0
-        self.spd_level = 0
+        self.add_atk_level = 0
+        self.add_HP_level = 0
+        self.add_spd_level = 0
+
         self.apply_upgrades = False
 
 
     def update(self, deltatime, player_action):
+        # print(f"atk:{self.game.settings.current_atk_level}, HP:{self.game.settings.current_HP_level}, spd:{self.game.settings.current_spd_level}, current_atk:{self.add_atk_level}, current_spd:{self.add_spd_level}, current_hp:{self.add_HP_level}")
+
+        self.game.play_circus_music = True
 
         # Only want Player's animation, not input
         player_action["up"], player_action["down"], player_action["right"], player_action["left"] = False, False, False, False
@@ -52,20 +56,19 @@ class Upgrade(State, Dialogue):
 
         # Backspace key, leave room
         if self.attack_up_rect.collidepoint(self.game.mouse):
-            if pygame.mouse.get_pressed()[0] and not self.click and self.game.current_currency >= 125:
-                if self.game.settings.current_atk_level < 12 and self.atk_level < 12:
-                    self.atk_level += 1 # Max is 12
-                    self.add_atk += 1
-                    self.sugar_price += 125
-                    self.click = True
+            if pygame.mouse.get_pressed()[0] and not self.click and not self.add_atk_level >= (7 - self.game.settings.current_atk_level):
+                self.add_atk_level += 1 
+                self.add_atk += 1
+                self.sugar_price += 250
+                self.click = True
+
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
 
         if self.attk_down_rect.collidepoint(self.game.mouse):
-            if pygame.mouse.get_pressed()[0] and not self.click and not self.game.settings.current_atk_level <= 0 and not self.add_atk <= 0:
-                print("atk")
-                self.sugar_price -= 125
-                self.atk_level -= 1
+            if pygame.mouse.get_pressed()[0] and not self.click and not self.add_atk <= 0:
+                self.sugar_price -= 250
+                self.add_atk_level -= 1
                 self.add_atk -= 1
                 self.click = True
             if not pygame.mouse.get_pressed()[0]:
@@ -73,20 +76,19 @@ class Upgrade(State, Dialogue):
 
 
         if self.health_rect.collidepoint(self.game.mouse):
-            if pygame.mouse.get_pressed()[0] and not self.click and self.game.current_currency >= 125:
-                if self.game.settings.current_HP_level < 10 and self.HP_level < 10:
-                    self.HP_level += 1 # Max is 10
-                    self.add_HP += 50
-                    self.sugar_price += 125
-                    self.click = True
+            if pygame.mouse.get_pressed()[0] and not self.click and not self.add_HP_level >= (11 - self.game.settings.current_HP_level):
+                self.add_HP_level += 1 # Max is 10
+                self.add_HP += 50
+                self.sugar_price += 125
+                self.click = True
+
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
 
         if self.hdown_rect.collidepoint(self.game.mouse):
-            if pygame.mouse.get_pressed()[0] and not self.click and not self.game.settings.current_HP_level <= 0 and not self.add_HP <= 0:
-                print("hp")
+            if pygame.mouse.get_pressed()[0] and not self.click and not self.add_HP <= 0:
                 self.sugar_price -= 125
-                self.HP_level -= 1
+                self.add_HP_level -= 1
                 self.add_HP -= 50
                 self.click = True
             if not pygame.mouse.get_pressed()[0]:
@@ -94,20 +96,20 @@ class Upgrade(State, Dialogue):
 
 
         if self.speed_rect.collidepoint(self.game.mouse):
-            if pygame.mouse.get_pressed()[0] and not self.click and self.game.current_currency >= 100:
-                if self.game.settings.current_spd_level < 10 and self.spd_level < 10:
-                    self.spd_level += 1 # Max is 10
-                    self.add_spd += 10
-                    self.sugar_price += 100
-                    self.click = True
+            if pygame.mouse.get_pressed()[0] and not self.click and not self.add_spd_level >= (10 - self.game.settings.current_spd_level):
+                self.add_spd_level += 1 # Max is 10
+                self.add_spd += 10
+                self.sugar_price += 100
+                self.click = True
+
             if not pygame.mouse.get_pressed()[0]:
                 self.click = False
 
         if self.sdown_rect.collidepoint(self.game.mouse):
-            if pygame.mouse.get_pressed()[0] and not self.click and not self.game.settings.current_spd_level <= 0 and not self.add_spd <= 0:
-                print("spd")
+            if pygame.mouse.get_pressed()[0] and not self.click and not self.add_spd <= 0:
                 self.sugar_price -= 100
-                self.spd_level -= 1
+                self.add_spd_level -= 1
+
                 self.add_spd -= 10
                 self.click = True
             if not pygame.mouse.get_pressed()[0]:
@@ -119,6 +121,12 @@ class Upgrade(State, Dialogue):
                 self.click = True
                 if self.sugar_price != 0 and self.game.current_currency >= self.sugar_price:
                     self.sounds.upgrade_clicked.play()
+                    self.game.settings.current_atk_level += self.add_atk_level
+                    self.game.settings.current_HP_level += self.add_HP_level
+                    self.game.settings.current_spd_level += self.add_spd_level
+                    self.add_atk_level = 0
+                    self.add_spd_level = 0
+                    self.add_HP_level = 0
                 else:
                     self.sounds.no_upgrade.play()
 
@@ -127,12 +135,10 @@ class Upgrade(State, Dialogue):
                 self.click = False            
 
         if self.apply_upgrades and self.game.current_currency >= self.sugar_price:
-            self.game.settings.current_atk_level += self.atk_level
-            self.game.settings.current_HP_level += self.HP_level
-            self.game.settings.current_spd_level += self.spd_level
             self.game.settings.current_attackpoints += self.add_atk
             self.game.settings.current_healthpoints += self.add_HP
             self.game.settings.current_speed += self.add_spd
+            
             self.game.current_currency -= self.sugar_price
             self.add_atk = 0
             self.add_HP = 0
@@ -144,6 +150,9 @@ class Upgrade(State, Dialogue):
             self.add_atk = 0
             self.add_HP = 0
             self.add_spd = 0
+            self.add_atk_level = 0
+            self.add_spd_level = 0
+            self.add_HP_level = 0
             self.sugar_price = 0
 
 
@@ -165,18 +174,18 @@ class Upgrade(State, Dialogue):
         # Displaying Attack upgrades
         display.blit(self.attack_up, (self.menu_rect.x + 300, self.menu_rect.y + 80))
         display.blit(self.attack_down, self.attk_down_rect)
-        if self.game.settings.current_atk_level < 12:
+        if self.game.settings.current_atk_level < 7:
             self.game.draw_text(display, f"{int(self.add_atk)}", True, (0,0,14), self.menu_rect.x + 405, self.menu_rect.y + 80, 40)
-        if self.game.settings.current_atk_level >= 12:
+        if self.game.settings.current_atk_level >= 7:
             self.game.draw_text(display, "MAX", True, (0,0,14), self.menu_rect.x + 385, self.menu_rect.y + 80, 40)
         self.game.draw_text(display, "ATTACK", True, (0,0,14), self.menu_rect.x + 370, self.menu_rect.y + 35, 30)
 
         # Displaying Health upgrades
         display.blit(self.health_up, self.health_rect)
         display.blit(self.health_down, self.hdown_rect)
-        if self.game.settings.current_HP_level < 10:
+        if self.game.settings.current_HP_level < 11:
             self.game.draw_text(display, f"{int(self.add_HP)}", True, (0,0,14), self.menu_rect.x + 405, self.menu_rect.y + 180, 40)
-        if self.game.settings.current_HP_level >= 10:
+        if self.game.settings.current_HP_level >= 11:
             self.game.draw_text(display, "MAX", True, (0,0,14), self.menu_rect.x + 385, self.menu_rect.y + 180, 40)
         self.game.draw_text(display, "HEALTH", True, (0,0,14), self.menu_rect.x + 370, self.menu_rect.y + 140, 30)
 

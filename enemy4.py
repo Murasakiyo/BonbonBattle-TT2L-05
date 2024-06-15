@@ -1,6 +1,5 @@
 import pygame
 import math
-import random
 from AiraLyra import *
 
 class Enemy4(pygame.sprite.Sprite):
@@ -53,7 +52,7 @@ class Enemy4(pygame.sprite.Sprite):
         self.spin_speed_lyra = 8         # Lyra's spin is the one moving around the screen
         self.spin_speed_aira = 5         # Aira's spin is the one following the player
         self.movement_timer = 0          # This is for changing their movement speeds for fixing the weird jitters that the movement code causes
-        self.HP = 1500
+        self.HP = 1000
         self.max_HP = self.HP
         self.moxie = 0
         self.max_moxie = 200
@@ -67,7 +66,6 @@ class Enemy4(pygame.sprite.Sprite):
 
 
     def update(self, deltatime, player_action, player_x, player_y, death):
-        # print(f"screen airax:{self.aira.rect.centerx}")
         self.aira.update(deltatime, self.idle, self.norm_attack, self.positional, self.start_super_atk, death)
         self.lyra.update(deltatime, self.idle, self.norm_attack, self.positional, self.start_super_atk, death)
         self.horiz_string.animate(deltatime)
@@ -109,7 +107,6 @@ class Enemy4(pygame.sprite.Sprite):
         if self.ult_attack:
             self.move_speed = 16
 
-        # print(f"self.norm_attack:{self.norm_attack}, self.super_attack:{self.super_attack}, move_speed:{self.move_speed}, self.position:{self.positional}, self.stop_moving:{self.stop_moving}, self.moxie:{self.moxie}")
         
         if not self.super_attack and not self.stop_normal_atk:
             self.norm_attack = True
@@ -191,6 +188,7 @@ class Enemy4(pygame.sprite.Sprite):
                         self.vert_string.rect.y += 1 * self.atk_speed
                     if self.vert_string.rect.y >= 0:
                         self.game.offset = self.game.screen_shake(1,10,30)
+                        self.game.sounds.screen_shake.play()
                         self.attack_bool = True
 
                 if self.attack_bool == True: # This code is for the retraction of the strings
@@ -437,7 +435,7 @@ class Enemy4(pygame.sprite.Sprite):
         self.aira.image = self.aira.idle_sprites[0]
         self.lyra.image = self.lyra.idle_sprites[0]
 
-        self.HP = 300
+        self.HP = 1000
         self.moxie = 0
 
         self.aira.rect.x, self.aira.rect.y = 30, 200

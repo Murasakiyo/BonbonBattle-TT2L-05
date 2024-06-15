@@ -43,7 +43,6 @@ class Level_Options(State):
         self.show_bg = self.current_background
         self.bg_transition(player_action)
         self.update_keys(player_action, deltatime)
-        # print(f"level_index: {self.index}")
         
 
         if self.menu_options[self.index] == "lvl1": 

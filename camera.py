@@ -27,7 +27,6 @@ class LoungeCamera(pygame.sprite.Group):
         self.offset.x = target.rect.centerx - self.h_width
         self.offset.y = target.rect.centery - self.h_height
         target.rect.clamp_ip(self.bg_rect)
-        # print(self.offset)
 
         if self.offset.x >= 1010:
             self.offset.x = 1010
@@ -44,11 +43,9 @@ class LoungeCamera(pygame.sprite.Group):
         self.talk_rect.x = grass_offset.x + 1250
         display.blit(self.bg, sky_offset)
         display.blit(self.grass, grass_offset)
-        # pygame.draw.rect(display, (255,255,255), self.talk_rect,2)
 
         for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
             offset_pos = sprite.rect.midleft - self.offset
             display.blit(sprite.image, offset_pos)
 
-        # print(f"offset:{grass_offset}, rect: x={self.talk_rect.x}, y={self.talk_rect.y}")
         

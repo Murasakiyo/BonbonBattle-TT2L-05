@@ -28,7 +28,6 @@ class FlyEnemy(pygame.sprite.Sprite):
                         self.sprite_grp[i].moving_speed = int(self.slowness_amount[i])
                     else:
                         self.sprite_grp[i].moving_speed = int(self.original_speed[i])
-                    # print(f"Speed of fly{[i]}:{self.sprite_grp[i].moving_speed}")
 
 
         

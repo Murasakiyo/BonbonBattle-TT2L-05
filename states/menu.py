@@ -2,16 +2,9 @@ import pygame
 from parent_classes.state import State
 from states.first_cutscene import Story
 from states.game_set import Game_Settings
-from states.level_choose import Level_Options
 from states.lounge import Lounge
-from states.level_1 import First_Stage
-from states.level_2 import Sec_Stage
-from states.level_3 import Trio_Stage
-from states.level_4 import Quad_Stage
-from states.level_5 import Penta_Stage
-from states.level_1 import First_Stage
-from states.level_2 import Sec_Stage
 from settings import Settings
+
 
 class MainMenu(State):
     def __init__(self, game):
@@ -24,7 +17,6 @@ class MainMenu(State):
         self.current_start = self.start_button
         self.rect_START = self.start_button.get_rect(width= 250, height=100)
         self.rect_START.x, self.rect_START.y = 600, 465
-        # self.rectest = pygame.Rect(300,100,600,450)
         self.set_button = pygame.image.load("sprites/set_button.png").convert_alpha()
         self.set_button_hover = pygame.image.load("sprites/set_button_hover.png").convert_alpha()
         self.rect_SET = self.set_button.get_rect(width=100, height=100)

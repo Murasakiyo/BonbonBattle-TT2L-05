@@ -47,7 +47,6 @@ class Ults():
             if self.game.ult:
                 if self.init_stan:
                     self.stan_ult.update(deltatime, player_action, enemies)
-                    self.game.offset = self.game.screen_shake(3,5,20)
                     self.enemy_moxie = 0
                 elif self.init_louie:
                     self.louie_ult.update(deltatime, player_action)
