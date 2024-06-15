@@ -30,7 +30,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.fps = 0.07
         self.current_frame, self.last_frame_update = 0,0
         self.HP = 300
-        self.body_damage = 50
+        self.body_damage = 35
         self.attack = False
         self.ult_timer = 0
         self.ult = False
@@ -97,7 +97,7 @@ class Enemy3(pygame.sprite.Sprite):
     def minion_spawn(self, deltatime):
         if len(self.minionlist) == 0 and not self.leech:
             self.minion_time += deltatime
-            if self.minion_time > 3:
+            if self.minion_time > 2.5:
                 self.attack = True
                 for i in range(3):
                     if i == 1:
@@ -116,9 +116,6 @@ class Enemy3(pygame.sprite.Sprite):
                 self.minion_time = 0
 
        
-                    
-
-
     def enemy3_moxie_function(self, deltatime):
 
         if self.moxie >= 300:
@@ -247,4 +244,5 @@ class Enemy3(pygame.sprite.Sprite):
         self.ult_timer = 0
         self.ult = False
         self.leech = False
+        self.moxie = 0
         self.reset_minions()

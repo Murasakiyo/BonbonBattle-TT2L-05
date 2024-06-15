@@ -31,7 +31,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         self.load_health_bar()
         self.load_moxie_bar()
 
-
         self.current_time, self.end_time = 0,0
         self.swarming = True
         self.gacha = 0
@@ -98,8 +97,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
         self.ending_options(deltatime, player_action, 3, 2)
         
 
-
-
         if self.game.start == True:
             if self.game.ult == False:
                 # Update player
@@ -111,8 +108,6 @@ class Sec_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particle
                 self.health_update()
                 self.moxie_update(player_action)
                 self.game.frozen()
-
-
 
                 if not(self.game.defeat):
                 # Check if flies are all still alive

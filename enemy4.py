@@ -140,16 +140,6 @@ class Enemy4(pygame.sprite.Sprite):
         if self.ult_attack:
             self.ultimate_attack(deltatime)
 
-        # print(self.super_timer)
-        # print(self.start_super_atk)
-        # print(self.super_attack)
-        # print(self.super_count)
-        # print(self.moxie)
-        # print(pygame.mouse.get_pos())
-        # print(self.spin_positional)
-        # print(self.movement_timer)
-        # print(self.move_speed)
-
 
     def render(self, display):
         if not(self.start_ult_atk):

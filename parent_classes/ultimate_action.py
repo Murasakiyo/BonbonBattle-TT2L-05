@@ -65,7 +65,7 @@ class Ults():
         if pygame.sprite.spritecollide(support, enemies, False): #first check: rectangular collision
                 if pygame.sprite.spritecollide(support, enemies, False, pygame.sprite.collide_mask):
                     for enemy in enemies:
-                        enemy.HP -= 2
+                        enemy.HP -= (self.game.settings.current_attackpoints - 1)
                         
 
     # Display confection

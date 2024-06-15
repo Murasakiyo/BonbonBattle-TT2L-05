@@ -120,6 +120,9 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.game_over(player_action)
         self.game_restart(player_action)
         self.ending_options(deltatime, player_action, 2, 1)
+
+        if not(self.game.tutorial):
+            self.tuto4_done = True
         
 
         if self.game.start == True:

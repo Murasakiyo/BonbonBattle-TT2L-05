@@ -1,0 +1,25 @@
+Stanley O'Cake, The Court Jester
+When I am active in battle, I will give an attack buff 
+to you, Torres, for every 3 seconds. I will also reduce
+the enemy's "excitement" during that time.
+
+If you initiate my ultimate attack, I will reset all
+enemies moxie to 0 and the repercussion would cause
+damage to all enemies on the screen by 50.
+
+Krie Klubnika, The Queen
+The Queen oversees all subjects and is responsible
+for their well-being. Krie heals the player 2% of 
+their healthpoints for every 3 seconds.
+
+Initiate Her Majesty's ultimate and she will heal 
+you significantly.
+
+Louie, The Pierrot Prince
+Louie's floats are cold and cool. There are frost 
+around the environment when he is active, which slows 
+down the enemies every 3 seconds. 
+
+His ultimate initiation summons a blizzard which will 
+freeze the enemies' movements for 5 seconds.
+

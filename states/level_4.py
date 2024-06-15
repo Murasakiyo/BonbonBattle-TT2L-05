@@ -28,7 +28,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.particle_group = pygame.sprite.Group()
         self.sounds = Sounds(self.game)
         
-        self.current_time, self.end_time = 0,0
+        self.current_time, self.end_time, self.leech_timer = 0,0,0
         self.enemy_defeat = False
         self.snow_value = 1
         self.enemy3_heal = 0
@@ -126,13 +126,18 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                             self.snake_attacked(deltatime, player_action, self.enemy_group, self.enemy3, self.enemy3.body_damage)
                             for minions in self.enemy3.minionlist.sprites():
                                 self.minion_collisions(deltatime, player_action, self.enemy3.minionlist, self.enemy3.minionlist, minions, minions.damage)
+                            
                             if self.enemy3.HP < 300:
                                 if self.enemy3.leech == True:
                                     self.old_health = self.player.healthpoints
-                                    self.player.healthpoints -= (self.player.healthpoints * 20/100)
-                                    self.enemy3_heal = (self.old_health * 20/100)
-                                    self.enemy3.HP += self.enemy3_heal
-                        
+                                    self.leech_timer += deltatime
+                                    if not(self.leech_timer > 0.15):
+                                        self.player.healthpoints -= (self.player.healthpoints * 0.05)
+                                        self.enemy3_heal = (self.old_health * 0.05)
+                                        self.enemy3.HP += self.enemy3_heal
+                                else:
+                                    self.leech_timer = 0
+                            
                         if self.enemy3.HP > 300:
                             self.enemy3.HP = 300
                     
@@ -169,6 +174,12 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                         if not(self.enemy3.leech):
                             self.enemy3.ult = False
                             self.enemy3.moxie = 0
+                    if self.init_louie:
+                        if self.enemy3.leech == True:
+                            self.enemy3.leech = False
+                            self.leech_timer = 0
+
+
                 self.add_ultimate(deltatime, player_action, self.enemy_group)
 
             self.particle_group.update(deltatime)
@@ -202,6 +213,8 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
 
     def render(self, display):
         display.blit(pygame.transform.scale(self.game.mountain, (1100,600)), (0,0))
+        if self.enemy3.leech == True:
+            display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))
         self.confection_display(display)
         if self.game.defeat:
             display.blit(pygame.transform.scale(self.game.black, (1100,600)), (0,0))

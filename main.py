@@ -73,7 +73,7 @@ class Game():
 
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = MainMenu(self)
+        self.title_screen = Lounge(self)
         self.state_stack.append(self.title_screen)
 
     def open_txt(self, filename):
@@ -351,8 +351,8 @@ class Game():
                     self.current_currency = loaded_data['current_currency']
                 if 'krie_intro' in loaded_data:
                     self.settings.krie_intro = loaded_data['krie_intro']
-                # if 'tutorial' in loaded_data:
-                #     self.tutorial = loaded_data['tutorial']
+                if 'tutorial' in loaded_data:
+                    self.tutorial = loaded_data['tutorial']
         print(f"loaded data: lvl- {self.current_level}, health- {self.settings.current_healthpoints}, attack- {self.settings.current_attackpoints}, speed- {self.settings.current_speed}")
         
 if __name__ == "__main__":

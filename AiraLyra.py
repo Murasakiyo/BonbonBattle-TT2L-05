@@ -245,20 +245,22 @@ class Twin_ult(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.load_sprites()
-        self.rect = self.ultimate_sprites[0].get_rect(x=0, y=0)
+        self.rect = self.image.get_rect(x=0, y=0)
         self.mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.mask.to_surface()
         self.current_frame, self.last_frame_update = 0,0
         self.fps = 0.083
 
     def update(self, deltatime, ult):
+        self.mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.mask.to_surface()
         self.animate(deltatime)
         
     
     def anim_reset(self, ult):
         if not ult:
             self.current_frame = 0
-            self.current_image = self.ultimate_sprites[0]
+            # self.current_image = self.ultimate_sprites[0]
             self.last_frame_update = 0
             self.fps = 0.083
 
@@ -307,7 +309,7 @@ class Horiz_hand(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.load_sprites()
-        self.rect = self.atk_sprites[0].get_rect(x = self.game.screen_rect.midleft[0] - 1100 - 25, y = player_y - 25)
+        self.rect = self.image.get_rect(x = self.game.screen_rect.midleft[0] - 1100 - 25, y = player_y - 25)
         self.mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.mask.to_surface()
         self.current_frame, self.last_frame_update = 0,0
@@ -341,7 +343,7 @@ class Vert_hand(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.load_sprites()
-        self.rect = self.atk_sprites[0].get_rect(x = player_x - 25, y= self.game.screen_rect.midtop[1] - 600)
+        self.rect = self.image.get_rect(x = player_x - 25, y= self.game.screen_rect.midtop[1] - 600)
         self.mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.mask.to_surface()
         self.current_frame, self.last_frame_update = 0,0
