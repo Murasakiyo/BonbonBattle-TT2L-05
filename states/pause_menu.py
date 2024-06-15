@@ -37,8 +37,6 @@ class Pause(State):
                 self.click = False
 
         if self.resume_game:
-            # if self.game.music1:
-            #     self.game.sounds.lvl1_bgmusic.play(-1)
             self.game.play_bg_music(self.current_level_bg)
             self.exit_state(-1)
             self.resume_game = False

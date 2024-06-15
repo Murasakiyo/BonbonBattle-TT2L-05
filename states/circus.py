@@ -49,7 +49,6 @@ class Circus(State):
 
             if self.game.alpha == 255:
                 self.exit_state(-1)
-                print("exit circus")
                 player_action["transition"] = False
 
         # Collide with Krie

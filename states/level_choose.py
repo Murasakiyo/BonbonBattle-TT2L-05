@@ -39,7 +39,6 @@ class Level_Options(State):
 
 
     def update(self, deltatime, player_action):
-        print("lvl choose update")
         self.game.stop_bg_music()
         self.show_bg = self.current_background
         self.bg_transition(player_action)

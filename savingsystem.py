@@ -20,20 +20,6 @@ class SaveDataSystem:
             'upgrade_spd_lvl': self.game.settings.current_spd_level
         }
     
-    # def default_value(self):
-    #     return {
-    #         'current_level': 0,
-    #         'healthpoints': 250,
-    #         'attackpoints': 3,
-    #         'speed': 400,
-    #         'skip_cutscenes': False,
-    #         'current_currency': 0,
-    #         'krie_intro': False,
-    #         'stan_dialogue_counter': 0,
-    #         'upgrade_atk_lvl': 0,
-    #         'upgrade_HP_lvl': 0,
-    #         'upgrade_spd_lvl': 0
-        # }
 
     # serialize player_data and save to a file
     def save_data_file(self):
@@ -46,9 +32,6 @@ class SaveDataSystem:
         # try:
         with open(self.file_name, 'rb') as file:
             return pickle.load(file)
-        # except FileNotFoundError: 
-        #     return self.default_value()
-        #     # print("no file found")
         
 
 

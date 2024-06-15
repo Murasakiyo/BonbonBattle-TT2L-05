@@ -69,9 +69,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
     def enter_state(self):
         super().enter_state()  # Call parent class's method (to update the level)
         self.game.play_bg_music(self.game.sounds.lvl1_bgmusic)
-        # self.game.music1 = True
         self.player.attribute_update()
-        # self.sounds.lvl1_bgmusic.play(-1)
         if self.game.current_level == 0:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
@@ -79,7 +77,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
 
     def update(self, deltatime, player_action):
-        print(f"self.end= {self.end}")
         if player_action["reset_game"]:
             self.game.play_bg_music(self.game.sounds.lvl1_bgmusic)
             if self.game.settings.first_win1:
@@ -109,7 +106,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.exit_state(-1)
 
         if self.end:
-            self.button_go()  # win/lose screen > exit
+            self.button_go()  
 
         self.game_over(player_action)
         self.game_restart(player_action)
@@ -158,7 +155,6 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
                     if not(self.end):
                         if player_action["pause"]:
-                            print("exit lvl 1")   # pause > exit level
                             new_state = self.pause
                             new_state.enter_state()
                             self.game.start = False

@@ -11,7 +11,6 @@ class Lounge(State, Dialogue):
     def __init__(self, game):
         super().__init__(game)
         self.game = game
-        print("init lounge")
         # self.player = Player(self.game, 300, 150)
         self.player = Player(self.game, 300, 150)
         self.stan = Stanley(self.game)

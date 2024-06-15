@@ -16,6 +16,7 @@ from savingsystem import *
 from itertools import repeat
 
 class Game():
+    # Create just one instance of a class (Singleton Pattern)
     sounds = Sounds()
     current_bgmusic = ""
 
@@ -60,18 +61,8 @@ class Game():
         self.saving_system = SaveDataSystem('player_data.pickle', self)
         self.load_data() # load saved data when start a game
 
-        # self.play_circus_music = False
-        # self.play_lvl1_music = False
-        # # self.playing_lvl1 = False
-    
-        # self.bg_music = " "
-        # self.music1 = False
-        # self.music2 = False
-        # self.music3 = False
-        # self.music5 = False
-        
-        
 
+    
     # Game loop
     def game_loop(self):
         while self.play:
@@ -82,10 +73,9 @@ class Game():
             self.clock.tick((60))
             
 
-
     # First state/room in the game (can be changed)
     def load_states(self):
-        self.title_screen = MainMenu(self)
+        self.title_screen = Penta_Stage(self)
         self.state_stack.append(self.title_screen)
 
     def open_txt(self, filename):
@@ -99,7 +89,7 @@ class Game():
         self.open_file.close()
         return text
     
-
+    # handle bg music without including PAUSE MENU
     def play_bg_music(self, bg_music):
         Game.current_bgmusic = bg_music
         self.sounds.play_bg(bg_music)
@@ -107,8 +97,6 @@ class Game():
     def stop_bg_music(self):
         Game.current_bgmusic = None
         self.sounds.stop_bg()
-
-
 
         
     # All key events are here. Receive input from_ player, display output for player
@@ -375,7 +363,6 @@ class Game():
                 self.settings.current_HP_level = loaded_data['upgrade_HP_lvl']
             if 'upgrade_spd_lvl' in loaded_data:
                 self.settings.current_spd_level = loaded_data['upgrade_spd_lvl']
-        print(f"loaded data: atk lvl = {self.settings.current_atk_level}, HP lvl = {self.settings.current_HP_level}, spd lvl = {self.settings.current_spd_level}")
         
 if __name__ == "__main__":
     game = Game()
