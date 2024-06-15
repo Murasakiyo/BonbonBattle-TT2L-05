@@ -12,8 +12,6 @@ from states.level_5 import Penta_Stage
 from states.level_1 import First_Stage
 from states.level_2 import Sec_Stage
 from settings import Settings
-from music import Sounds
-
 
 class MainMenu(State):
     def __init__(self, game):
@@ -40,11 +38,6 @@ class MainMenu(State):
         if self.rect_START.collidepoint(self.game.mouse):
             if pygame.mouse.get_pressed()[0] and not self.click:
                 self.sounds.start_game.play()
-                # if self.game.reset_game:
-                #     print("reset")
-                #     self.settings.gamereset_value()
-                # else:
-                #     print("no reset")
                 self.next = True
                 self.click = True
                 player_action["start"] = True
