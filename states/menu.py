@@ -67,7 +67,7 @@ class MainMenu(State):
             self.game.draw_text(self.game.screen, "Loading...", True, "white", 400, 250, 80)
         if self.game.alpha == 255:
             if self.game.skip_cutscenes:
-                new_state = Lounge(self.game)
+                new_state = Penta_Stage(self.game)
             else:
                 new_state = Story(self.game)
             new_state.enter_state()

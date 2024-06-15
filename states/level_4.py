@@ -52,7 +52,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.load_health_bar()
         self.load_moxie_bar()
         self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
-        self.enemy_moxie_update(self.enemy3.moxie)
+        self.enemy_moxie_update(self.enemy3.moxie, self.enemy3.max_moxie)
 
         self.sugarcube_received = 0
 
@@ -77,7 +77,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             self.player.reset_player(200,200)
             self.ultimate_reset()
             self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
-            self.enemy_moxie_update(self.enemy3.moxie)
+            self.enemy_moxie_update(self.enemy3.moxie, self.enemy3.max_moxie)
             self.load_health_bar()
             self.load_moxie_bar()
             if self.enemy_defeat:
@@ -115,6 +115,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                 for enemy in self.enemy_group.sprites():
                     if enemy.HP <= 0:
                         enemy.kill()
+                        self.sounds.enemies_death.play()
                         self.enemy3.minionlist.empty()
                         self.spawn_exploding_particles(300, enemy)
                         self.enemy_defeat = True
@@ -136,16 +137,15 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                         if self.enemy3.HP > 300:
                             self.enemy3.HP = 300
                     
-                        for enemy in self.enemy_group.sprites():
-                            if enemy.HP <= 0:
-                                self.sounds.enemies_death.play()
-                                enemy.kill()
-                                self.enemy3.minionlist.empty()
-                                self.spawn_exploding_particles(300, enemy)
-                                self.enemy_defeat = True
+                        # for enemy in self.enemy_group.sprites():
+                        #     if enemy.HP <= 0:
+                        #         enemy.kill()
+                        #         self.enemy3.minionlist.empty()
+                        #         self.spawn_exploding_particles(300, enemy)
+                        #         self.enemy_defeat = True
 
                     self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
-                    self.enemy_moxie_update(self.enemy3.moxie)
+                    self.enemy_moxie_update(self.enemy3.moxie, self.enemy3.max_moxie)
                        
                     self.snow_particles(self.snow_value)
 

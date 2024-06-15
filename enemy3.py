@@ -36,6 +36,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.ult = False
         self.atk_timer = 0
         self.moxie = 0
+        self.max_moxie = 300
         self.leech = False
 
     def update(self, deltatime, player_action, player_x, player_y, player_rectx):

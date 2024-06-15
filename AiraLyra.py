@@ -252,6 +252,8 @@ class Twin_ult(pygame.sprite.Sprite):
         self.fps = 0.083
 
     def update(self, deltatime, ult):
+        self.mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.mask.to_surface()
         self.animate(deltatime)
         
     
