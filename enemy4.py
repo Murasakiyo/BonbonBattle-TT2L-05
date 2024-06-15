@@ -53,7 +53,8 @@ class Enemy4(pygame.sprite.Sprite):
         self.spin_speed_lyra = 8         # Lyra's spin is the one moving around the screen
         self.spin_speed_aira = 5         # Aira's spin is the one following the player
         self.movement_timer = 0          # This is for changing their movement speeds for fixing the weird jitters that the movement code causes
-        self.HP = 300
+        self.HP = 3000
+        self.max_HP = self.HP
         self.moxie = 0
         self.max_moxie = 200
 
