@@ -30,7 +30,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.tongue = Tongue(self.game)
         self.tongue2 = Tongue2(self.game)
         self.pause = Pause(self.game)
-        self.sounds = Sounds(self.game)
+        self.sounds = self.game.sounds
         # self.effect_time = 0
         # self.confetti = True
         self.ultimates()
@@ -62,10 +62,16 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                     
         self.sugarcube_received = 0
 
+        self.end_prev = False
+
+
     # method overriding
     def enter_state(self):
         super().enter_state()  # Call parent class's method (to update the level)
+        self.game.play_bg_music(self.game.sounds.lvl1_bgmusic)
+        # self.game.music1 = True
         self.player.attribute_update()
+        # self.sounds.lvl1_bgmusic.play(-1)
         if self.game.current_level == 0:
             self.current_sugarcube_value = self.game.settings.first_sugarcube_value
         else:
@@ -73,10 +79,9 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
 
     def update(self, deltatime, player_action):
-
-        self.game.play_lvl1_music = True
-
+        print(f"self.end= {self.end}")
         if player_action["reset_game"]:
+            self.game.play_bg_music(self.game.sounds.lvl1_bgmusic)
             if self.game.settings.first_win1:
                 self.current_sugarcube_value = self.game.settings.sugarcube_value
             self.enemy1.enemy_reset()
@@ -104,7 +109,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.exit_state(-1)
 
         if self.end:
-            self.button_go()
+            self.button_go()  # win/lose screen > exit
 
         self.game_over(player_action)
         self.game_restart(player_action)
@@ -153,6 +158,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
 
                     if not(self.end):
                         if player_action["pause"]:
+                            print("exit lvl 1")   # pause > exit level
                             new_state = self.pause
                             new_state.enter_state()
                             self.game.start = False
@@ -211,14 +217,16 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                 self.game.draw_text(display, self.game.ct_display, True, "white", 500,150,200)
 
         if self.end:
+            if self.end_prev == False:
+                self.game.stop_bg_music()
+                self.end_prev = True
             self.ending_state(display)
-            self.game.sounds.lvl1_bgmusic.stop()
             if self.game.win:
                 self.game.settings.first_win1 = True
                 self.game.current_level = max(self.game.current_level, 1)
-                
+        else:
+            self.end_prev = False
             
-        
 
 
 

@@ -19,7 +19,7 @@ class MainMenu(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.game = game
-        self.sounds = Sounds(self.game)
+        self.sounds = self.game.sounds
         self.settings = Settings(self.game)
         self.start_button = pygame.image.load("sprites/start_button.png").convert_alpha()
         self.start_button_hover = pygame.image.load("sprites/start_button_hover.png").convert_alpha()

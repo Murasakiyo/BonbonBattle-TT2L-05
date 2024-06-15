@@ -11,6 +11,7 @@ class Lounge(State, Dialogue):
     def __init__(self, game):
         super().__init__(game)
         self.game = game
+        print("init lounge")
         # self.player = Player(self.game, 300, 150)
         self.player = Player(self.game, 300, 150)
         self.stan = Stanley(self.game)
@@ -32,6 +33,9 @@ class Lounge(State, Dialogue):
         self.lvlbtn_rect = self.level_button.get_rect()
         self.init_talk = False
         self.finish_talk = False
+
+        self.game.play_bg_music(self.game.sounds.circus_bgmusic)
+        
 
         # self.offset = pygame.math.Vector2((0,0))
         

@@ -16,6 +16,9 @@ from savingsystem import *
 from itertools import repeat
 
 class Game():
+    sounds = Sounds()
+    current_bgmusic = ""
+
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Bonbon Battle: Treading Through Cotton Woods")
@@ -34,7 +37,7 @@ class Game():
         self.start = True
         self.deltatime, self.prevtime, self.current_time, self.countdown, self.freeze_time = 0 , 0, 0, 4, 0
         self.settings = Settings(self)
-        self.sounds = Sounds(self)
+        self.sounds = Game.sounds
         self.backgrounds()
         self.dialogue_sprites()
         self.buttons()
@@ -57,10 +60,16 @@ class Game():
         self.saving_system = SaveDataSystem('player_data.pickle', self)
         self.load_data() # load saved data when start a game
 
-        self.play_circus_music = False
-        self.play_lvl1_music = False
+        # self.play_circus_music = False
+        # self.play_lvl1_music = False
+        # # self.playing_lvl1 = False
     
-        self.bg_music = " "
+        # self.bg_music = " "
+        # self.music1 = False
+        # self.music2 = False
+        # self.music3 = False
+        # self.music5 = False
+        
         
 
     # Game loop
@@ -71,8 +80,6 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
-            self.play_background_music()
-
             
 
 
@@ -93,30 +100,18 @@ class Game():
         return text
     
 
-    def play_background_music(self):
-        if self.play_circus_music:  # play music in lounge and circus
-            print(self.bg_music)
-            self.play_circus_music = False
-            if self.bg_music != "circus music":  # make sure the music play once when the transition from circus to lounge
-                print("circus music")
-                self.sounds.circus_bgmusic.play(-1)
-                self.bg_music = "circus music"  
+    def play_bg_music(self, bg_music):
+        Game.current_bgmusic = bg_music
+        self.sounds.play_bg(bg_music)
 
-        elif self.play_lvl1_music:
-            print(self.bg_music)
-            self.play_lvl1_music = False
-            print("now in level 1 music")
-            if self.bg_music != "level1 music":
-                self.sounds.lvl1_bgmusic.play(-1)
-                self.bg_music = "level1 music"
+    def stop_bg_music(self):
+        Game.current_bgmusic = None
+        self.sounds.stop_bg()
 
-        else:
-            self.sounds.circus_bgmusic.stop()
-            print("stop music")  
-            self.bg_music = " "  
+
 
         
-    # All key events are here. Receive input from player, display output for player
+    # All key events are here. Receive input from_ player, display output for player
     def get_events(self):
 
         for event in pygame.event.get():

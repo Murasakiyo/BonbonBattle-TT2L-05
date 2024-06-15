@@ -19,6 +19,12 @@ class Pause(State):
         self.click = False
         self.mouse = pygame.mouse.get_pos()
         self.exit_game, self.resume_game = False, False
+        self.current_level_bg = None
+        
+    def enter_state(self):
+        super().enter_state() 
+        self.current_level_bg = self.game.sounds.current_bg
+        self.game.stop_bg_music()
 
     def update(self, deltatime, player_action):
         
@@ -31,6 +37,9 @@ class Pause(State):
                 self.click = False
 
         if self.resume_game:
+            # if self.game.music1:
+            #     self.game.sounds.lvl1_bgmusic.play(-1)
+            self.game.play_bg_music(self.current_level_bg)
             self.exit_state(-1)
             self.resume_game = False
 
