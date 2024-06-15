@@ -232,6 +232,7 @@ class Game():
 
     # Screen shake
     def screen_shake(self, num, intensity, amplitude):
+        self.sounds.screen_shake.play()
         s = -1
         for i in range(0,num):
             for x in range(0, amplitude, intensity):

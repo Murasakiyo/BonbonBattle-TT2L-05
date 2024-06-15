@@ -19,6 +19,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         super().__init__(game)
         self.camera = CameraGroup(self.game)
         self.pause = Pause(self.game)
+        self.sounds = self.game.sounds
         self.ultimate = False
         self.confection_ult = pygame.sprite.Group()
         self.support_dolls = pygame.sprite.Group()
