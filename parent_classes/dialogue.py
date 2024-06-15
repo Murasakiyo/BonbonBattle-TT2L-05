@@ -43,8 +43,7 @@ class Dialogue():
             self.message2 = self.text[self.activetext + 1]
         else:
             self.message2 = self.text[self.activetext]
-        # print(f"activetext:{self.activetext}")
-        # print(f"requirements:{len(self.text) - 1}")
+        
         
         if self.counter < self.speed * len(self.message):
             self.counter = self.counter + 1
@@ -208,7 +207,6 @@ class Answer():
     
 
     def update_keys(self, deltatime):
-        # print("updating..")
         self.current_time += deltatime
         if self.current_time > 0.12:
             if self.game.convo_keys["down"]:  

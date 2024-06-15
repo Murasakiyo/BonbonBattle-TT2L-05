@@ -1,15 +1,7 @@
 import pygame
 import sys
 from states.menu import MainMenu
-from torres import *
-from states.level_1 import First_Stage
-from states.pause_menu import Pause
-from states.first_cutscene import Story
-from states.lounge import Stan_Dialogue
-from states.level_choose import Level_Options
-from states.circus import Circus
 from parent_classes.particleeffect import *
-# from parent_classes.ultimate_action import *
 from settings import Settings
 from music import Sounds
 from savingsystem import *
@@ -71,6 +63,7 @@ class Game():
             self.update() # update the game according to presses
             self.render() # render to screen
             self.clock.tick((60))
+
             
 
     # First state/room in the game (can be changed)
@@ -214,7 +207,6 @@ class Game():
         self.defeat = False
         self.win = False
         self.init_reset = False
-        self.tutorial = True
         self.tutorial_counter = 0
     
     # Louie's freeze ultimate
@@ -342,11 +334,10 @@ class Game():
     def save_data(self):
         self.saving_system.save_data_file()
         player_data = self.saving_system.get_save_data()
-        print(f"Saving data: {player_data}")
+        # print(f"Saving data: {player_data}")
 
     def load_data(self):
 
-        # if not self.first_game:
         loaded_data = self.saving_system.load_data_file()
         if loaded_data: 
             if 'current_level' in loaded_data:
@@ -361,6 +352,8 @@ class Game():
                 self.skip_cutscenes = loaded_data['skip_cutscenes']
             if 'current_currency' in loaded_data:
                 self.current_currency = loaded_data['current_currency']
+            if 'tutorial' in loaded_data:
+                self.settings.tutorial = loaded_data['tutorial']
             if 'krie_intro' in loaded_data:
                 self.settings.krie_intro = loaded_data['krie_intro']
             if 'stan_dialogue_counter' in loaded_data:
@@ -371,6 +364,8 @@ class Game():
                 self.settings.current_HP_level = loaded_data['upgrade_HP_lvl']
             if 'upgrade_spd_lvl' in loaded_data:
                 self.settings.current_spd_level = loaded_data['upgrade_spd_lvl']
+            if 'end_level' in loaded_data:
+                self.settings.first_win5 = loaded_data['end_level']
         
 if __name__ == "__main__":
     game = Game()

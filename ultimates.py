@@ -15,6 +15,7 @@ class Torres_Ult(pygame.sprite.Sprite):
         self.animate(deltatime)
         if self.image == self.current_anim_list[2]:
             self.game.offset = self.game.screen_shake(3,8,20)
+            self.game.sounds.screen_shake.play()
         if self.image == self.current_anim_list[4]:
             self.game.ult_finish = True
             self.game.ult = False
@@ -62,7 +63,10 @@ class Stan_Ult(pygame.sprite.Sprite):
 
     def update(self, deltatime, player_action, enemies):
         self.animate(deltatime)
+        if self.image == self.current_anim_list[11]:
+            self.game.sounds.screen_shake.play()
         if self.image == self.current_anim_list[13]:
+            self.game.offset = self.game.screen_shake(3,5,20)
             self.ult_collisions(enemies)
             self.game.ult_finish = True
             self.game.ult = False

@@ -12,7 +12,6 @@ from parent_classes.moxie import *
 from parent_classes.enemyhealthbar import *
 from parent_classes.particleeffect import *
 from parent_classes.sugarcube import *
-from music import Sounds
 
 
 
@@ -124,7 +123,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.game_restart(player_action)
         self.ending_options(deltatime, player_action, 2, 1)
 
-        if not(self.game.tutorial):
+        if not(self.game.settings.tutorial):
             self.tuto4_done = True
         
 
@@ -258,7 +257,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         if self.game.tutorial_counter == 6:
             self.tuto6_done = True
 
-        if self.game.tutorial:
+        if self.game.settings.tutorial:
             new_state = Tutorial(self.game, self.player.rect.centerx, self.player.rect.centery)
             if not self.tuto1_done:
                 self.tuto_time += deltatime
@@ -296,8 +295,7 @@ class First_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                         self.tuto_time = 0
             if self.tuto6_done and not self.body_group.sprites():
                 new_state.enter_state()
-        else:
-            self.end_prev = False
+       
             
 
 
