@@ -32,7 +32,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
         self.enemy4 = Enemy4(self.game, self.player.rect.centerx, self.player.rect.centery)
         self.load_health_bar()
         self.load_moxie_bar()
-        self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP)
+        self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP, self.enemy4.max_HP)
         self.enemy_moxie_update(self.enemy4.moxie, self.enemy4.max_moxie)
 
 
@@ -82,7 +82,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
             self.player.reset_player(200,200)
             self.enemy4.enemy_reset()
             self.ultimate_reset()
-            self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP)
+            self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP, self.enemy4.max_HP)
             self.enemy_moxie_update(self.enemy4.moxie, self.enemy4.max_moxie)
             self.load_health_bar()
             self.load_moxie_bar()
@@ -127,9 +127,11 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                     self.sounds.enemies_death.play()
                     self.enemy_defeat = True
                     
-                if self.enemy4.aira.rect.centerx >= 549 and self.enemy_defeat:
-                    self.body_group.remove(self.enemy4.lyra)
+                # if self.enemy4.aira.rect.centerx == 550 and self.enemy_defeat:
+                #     self.body_group.remove(self.enemy4.lyra)
 
+                if not self.enemy4.aira.rect.centerx <= 540 and not self.enemy4.aira.rect.centerx >= 560 and self.enemy_defeat:
+                    self.body_group.remove(self.enemy4.lyra)
 
                 if not(self.game.defeat):
                     if not(self.enemy4.HP <= 0):
@@ -145,7 +147,7 @@ class Penta_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Partic
                         #     self.body_group.remove(self.enemy4.lyra)
                         #     self.enemy_defeat = True
 
-                    self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP)
+                    self.enemy_health_update(self.enemy4.aira.rect.x, self.enemy4.aira.rect.y, self.enemy4.HP, self.enemy4.max_HP)
                     self.enemy_moxie_update(self.enemy4.moxie, self.enemy4.max_moxie)
                        
  

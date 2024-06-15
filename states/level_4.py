@@ -51,7 +51,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
         self.characters(200,200)
         self.load_health_bar()
         self.load_moxie_bar()
-        self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
+        self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP, self.enemy3.max_HP)
         self.enemy_moxie_update(self.enemy3.moxie, self.enemy3.max_moxie)
 
         self.sugarcube_received = 0
@@ -76,7 +76,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
             self.enemy3.enemy_reset()
             self.player.reset_player(200,200)
             self.ultimate_reset()
-            self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
+            self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP, self.enemy3.max_HP)
             self.enemy_moxie_update(self.enemy3.moxie, self.enemy3.max_moxie)
             self.load_health_bar()
             self.load_moxie_bar()
@@ -144,7 +144,7 @@ class Quad_Stage(State, Ults, Collisions, Health, Moxie, EnemyHealthBar, Particl
                         #         self.spawn_exploding_particles(300, enemy)
                         #         self.enemy_defeat = True
 
-                    self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP)
+                    self.enemy_health_update(self.enemy3.rect.x, self.enemy3.rect.y, self.enemy3.HP, self.enemy3.max_HP)
                     self.enemy_moxie_update(self.enemy3.moxie, self.enemy3.max_moxie)
                        
                     self.snow_particles(self.snow_value)

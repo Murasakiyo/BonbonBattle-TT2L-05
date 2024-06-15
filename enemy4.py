@@ -53,7 +53,8 @@ class Enemy4(pygame.sprite.Sprite):
         self.spin_speed_lyra = 8         # Lyra's spin is the one moving around the screen
         self.spin_speed_aira = 5         # Aira's spin is the one following the player
         self.movement_timer = 0          # This is for changing their movement speeds for fixing the weird jitters that the movement code causes
-        self.HP = 300
+        self.HP = 1500
+        self.max_HP = self.HP
         self.moxie = 0
         self.max_moxie = 200
 
@@ -76,14 +77,27 @@ class Enemy4(pygame.sprite.Sprite):
             self.twin_ult.update(deltatime, self.start_ult_atk)
         self.twin_ult.anim_reset(self.start_ult_atk)
 
+        # Death settings for variables
         if self.HP <= 0:
             self.HP = 0
+            self.super_attack = False
+            self.start_super_atk = False
+            self.ult_attack = False
+            self.start_ult_atk = False
+            self.go_middle = True
+            if self.go_middle:
+                self.move_speed = 10
+
+            if not self.aira.rect.centerx <= 540 and not self.aira.rect.centerx >= 560:
+                self.move_speed = 0
+                self.go_middle = False
+            
         if self.moxie <= 0:
             self.moxie = 0
 
 
         # This code is for setting their speeds to 0 to fix the weird jitters with the sprite movement code
-        if not(self.ult_attack):
+        if not(self.ult_attack) and not(self.HP <= 0):
             self.movement_timer += deltatime
             if self.movement_timer < 1.5:
                 self.move_speed = 8
@@ -164,9 +178,12 @@ class Enemy4(pygame.sprite.Sprite):
         # print(pygame.mouse.get_pos())
         # print(self.spin_positional)
         # print(self.movement_timer)
-        # print(self.move_speed)
+        print(self.move_speed)
+        # print(self.go_middle)
         # print(self.HP)
-        print(self.positional)
+        # print(self.positional)
+        # print(self.aira.rect.centerx)
+
 
     def render(self, display):
         # if not(self.start_ult_atk):
@@ -297,7 +314,7 @@ class Enemy4(pygame.sprite.Sprite):
         if self.HP <= 0:
             if self.positional == 1:
                 self.go_middle = True
-                if self.aira.rect.centerx >= 550:
+                if self.aira.rect.centerx == 550:
                     self.go_middle = False
                     self.move_speed = 0
                     self.aira.rect.centerx = 550

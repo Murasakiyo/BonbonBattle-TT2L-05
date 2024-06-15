@@ -4,9 +4,9 @@ class EnemyHealthBar():
     def __init__(self, game):
         self.game = game
 
-    def enemy_health_update(self, enemyrectx, enemyrecty, HP):
+    def enemy_health_update(self, enemyrectx, enemyrecty, HP, max_HP):
         self.enemy_health = pygame.Rect(enemyrectx, enemyrecty, HP, 10)
-        self.boss_health = pygame.Rect(self.game.screen_rect.x + 750, self.game.screen_rect.y + 10, (300 - HP), 40)
+        self.boss_health = pygame.Rect(self.game.screen_rect.x + 750, self.game.screen_rect.y + 10, (300 - ((HP/max_HP) * 300)), 40)
 
     def enemy_moxie_update(self, moxie, max_moxie):
         self.enemy_moxie_rect = pygame.Rect(1060, 150, 30, 250)

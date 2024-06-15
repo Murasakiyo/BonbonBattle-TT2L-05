@@ -30,6 +30,7 @@ class Enemy3(pygame.sprite.Sprite):
         self.fps = 0.07
         self.current_frame, self.last_frame_update = 0,0
         self.HP = 300
+        self.max_HP = self.HP
         self.body_damage = 50
         self.attack = False
         self.ult_timer = 0
